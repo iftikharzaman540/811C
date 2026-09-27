@@ -62,7 +62,7 @@ export class PaymentsService {
     if (!wallet) throw new NotFoundException('Wallet not found');
 
     await this.walletService.processTransaction({
-      userId: userId,
+      walletId: wallet.id,
       type: 'DEPOSIT',
       amount: amount,
       referenceId: reference,
