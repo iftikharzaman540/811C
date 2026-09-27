@@ -16,6 +16,7 @@ import { AdminDashboardModule } from './admin-dashboard/admin-dashboard.module';
 import { PaymentsModule } from './payments/payments.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { QueuesModule } from './queues/queues.module';
+import { GregmornModule } from './gregmorn/gregmorn.module';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { QueuesModule } from './queues/queues.module';
     AdminDashboardModule,
     PaymentsModule,
     NotificationsModule,
-    QueuesModule
+    QueuesModule,
+    GregmornModule
   ],
 })
 export class AppModule {}
