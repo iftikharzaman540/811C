@@ -41,6 +41,48 @@ export class PaymentsService {
     return { payment_id: payment.id, reference, ...providerResponse };
   }
 
+  async createAutoDeposit(userId: string, amount: number, providerName: PaymentProvider, accountNo: string) {
+    const reference = `AUTO-DEP-${uuidv4()}`;
+
+    // 1. Create a completed payment immediately (since it's a seamless API mock)
+    const payment = await this.prisma.payment.create({
+      data: {
+        user_id: userId,
+        amount,
+        provider: providerName,
+        type: 'DEPOSIT',
+        transaction_reference: reference,
+        status: 'COMPLETED',
+        metadata: { auto: true, accountNo }
+      },
+    });
+
+    // 2. Add the amount to user's wallet automatically
+    const wallet = await this.prisma.wallet.findUnique({ where: { user_id: userId } });
+    if (!wallet) throw new NotFoundException('Wallet not found');
+
+    await this.walletService.processTransaction({
+      userId: userId,
+      type: 'DEPOSIT',
+      amount: amount,
+      referenceId: reference,
+      description: `Auto Deposit via ${providerName} (${accountNo})`
+    });
+
+    // 3. Create the Deposit record for backwards compatibility in Admin Financials
+    await this.prisma.deposit.create({
+      data: {
+        user_id: userId,
+        amount,
+        payment_method: providerName,
+        transaction_ref: reference,
+        status: 'COMPLETED',
+      },
+    });
+
+    return { success: true, message: 'Deposit successful', reference, newBalance: wallet.balance.toNumber() + amount };
+  }
+
   async handleWebhook(payload: any, signature: string) {
     const { reference, provider: providerName, status } = payload;
     if (!reference) throw new BadRequestException('Reference missing in webhook');

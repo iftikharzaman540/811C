@@ -21,6 +21,17 @@ export class PaymentsController {
     return this.service.createDeposit(user.userId, body.amount, body.provider);
   }
 
+  @Post('auto-deposit')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Initiate an auto deposit (Mock for Direct API)' })
+  async autoDeposit(
+    @CurrentUser() user: any,
+    @Body() body: { amount: number; provider: PaymentProvider; accountNo: string }
+  ) {
+    return this.service.createAutoDeposit(user.userId, body.amount, body.provider, body.accountNo);
+  }
+
   @Post('withdraw')
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
