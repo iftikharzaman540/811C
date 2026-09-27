@@ -25,7 +25,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
     try {
       const isLogin = activeTab === "login";
       const endpoint = isLogin ? "/auth/login" : "/auth/register";
-      const payload = isLogin ? { identifier, password } : { email: identifier, password };
+      const payload = isLogin ? { identifier, password } : { phone: identifier, password };
       
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://169.58.50.184:4000/api/v1";
       const res = await fetch(API_URL + endpoint, {
@@ -121,7 +121,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
               }
             `}} />
             
-            <p className="text-[11px] text-white/70 mb-2">Support Phone number/Email/Profile Register</p>
+            <p className="text-[11px] text-white/70 mb-2">Login or Register with Phone Number</p>
             
             <div className="flex flex-col gap-3">
               
@@ -132,7 +132,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
                   <span className="text-[13px] text-neutral-400">+92</span>
                 </div>
                 <input 
-                  type="text" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="*Please enter Phone number/Email/Profile" 
+                  type="tel" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="*Please enter Phone number" 
                   className="flex-1 bg-transparent border-none outline-none px-3 text-[13px] text-white placeholder:text-neutral-600"
                 />
               </div>

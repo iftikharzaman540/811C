@@ -104,8 +104,8 @@ export class AuthService {
   private async generateTokens(userId: string, role: string) {
     const payload = { sub: userId, role };
     return {
-      access_token: this.jwtService.sign(payload, { expiresIn: '15m' }),
-      refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
+      access_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
+      refresh_token: this.jwtService.sign(payload, { expiresIn: '30d' }),
     };
   }
 }
