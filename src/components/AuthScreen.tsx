@@ -20,7 +20,8 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
   const [showLuckyDrawPopup, setShowLuckyDrawPopup] = useState(false);
 
   const handleSubmit = async () => {
-    if (!identifier || !password) return alert("Please enter credentials");
+    if (!identifier || !password) return alert("Please enter phone number and password");
+    if (identifier.length !== 10) return alert("Please enter a valid 10-digit phone number without 0 (e.g. 3001234567)");
     setIsLoading(true);
     try {
       const isLogin = activeTab === "login";
@@ -132,7 +133,10 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
                   <span className="text-[13px] text-neutral-400">+92</span>
                 </div>
                 <input 
-                  type="tel" value={identifier} onChange={(e) => setIdentifier(e.target.value)} placeholder="*Please enter Phone number" 
+                  type="tel" 
+                  value={identifier} 
+                  onChange={(e) => setIdentifier(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))} 
+                  placeholder="*Please enter 10-digit Phone number" 
                   className="flex-1 bg-transparent border-none outline-none px-3 text-[13px] text-white placeholder:text-neutral-600"
                 />
               </div>
