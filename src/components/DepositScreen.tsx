@@ -181,6 +181,22 @@ export default function DepositScreen() {
           </div>
         )}
 
+        {tab === "online" && (
+          <div className="mb-6">
+            <h2 className="text-sm font-bold mb-3">Mobile Number (JazzCash / EasyPaisa)</h2>
+            <div className="flex bg-[#1a1a1a] border border-neutral-700 rounded-md items-center px-3 h-[46px] focus-within:border-[#1fdf1f]">
+              <span className="text-neutral-400 mr-2 text-sm">+92</span>
+              <input 
+                type="tel" 
+                value={accountNo}
+                onChange={(e) => setAccountNo(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+                placeholder="3001234567" 
+                className="bg-transparent border-none outline-none w-full text-white text-[15px]"
+              />
+            </div>
+          </div>
+        )}
+
         {/* Deposit Amount */}
         <h2 className="text-sm font-bold mb-3">Deposit amount</h2>
         <div className="flex gap-2 mb-4">
