@@ -8,7 +8,7 @@ import BottomNav from "@/components/BottomNav";
 
 import { useUser } from '@/context/UserContext';
 export default function ProfilePage() {
-  const { user, loading } = useUser();
+  const { user, loading, logout } = useUser();
   const [hasToken, setHasToken] = useState(false);
 
   useEffect(() => {
@@ -125,6 +125,22 @@ export default function ProfilePage() {
           );
         })}
       </div>
+
+      {/* Logout Button */}
+      {hasToken && (
+        <div className="px-4 py-8 bg-[#0a0a0a]">
+          <button 
+            onClick={() => {
+              logout();
+              setHasToken(false);
+              window.location.href = "/";
+            }}
+            className="w-full bg-[#1a0505] border border-[#cc0000] text-[#ff4444] font-bold py-3.5 rounded-[12px] text-[15px] hover:bg-[#cc0000] hover:text-white transition-all shadow-[0_0_15px_rgba(204,0,0,0.2)] flex items-center justify-center gap-2"
+          >
+            Logout
+          </button>
+        </div>
+      )}
 
       <BottomNav activeTab="profile" />
     </main>
