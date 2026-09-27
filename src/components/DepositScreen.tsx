@@ -18,6 +18,8 @@ export default function DepositScreen() {
   const [amount, setAmount] = useState("");
   const [promoExpanded, setPromoExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [accountNo, setAccountNo] = useState("");
+  const [showAutoPrompt, setShowAutoPrompt] = useState(false);
 
   const handleDeposit = async () => {
     if (!amount || Number(amount) <= 0) {
@@ -261,6 +263,20 @@ export default function DepositScreen() {
         <button onClick={handleDeposit} disabled={loading} className={`w-full py-3.5 rounded-lg font-bold text-[15px] ${amount ? "bg-[#1fdf1f] text-black shadow-[0_2px_15px_rgba(31,223,31,0.3)]" : "bg-[#444] text-neutral-300"} ${loading ? "opacity-50" : ""}`}>
           {loading ? "Processing..." : "Deposit Now"}
         </button>
+      
+      {showAutoPrompt && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4">
+          <div className="bg-[#1a1a1a] p-6 rounded-2xl w-full max-w-sm flex flex-col items-center text-center border border-[#1fdf1f]/30 shadow-[0_0_30px_rgba(31,223,31,0.15)]">
+            <div className="w-16 h-16 border-4 border-[#1fdf1f]/20 border-t-[#1fdf1f] rounded-full animate-spin mb-4"></div>
+            <h3 className="text-white text-lg font-bold mb-2">Awaiting Payment</h3>
+            <p className="text-neutral-400 text-sm mb-4">
+              Please check your phone. A prompt has been sent to your <strong>{method}</strong> number. Enter your MPIN in your app to authorize the payment.
+            </p>
+            <div className="text-[#1fdf1f] font-bold text-2xl animate-pulse">Rs {amount}</div>
+          </div>
+        </div>
+      )}
+
       </div>
     </div>
   );
