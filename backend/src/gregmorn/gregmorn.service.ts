@@ -82,6 +82,7 @@ export class GregmornService {
       currency,
       demo: isDemo ? "1" : "0",
       exitUrl: process.env.FRONTEND_URL || "https://8111c.com/",
+      callbackUrl: "https://8111c.com/api/v1/webhooks/gregmorn",
       gameId,
       language: "en",
       player_login: playerLogin,
