@@ -10,7 +10,7 @@ export class GregmornService {
   private clientApiUrl = process.env.GREGMORN_CLIENT_API || 'https://client-api-dev.helcenac.com';
 
   private loginId = process.env.GREGMORN_LOGIN || '8111C';
-  private password = process.env.GREGMORN_PASSWORD || 'h3PwROwNb-Il';
+  private password = process.env.GREGMORN_PASSWORD || '9!J!k<Qh{)AZD)q';
   public userId = process.env.GREGMORN_USER_ID || 'dd684b6f-2c8e-41b0-a6dd-742bd956920a';
   public secretKey = process.env.GREGMORN_SECRET_KEY || 'Q6NLPylw_Kzi';
 
