@@ -50,10 +50,6 @@ export default function DepositScreen() {
       const payload = tab === "online"
         ? { amount: Number(amount), provider: method.toUpperCase(), accountNo }
         : { amount: Number(amount), provider: "MANUAL" };
-        
-      if (tab === "online") {
-        await new Promise(r => setTimeout(r, 4000)); // Mock API delay
-      }
 
       const res = await fetch(`${API_URL}/payments/${endpoint}`, {
         method: "POST",
@@ -62,15 +58,51 @@ export default function DepositScreen() {
       });
       
       const resData = await res.json();
-      if (res.ok) {
-        toast.success(tab === "online" ? "Deposit Successful!" : "Deposit request sent!");
-        setAmount("");
-        setShowAutoPrompt(false);
-        router.push("/profile");
-      } else {
+      if (!res.ok) {
         toast.error(resData.message || "Deposit failed");
         setShowAutoPrompt(false);
+        setLoading(false);
+        return;
       }
+
+      if (tab === "online") {
+        // Start polling the status
+        const ref = resData.reference;
+        let attempts = 0;
+        let success = false;
+        
+        while (attempts < 30) {
+          await new Promise(r => setTimeout(r, 2000));
+          const statusRes = await fetch(`${API_URL}/payments/status/${ref}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+          });
+          const statusData = await statusRes.json();
+          if (statusData.status === 'COMPLETED') {
+            success = true;
+            break;
+          } else if (statusData.status === 'REJECTED') {
+            toast.error("Payment failed or cancelled on phone.");
+            setShowAutoPrompt(false);
+            setLoading(false);
+            return;
+          }
+          attempts++;
+        }
+        
+        if (success) {
+          toast.success("Deposit Successful! Balance updated.");
+        } else {
+          toast.success("Deposit pending. Please check your balance shortly.");
+        }
+        
+      } else {
+        toast.success("Deposit request sent!");
+      }
+
+      setAmount("");
+      setShowAutoPrompt(false);
+      router.push("/profile");
+      
     } catch (e) {
       toast.error("Deposit request failed");
       setShowAutoPrompt(false);
