@@ -7,12 +7,19 @@ import HomeScreen from "@/components/HomeScreen";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function Home() {
-  const [view, setView] = useState<"splash" | "home">("splash");
+  const [view, setView] = useState<"splash" | "home" | "mounting">("mounting");
   const [showAuth, setShowAuth] = useState(false);
   const [authDefaultMode, setAuthDefaultMode] = useState<"login" | "register">("login");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const hasSeenSplash = sessionStorage.getItem("hasSeenSplash");
+      if (hasSeenSplash) {
+        setView("home");
+      } else {
+        setView("splash");
+      }
+
       const params = new URLSearchParams(window.location.search);
       if (params.get("login") === "true") {
         setAuthDefaultMode("login");
@@ -25,6 +32,17 @@ export default function Home() {
       }
     }
   }, []);
+
+  const handleSplashComplete = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("hasSeenSplash", "true");
+    }
+    setView("home");
+  };
+
+  if (view === "mounting") {
+    return <main className="min-h-screen bg-black" />;
+  }
 
   return (
     <main className="min-h-screen bg-black flex flex-col relative">
@@ -41,7 +59,7 @@ export default function Home() {
             transition={{ duration: 0.8, ease: "easeInOut" }}
             className="absolute inset-0 z-[200]"
           >
-            <SplashScreen onComplete={() => setView("home")} />
+            <SplashScreen onComplete={handleSplashComplete} />
           </motion.div>
         )}
         
