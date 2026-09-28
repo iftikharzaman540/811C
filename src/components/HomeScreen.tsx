@@ -276,16 +276,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [heroIndex, setHeroIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [realGames, setRealGames] = useState<any[]>([]);
-    const [loadingGames, setLoadingGames] = useState(true);
   
   useEffect(() => {
     fetch('/api/v1/games/gregmorn/list?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
-        if(Array.isArray(data)) setRealGames(data.slice(0, 250));
-        setLoadingGames(false);
+        if(Array.isArray(data)) setRealGames(data.slice(0, 30));
       })
-      .catch(e => console.error("Error fetching games", e)).finally(() => setLoadingGames(false));
+      .catch(e => console.error("Error fetching games", e));
   }, []);
 
   const handleLaunchGame = async (gameId: string) => {
@@ -323,16 +321,53 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const { user, logout } = useUser();
 
 
-  useEffect(() => {
-    (window as any).handleLaunchGame = async (gameName: string) => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        toast.error("Please login to play games!");
-        if (onLoginClick) onLoginClick();
-        return;
-      }
-      toast.error(`"${gameName}" is a UI Demo. Please play real games from the 'Slot Game' section below!`, { duration: 4000 });
-    };
+  
+    useEffect(() => {
+      fetch('/api/v1/games/gregmorn/list?t=' + Date.now())
+        .then(r => r.json())
+        .then(data => {
+          if(Array.isArray(data)) setRealGames(data);
+        })
+        .catch(e => console.error("Error fetching games", e));
+        
+      (window as any).handleLaunchGame = async (gameIdOrName: string) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          toast.error("Please login to play games!");
+          if (onLoginClick) onLoginClick();
+          return;
+        }
+        
+        if (gameIdOrName.length < 10) {
+           toast.error(`"${gameIdOrName}" is a UI Demo. Please play real games from the 'Slot Game' section below!`, { duration: 4000 });
+           return;
+        }
+
+        try {
+          toast.loading("Launching game...", { id: 'launch' });
+          const API_URL = "/api/v1";
+          const res = await fetch(`${API_URL}/games/gregmorn/launch`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ gameId: gameIdOrName, demo: false })
+          });
+          const data = await res.json();
+          toast.dismiss('launch');
+          if (res.ok && data.url) {
+            setGameUrl(data.url);
+          } else {
+            toast.error("Failed to launch game");
+          }
+        } catch (e) {
+          toast.dismiss('launch');
+          toast.error("An error occurred");
+          console.error(e);
+        }
+      };
+
 
     const timer = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % heroBanners.length);
@@ -653,49 +688,595 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           </div>
         </div>
 
-        {/* Real Games Grid */}
-          <div className="mb-8 px-4">
-            
-            <div className="flex justify-between items-center mb-3">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,100,0,0.8)] -ml-1">🎰</span>
-                <h2 className="text-[17px] font-bold text-white tracking-tight">Real Games</h2>
-              </div>
+        {/* Single Main Grid Section (Hot) */}
+        <div className="mb-8 px-4">
+          
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,100,0,0.8)] -ml-1">🔥</span>
+              <h2 className="text-[17px] font-bold text-white tracking-tight">Hot</h2>
             </div>
-
-            {loadingGames ? (
-              <div className="w-full flex items-center justify-center p-12">
-                <div className="w-8 h-8 border-4 border-[#ff0b0b] border-t-transparent rounded-full animate-spin"></div>
+            
+            {/* Pill Navigation: <- | All | -> */}
+            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
+              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
+              </button>
+              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
+                All
               </div>
-            ) : realGames.length > 0 ? (
-              <div className="grid grid-cols-3 gap-2.5">
-                {realGames.map((game, gIdx) => (
-                  <motion.div 
-                    key={game.id || gIdx}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleLaunchGame(game.id)}
-                    className="aspect-[3/4] bg-neutral-900 rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]"
-                  >
-                    <div className="absolute inset-0">
-                      <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    </div>
-                    <div className="absolute top-0 right-0 px-2 py-0.5 bg-[#cc0000] text-white text-[9px] font-bold rounded-bl-lg shadow-md z-10">
-                      {game.provider}
-                    </div>
-                    <div className="mt-auto p-2 relative z-10">
-                      <h3 className="text-white text-[11px] font-bold leading-tight line-clamp-2 drop-shadow-md">{game.title}</h3>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            ) : (
-              <div className="w-full text-center text-neutral-400 p-8">No games found.</div>
-            )}
+              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </button>
+            </div>
           </div>
 
-          <Footer />
+          {/* Unified Game Grid */}
+          <div className="grid grid-cols-3 gap-2.5">
+            {(realGames.length > 0 ? realGames.slice(0, 21) : gamesList).map((game: any, gIdx: number) => (
+              <motion.div 
+                key={gIdx}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
+              >
+                {/* Top Bar */}
+                <div className="w-full flex justify-between items-start p-1.5 z-10 relative">
+                  <div className="flex gap-1 items-center">
+                    {game.hot && (
+                      <span className="text-[8px] bg-[#cc0000] text-white font-black px-1 rounded-sm italic leading-tight shadow-md">HOT</span>
+                    )}
+                    <span className="text-[14px] font-black italic drop-shadow-md text-transparent bg-clip-text bg-gradient-to-b from-[#ffdf00] to-[#ffaa00]" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</span>
+                  </div>
+                  <div className="w-5 h-5 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-sm border border-white/10 shadow-sm">
+                    <svg className="w-3 h-3 text-neutral-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                </div>
+
+                {/* Main graphic placeholder */}
+                <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl">
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
+                </div>
+                
+                {/* Free to claim pill (Matches Screenshot) */}
+                <div className="absolute bottom-7 w-[90%] left-[5%] bg-black border border-[#ffdf00] rounded-full py-0.5 text-center z-20 shadow-md">
+                   <span className="text-white text-[9px] font-bold">Free to claim <span className="text-[#ffdf00]">Rs 888</span></span>
+                </div>
+
+                {/* Bottom Name Plate */}
+                <div className="w-full bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-6 pb-1.5 text-center mt-auto relative z-10">
+                  <span className="text-[12px] font-black tracking-tight text-white drop-shadow-md">{game.title || game.name}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Mini Games Section (Pixel Perfect) */}
+        <div className="mb-8 px-4">
+          
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-1.5">
+              <div className="flex flex-col items-center justify-center w-5 h-5 relative mr-1">
+                 <div className="w-2 h-2 bg-[#00aaff] rounded-[1px] absolute top-0.5 transform rotate-45 shadow-[0_0_5px_#00aaff]"></div>
+                 <div className="w-2 h-2 bg-[#00aaff] rounded-[1px] absolute bottom-0.5 left-0.5 transform rotate-45 shadow-[0_0_5px_#00aaff]"></div>
+                 <div className="w-2 h-2 bg-[#00aaff] rounded-[1px] absolute bottom-0.5 right-0.5 transform rotate-45 shadow-[0_0_5px_#00aaff]"></div>
+              </div>
+              <h2 className="text-[17px] font-bold text-white tracking-tight">Mini Games</h2>
+            </div>
+            
+            {/* Pill Navigation: <- | All | -> */}
+            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
+              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
+              </button>
+              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
+                All
+              </div>
+              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Unified Game Grid */}
+          <div className="grid grid-cols-3 gap-2.5">
+            {(realGames.length > 0 ? realGames.slice(21, 33) : miniGamesList).map((game: any, gIdx: number) => (
+              <motion.div 
+                key={gIdx}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
+              >
+                {/* Main graphic placeholder */}
+                <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl -translate-y-4">
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
+                </div>
+                
+                {/* Fake popups for specific games */}
+                {game.popups?.includes("coin") && (
+                  <div className="absolute bottom-2 left-0 w-12 h-12 bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-3 z-20">
+                     <span className="text-[8px] font-bold text-white">Rs600</span>
+                  </div>
+                )}
+
+                {/* Bottom Name Plate */}
+                <div className="w-full text-center mt-auto relative z-10 pb-2">
+                  <div className="text-[14px] font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Slot Section (Pixel Perfect) */}
+        <div className="mb-8 px-4">
+          
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,255,255,0.4)] -ml-1">🎰</span>
+              <h2 className="text-[17px] font-bold text-white tracking-tight">Slot</h2>
+            </div>
+            
+            {/* Pill Navigation: <- | All | -> */}
+            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
+              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
+              </button>
+              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
+                All
+              </div>
+              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Slot Game Grid */}
+          <div className="grid grid-cols-3 gap-2.5">
+            {realGames.length > 0 ? realGames.map((game, gIdx) => (
+              <motion.div 
+                key={game.id || gIdx}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleLaunchGame(game.id)}
+                className="aspect-[3/4] bg-neutral-900 rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]"
+              >
+                <div className="absolute inset-0">
+                  <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                </div>
+                <div className="absolute top-0 right-0 px-2 py-0.5 bg-[#cc0000] text-white text-[9px] font-bold rounded-bl-lg shadow-md z-10">
+                  {game.provider}
+                </div>
+                <div className="mt-auto p-2 relative z-10">
+                  <h3 className="text-white text-[11px] font-bold leading-tight line-clamp-2 drop-shadow-md">{game.title}</h3>
+                </div>
+              </motion.div>
+            )) : (realGames.length > 0 ? realGames.slice(33, 42) : slotGamesList).map((game: any, gIdx: number) => (
+              <motion.div 
+                key={gIdx}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
+              >
+                
+                {game.collage ? (
+                  <div className="absolute inset-0 flex flex-col">
+                    <div className="flex w-full h-[55%]">
+                       <div className={`w-1/2 h-full ${game.collage[0]} flex justify-center items-center text-3xl border-r border-b border-white/20`}>{game.graphic[0]}</div>
+                       <div className={`w-1/2 h-full ${game.collage[1]} flex justify-center items-center text-3xl border-b border-white/20`}>{game.graphic[1]}</div>
+                    </div>
+                    <div className={`w-full h-[45%] ${game.collage[2]} flex justify-center items-center text-4xl`}>{game.graphic[2]}</div>
+                    
+                    {/* SVG overlay for the V shaped partition (simulated with standard borders above, but lets add a subtle inset shadow) */}
+                    <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] pointer-events-none"></div>
+                  </div>
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl -translate-y-4">
+                    {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
+                  </div>
+                )}
+                
+                {/* Fake popups for specific games */}
+                {game.popups?.includes("coin_top") && (
+                  <div className="absolute top-2 left-0 w-12 h-12 bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-3 z-20">
+                     <span className="text-[8px] font-bold text-white">Rs600</span>
+                  </div>
+                )}
+                {game.popups?.includes("wheel_bottom") && (
+                  <div className="absolute bottom-6 left-0 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-2 z-20">
+                     <div className="absolute bottom-0 w-full bg-[#cc0000] text-white text-[8px] font-bold text-center border-2 border-[#ffdf00] rounded">Rs 888</div>
+                  </div>
+                )}
+                {game.popups?.includes("aviator_multiplier") && (
+                  <div className="absolute top-1/2 right-0 w-14 h-12 bg-black/90 rounded-l flex flex-col items-center justify-center shadow-lg border border-neutral-700 z-20 overflow-hidden translate-x-1">
+                     <span className="text-[20px] text-[#ff3366] -mt-1 leading-none drop-shadow-md">🛩️</span>
+                     <span className="text-white text-[9px] font-black mt-1">354.77x</span>
+                     {/* Green X Close button on popup */}
+                     <div className="absolute -top-1.5 right-1 w-3 h-3 bg-neutral-800 rounded-full border border-neutral-600 flex items-center justify-center">
+                        <span className="text-white text-[6px]">x</span>
+                     </div>
+                  </div>
+                )}
+
+                {/* Bottom Name Plate */}
+                <div className="w-full bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-6 pb-2 text-center mt-auto relative z-10">
+                  <div className="text-[14px] font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
+                  <div className="text-[12px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Fishing Section (Pixel Perfect) */}
+        <div className="mb-8 px-4">
+          
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(0,100,255,0.6)] -ml-1 transform -scale-x-100">🦈</span>
+              <h2 className="text-[17px] font-bold text-white tracking-tight">Fishing</h2>
+            </div>
+            
+            {/* Pill Navigation: <- | All | -> */}
+            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
+              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
+              </button>
+              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
+                All
+              </div>
+              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Unified Game Grid */}
+          <div className="grid grid-cols-3 gap-2.5">
+            {(realGames.length > 0 ? realGames.slice(42, 48) : fishingGamesList).map((game: any, gIdx: number) => (
+              <motion.div 
+                key={gIdx}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
+              >
+                {/* Main graphic placeholder */}
+                <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
+                </div>
+                
+                {/* Bottom Name Plate */}
+                <div className="w-full text-center mt-auto relative z-10 pb-2">
+                  <div className="font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Cards Section (Pixel Perfect) */}
+        <div className="mb-8 px-4">
+          
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,255,255,0.6)] -ml-1">🃏</span>
+              <h2 className="text-[17px] font-bold text-white tracking-tight">Cards</h2>
+            </div>
+            
+            {/* Pill Navigation: <- | All | -> */}
+            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
+              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
+              </button>
+              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
+                All
+              </div>
+              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Unified Game Grid */}
+          <div className="grid grid-cols-3 gap-2.5">
+            {(realGames.length > 0 ? realGames.slice(48, 54) : cardsGamesList).map((game: any, gIdx: number) => (
+              <motion.div 
+                key={gIdx}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
+              >
+                {/* Main graphic placeholder */}
+                <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
+                </div>
+                
+                {/* Fake popups for specific games */}
+                {game.popups?.includes("coin_top") && (
+                  <div className="absolute top-4 left-0 w-11 h-11 bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-2 z-20">
+                     <span className="text-[7px] font-bold text-white">Rs600</span>
+                  </div>
+                )}
+                {game.popups?.includes("huge_bottom") && (
+                  <div className="absolute bottom-6 -left-2 flex flex-col items-start z-20 transform scale-90">
+                     <span className="text-3xl drop-shadow-xl translate-x-3 translate-y-2">🛩️</span>
+                     <div className="bg-[#ffdf00] text-white text-[10px] font-black px-2 py-0.5 rounded-full border border-white shadow-lg whitespace-nowrap">Rs 10000</div>
+                  </div>
+                )}
+                {game.popups?.includes("trophies") && (
+                  <div className="absolute bottom-6 -right-2 flex flex-col items-center z-20">
+                     <span className="text-4xl drop-shadow-xl translate-y-2">🏆</span>
+                     <span className="text-3xl drop-shadow-xl absolute right-5 top-2 scale-75 opacity-90">🏆</span>
+                     <span className="text-3xl drop-shadow-xl absolute left-5 top-2 scale-75 opacity-90">🏆</span>
+                  </div>
+                )}
+
+                {/* Bottom Name Plate */}
+                <div className="w-full text-center mt-auto relative z-10 pb-2">
+                  <div className="font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Live Section (Pixel Perfect) */}
+        <div className="mb-8 px-4">
+          
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,255,255,0.6)] -ml-1">👩‍💼</span>
+              <h2 className="text-[17px] font-bold text-white tracking-tight">Live</h2>
+            </div>
+            
+            {/* Pill Navigation: <- | All | -> */}
+            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
+              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
+              </button>
+              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
+                All
+              </div>
+              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Unified Game Grid */}
+          <div className="grid grid-cols-3 gap-2.5">
+            {(realGames.length > 0 ? realGames.slice(54, 60) : liveGamesList).map((game: any, gIdx: number) => (
+              <motion.div 
+                key={gIdx}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
+              >
+                {/* Optional Star in Top Right */}
+                {game.star && (
+                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-sm border border-white/10 shadow-sm z-20">
+                    <svg className="w-3.5 h-3.5 text-neutral-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                )}
+              
+                {/* Main graphic placeholder */}
+                <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
+                </div>
+                
+                {/* Bottom Name Plate */}
+                <div className="w-full text-center mt-auto relative z-10 pb-2">
+                  <div className="font-black italic drop-shadow-md text-white mb-0.5">{game.logo}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Sports Section (Pixel Perfect) */}
+        <div className="mb-8 px-4">
+          
+          {/* Section Header */}
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,255,255,0.6)] -ml-1">⚽</span>
+              <h2 className="text-[17px] font-bold text-white tracking-tight">Sports</h2>
+            </div>
+            
+            {/* Pill Navigation: <- | All | -> */}
+            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
+              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
+              </button>
+              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
+                All
+              </div>
+              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+                <ArrowRight className="w-3.5 h-3.5 text-white" />
+              </button>
+            </div>
+          </div>
+
+          {/* Unified Game Grid */}
+          <div className="grid grid-cols-3 gap-2.5">
+            {(realGames.length > 0 ? realGames.slice(60, 66) : sportsGamesList).map((game: any, gIdx: number) => (
+              <motion.div 
+                key={gIdx}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
+              >
+                {/* Optional Star in Top Right */}
+                {game.star && (
+                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-sm border border-white/10 shadow-sm z-20">
+                    <svg className="w-3.5 h-3.5 text-neutral-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                )}
+              
+                {/* Main graphic placeholder */}
+                <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
+                </div>
+
+                {/* Fake popups for specific games */}
+                {game.popups?.includes("coin_top") && (
+                  <div className="absolute top-4 left-0 w-11 h-11 bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-2 z-20">
+                     <span className="text-[7px] font-bold text-white">Rs600</span>
+                  </div>
+                )}
+                {game.popups?.includes("wheel_bottom") && (
+                  <div className="absolute bottom-6 left-0 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-2 z-20">
+                     <div className="absolute bottom-0 w-full bg-[#ffdf00] text-white text-[7px] font-bold text-center border-2 border-white rounded">Rs 888</div>
+                  </div>
+                )}
+                {game.popups?.includes("deposit_rewards") && (
+                  <div className="absolute bottom-6 right-0 flex flex-col items-center z-20 transform scale-90 translate-x-1">
+                     <span className="text-2xl drop-shadow-xl absolute top-1 -left-2 z-10">🪙</span>
+                     <span className="text-4xl drop-shadow-xl text-yellow-300 font-black italic z-0 -translate-y-2">10%</span>
+                     <div className="text-white text-[8px] font-black leading-none drop-shadow-md z-20 -mt-2">Deposit rewards</div>
+                     <div className="text-yellow-400 text-[10px] font-black leading-none drop-shadow-md z-20 mt-0.5">7 days</div>
+                     {/* Green X Close button on popup */}
+                     <div className="absolute top-2 left-2 w-4 h-4 bg-black/60 rounded-full border border-neutral-600 flex items-center justify-center z-30 shadow-md">
+                        <span className="text-white text-[8px] font-bold">x</span>
+                     </div>
+                  </div>
+                )}
+                
+                {/* Bottom Name Plate */}
+                <div className="w-full text-center mt-auto relative z-10 pb-2">
+                  <div className="font-black italic drop-shadow-md text-white mb-0.5 flex justify-center">{game.logo}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Grand Prize Record */}
+        <div className="mb-8 px-4 pb-4">
+          <div className="bg-[#1c1c1c] rounded-xl py-3.5 overflow-hidden shadow-lg border border-neutral-800/50">
+            {/* Title */}
+            <h2 className="text-center text-[13px] text-white font-medium mb-3 flex items-center justify-center gap-1.5">
+              <div className="flex gap-0.5 opacity-50">
+                <div className="w-1.5 h-1.5 border border-white transform rotate-45"></div>
+                <div className="w-1.5 h-1.5 bg-white transform rotate-45"></div>
+              </div>
+              Grand Prize Record
+              <div className="flex gap-0.5 opacity-50">
+                <div className="w-1.5 h-1.5 bg-white transform rotate-45"></div>
+                <div className="w-1.5 h-1.5 border border-white transform rotate-45"></div>
+              </div>
+            </h2>
+            
+            {/* Left to Right Marquee Container */}
+            <div className="w-full overflow-hidden relative">
+              {/* Fade masks */}
+              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#1c1c1c] to-transparent z-10 pointer-events-none"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#1c1c1c] to-transparent z-10 pointer-events-none"></div>
+              
+              {/* Left-to-right animation */}
+              <motion.div 
+                animate={{ x: ["-50%", "0%"] }} 
+                transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+                className="flex gap-4 w-max px-2"
+              >
+                {marqueeWinners.map((winner, idx) => (
+                  <div key={idx} className="flex flex-col items-center w-[75px] shrink-0 cursor-pointer group">
+                    {/* Game Icon */}
+                    <div className={`w-[75px] h-[75px] rounded-[14px] ${winner.img} flex flex-col items-center justify-center mb-1.5 shadow-md relative overflow-hidden group-hover:scale-105 transition-transform`}>
+                       <span className="text-white/80 text-[10px] absolute top-1 font-black">{winner.game}</span>
+                       <span className="text-4xl drop-shadow-lg mt-2">{winner.icon}</span>
+                    </div>
+                    {/* User */}
+                    <div className="text-center w-full">
+                       <span className="text-neutral-400 text-[10px]">{winner.user}</span>
+                       <span className="text-[#ff3333] text-[10px] ml-1 font-bold">win</span>
+                    </div>
+                    {/* Amount */}
+                    <div className="flex items-center justify-center gap-0.5 mt-0.5">
+                       <span className="text-yellow-500 text-[8px] font-black border border-yellow-500 rounded-full w-[13px] h-[13px] flex items-center justify-center pt-[1px]">Rs</span>
+                       <span className="text-yellow-500 text-[12px] font-black tracking-tighter leading-none">{winner.amount}</span>
+                       <span className="text-neutral-500 text-[10px] leading-none ml-0.5">›</span>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Fixed Left Global Popups */}
+        <div className="fixed top-[45%] left-1 -translate-y-1/2 z-50 flex flex-col items-start pointer-events-none">
+          
+          {/* Top Coin Popup */}
+          <div onClick={() => toast.success("Claimed bonus!")} className="relative mb-3 pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:translate-x-1">
+            {/* Green arrow indicator */}
+            <div className="absolute -left-1 z-20 w-4 h-4 bg-[#ffdf00] rounded-full flex items-center justify-center shadow-md">
+               <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="4" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+            </div>
+            
+            <div className="w-[42px] h-[42px] bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(255,200,0,0.5)] border-2 border-[#ffdf00] relative z-10 ml-1.5">
+               <span className="text-[9px] font-black text-white italic drop-shadow-sm">Rs600</span>
+               <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-black rounded-full flex items-center justify-center shadow-lg border border-neutral-700 group-hover:bg-neutral-800 transition-colors">
+                 <span className="text-white text-[7px] font-bold">x</span>
+               </div>
+            </div>
+          </div>
+          
+          {/* Bottom Wheel Popup */}
+          <div onClick={() => toast.success("Opening lucky wheel!")} className="relative pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:translate-x-1">
+            <div className="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center shadow-xl border-[2.5px] border-[#ffdf00] relative z-10">
+               <div className="absolute -top-1.5 right-0 w-3.5 h-3.5 bg-black rounded-full flex items-center justify-center shadow-lg border border-neutral-700 group-hover:bg-neutral-800 transition-colors z-30">
+                 <span className="text-white text-[7px] font-bold">x</span>
+               </div>
+               {/* Inner wheel mockup */}
+               <div className="w-7 h-7 rounded-full border border-pink-400 flex items-center justify-center overflow-hidden shadow-inner">
+                 <div className="w-3 h-3 bg-[#ffdf00] rounded-full absolute shadow-inner"></div>
+               </div>
+               <div className="absolute -bottom-1 w-[110%] bg-[#ffdf00] text-white text-[8px] font-black text-center rounded px-0.5 shadow-md">Rs 500</div>
+               
+               <div className="absolute -top-2 -left-1 text-[13px] drop-shadow-md z-20 pointer-events-none">🐔</div>
+               <div className="absolute top-1 -right-3 text-[18px] drop-shadow-md z-0 pointer-events-none">💃</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fixed Right Global Popups */}
+        <div className="fixed top-[35%] sm:top-[40%] right-1 -translate-y-1/2 z-50 flex flex-col items-end pointer-events-none">
+          
+          {/* Deposit Rewards Popup */}
+          <div onClick={() => toast.success("Viewing deposit rewards!")} className="relative pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:-translate-x-1">
+            <div className="flex flex-col items-center bg-black/95 p-1.5 rounded-xl border border-yellow-400/80 shadow-[0_0_12px_rgba(255,200,0,0.2)] relative z-10 w-[50px]">
+              <div className="absolute top-0 right-1 w-3.5 h-3.5 bg-neutral-900 rounded-full flex items-center justify-center shadow-lg z-30 border border-neutral-700 group-hover:bg-neutral-800 transition-colors">
+                 <span className="text-white text-[7px] font-bold">x</span>
+              </div>
+              <span className="text-[14px] drop-shadow-xl absolute top-1.5 left-0 z-10">🪙</span>
+              <span className="text-[28px] drop-shadow-xl text-yellow-300 font-black italic z-0 leading-none mt-1" style={{textShadow: "0 2px 6px rgba(0,0,0,0.8)"}}>15<span className="text-[12px]">%</span></span>
+              <div className="text-white text-[6px] font-black leading-none drop-shadow-md z-20 mt-1 text-center">Deposit rewards</div>
+              <div className="text-yellow-400 text-[7px] font-black leading-none drop-shadow-md z-20 mt-0.5 mb-0.5">15 days</div>
+            </div>
+          </div>
+        </div>
+
+        <Footer />
         
         {/* Floating TOP Button */}
         <div className="fixed bottom-[85px] right-4 z-50 pointer-events-auto">
