@@ -22,6 +22,13 @@ export default function DepositScreen() {
   const [showAutoPrompt, setShowAutoPrompt] = useState(false);
 
   const handleDeposit = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please login first to make a deposit");
+      router.push("/");
+      return;
+    }
+
     if (!amount || Number(amount) <= 0) {
       toast.error("Please enter a valid amount");
       return;
