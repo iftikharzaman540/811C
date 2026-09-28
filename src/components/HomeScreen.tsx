@@ -1433,8 +1433,8 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
               {!user && (
                 <div className="mt-4 pt-4 border-t border-neutral-800 pb-8 flex flex-col w-full">
-                  <button onClick={() => { setIsMenuOpen(false); onLoginClick(); }} className="w-full bg-neutral-800 text-white font-bold py-2.5 rounded-lg mb-2 hover:brightness-110">Login</button>
-                  <button onClick={() => { setIsMenuOpen(false); onRegisterClick(); }} className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold py-2.5 rounded-lg hover:brightness-110">Register</button>
+                  <button onClick={() => { setIsMenuOpen(false); onLoginClick?.(); }} className="w-full bg-neutral-800 text-white font-bold py-2.5 rounded-lg mb-2 hover:brightness-110">Login</button>
+                  <button onClick={() => { setIsMenuOpen(false); onRegisterClick?.(); }} className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold py-2.5 rounded-lg hover:brightness-110">Register</button>
                 </div>
               )}
               {user && (
