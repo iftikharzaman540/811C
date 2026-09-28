@@ -86,7 +86,18 @@ export class GregmornWebhookController {
           const netAmount = winAmount - betAmount;
           
           if (netAmount !== 0) {
-            // Check idempotency could be added here, but skipping for brevity
+            const existingTx = await this.walletService.getTransactionByReference(transactionId);
+            if (existingTx) {
+              this.logger.warn(`Duplicate transactionId detected: ${transactionId}`);
+              return res.status(200).json({
+                balance: currentBalance,
+                currency: balanceData.currency || 'PKR',
+                error: '',
+                login,
+                status: 'success'
+              });
+            }
+
             await this.walletService.processTransaction({
               walletId: balanceData.wallet_id,
               amount: netAmount,
@@ -116,6 +127,12 @@ export class GregmornWebhookController {
           const netAmount = betAmount - winAmount;
 
           if (netAmount !== 0) {
+            const rollbackRef = `${transactionId}_rollback`;
+            const existingRollback = await this.walletService.getTransactionByReference(rollbackRef);
+            if (existingRollback) {
+              this.logger.warn(`Duplicate rollback detected: ${rollbackRef}`);
+              return res.status(200).json({ balance: currentBalance, currency: balanceData.currency || 'PKR', error: '', login, status: 'success' });
+            }
             try {
               await this.walletService.processTransaction({
                 walletId: balanceData.wallet_id,

@@ -103,4 +103,11 @@ export class WalletService {
       },
     };
   }
+
+  async getTransactionByReference(referenceId: string) {
+    if (!referenceId) return null;
+    return this.prisma.walletTransaction.findUnique({
+      where: { reference_id: referenceId },
+    });
+  }
 }

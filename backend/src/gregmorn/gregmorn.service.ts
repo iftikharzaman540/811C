@@ -69,7 +69,7 @@ export class GregmornService {
       if (!response.ok) {
         throw new Error(data.message || data.error || 'Failed to fetch games');
       }
-      return data;
+      return Array.isArray(data) ? data.filter((g: any) => g.isEnabled) : data;
     } catch (error) {
       this.logger.error(`Gregmorn getGames error: ${error.message}`);
       throw new InternalServerErrorException('Failed to fetch game list');
