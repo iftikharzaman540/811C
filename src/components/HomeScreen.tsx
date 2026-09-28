@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Gamepad2, ArrowRight, User, Rocket, Plane, Target, Layers, Gem, Gift, RefreshCcw, CircleDollarSign, Aperture, Volume2, Mail, ChevronLeft, ChevronRight, ArrowLeft, Globe, Search, FileText, Share2, Users, Download, Headset, HelpCircle, Info, MapPin, Moon, MessageCircle, Facebook, Instagram, Send, Twitter } from "lucide-react";
+import { Gamepad2, ArrowRight, User, Rocket, Plane, Target, Layers, Gem, Gift, RefreshCcw, CircleDollarSign, Aperture, Volume2, Mail, ChevronLeft, ChevronRight, ArrowLeft, Globe, Search, FileText, Share2, Users, Download, Headset, HelpCircle, Info, MapPin, Moon, MessageCircle, Globe as Web, Camera, Send, MessageSquare } from "lucide-react";
 import Footer from "./Footer";
 import BottomNav from "./BottomNav";
 
@@ -1414,11 +1414,11 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   <span className="text-[14px]">Whatsapp Channel</span>
                 </button>
                 <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
-                  <div className="w-6 h-6 rounded bg-[#1877F2] flex items-center justify-center shrink-0"><Facebook className="w-4 h-4 text-white" /></div>
+                  <div className="w-6 h-6 rounded bg-[#1877F2] flex items-center justify-center shrink-0"><Web className="w-4 h-4 text-white" /></div>
                   <span className="text-[14px]">Facebook channel</span>
                 </button>
                 <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
-                  <div className="w-6 h-6 rounded bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center shrink-0"><Instagram className="w-4 h-4 text-white" /></div>
+                  <div className="w-6 h-6 rounded bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center shrink-0"><Camera className="w-4 h-4 text-white" /></div>
                   <span className="text-[14px]">Instagram channel</span>
                 </button>
                 <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
@@ -1426,7 +1426,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   <span className="text-[14px]">Telegram channel</span>
                 </button>
                 <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
-                  <div className="w-6 h-6 rounded bg-black border border-neutral-700 flex items-center justify-center shrink-0"><Twitter className="w-4 h-4 text-white" /></div>
+                  <div className="w-6 h-6 rounded bg-black border border-neutral-700 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-white" /></div>
                   <span className="text-[14px]">Twitter</span>
                 </button>
               </div>
