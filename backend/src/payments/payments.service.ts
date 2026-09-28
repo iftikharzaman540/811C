@@ -136,7 +136,7 @@ export class PaymentsService {
 
       await this.prisma.deposit.updateMany({
         where: { transaction_ref: reference },
-        data: { status: 'COMPLETED', transaction_id: data.orderNo }
+        data: { status: 'COMPLETED' }
       });
 
       this.logger.log(`Deposit ${reference} COMPLETED successfully!`);
