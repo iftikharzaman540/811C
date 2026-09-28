@@ -70,7 +70,7 @@ export default function WithdrawScreen() {
     toast.loading("Processing withdrawal...");
     
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://8111c.com/api/v1";
       const res = await fetch(`${API_URL}/payments/withdraw`, {
         method: "POST",
         headers: {

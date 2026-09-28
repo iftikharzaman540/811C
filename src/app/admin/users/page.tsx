@@ -12,7 +12,7 @@ export default function AdminUsersPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const API_URL = "/api/v1";
+      const API_URL = "https://8111c.com/api/v1";
       const query = search ? `?search=${search}` : "";
       const res = await fetch(`${API_URL}/admin/users${query}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -35,7 +35,7 @@ export default function AdminUsersPage() {
   const updateStatus = async (id: string, status: string) => {
     try {
       const token = localStorage.getItem("token");
-      const API_URL = "/api/v1";
+      const API_URL = "https://8111c.com/api/v1";
       const res = await fetch(`${API_URL}/admin/users/${id}/status`, {
         method: "PATCH",
         headers: {

@@ -36,7 +36,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
       const endpoint = isLogin ? "/auth/login" : "/auth/register";
       const payload = isLogin ? { identifier, password } : { phone: identifier, password };
       
-      const API_URL = "/api/v1";
+      const API_URL = "https://8111c.com/api/v1";
       const res = await fetch(API_URL + endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

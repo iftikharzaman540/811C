@@ -12,7 +12,7 @@ export default function AdminFinancialsPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const API_URL = "/api/v1";
+      const API_URL = "https://8111c.com/api/v1";
       const res = await fetch(`${API_URL}/admin/${tab}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -36,7 +36,7 @@ export default function AdminFinancialsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const API_URL = "/api/v1";
+      const API_URL = "https://8111c.com/api/v1";
       const res = await fetch(`${API_URL}/admin/${tab}/${id}/${action}`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` }

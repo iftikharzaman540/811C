@@ -43,7 +43,7 @@ export default function DepositScreen() {
       setShowAutoPrompt(true);
     }
     
-    const API_URL = "/api/v1";
+    const API_URL = "https://8111c.com/api/v1";
     
     try {
       const endpoint = tab === "online" ? "auto-deposit" : "deposit";

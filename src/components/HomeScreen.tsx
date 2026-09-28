@@ -278,7 +278,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [realGames, setRealGames] = useState<any[]>([]);
   
   useEffect(() => {
-    fetch('/api/v1/games/gregmorn/list?t=' + Date.now())
+    fetch('https://8111c.com/api/v1/games/gregmorn/list?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
         if(Array.isArray(data)) setRealGames(data.slice(0, 30));
@@ -294,7 +294,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     }
     try {
       toast.loading("Launching game...", { id: 'launch' });
-      const res = await fetch('/api/v1/games/gregmorn/launch', {
+      const res = await fetch('https://8111c.com/api/v1/games/gregmorn/launch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -323,7 +323,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
   
     useEffect(() => {
-      fetch('/api/v1/games/gregmorn/list?t=' + Date.now())
+      fetch('https://8111c.com/api/v1/games/gregmorn/list?t=' + Date.now())
         .then(r => r.json())
         .then(data => {
           if(Array.isArray(data)) setRealGames(data);
@@ -345,7 +345,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
         try {
           toast.loading("Launching game...", { id: 'launch' });
-          const API_URL = "/api/v1";
+          const API_URL = "https://8111c.com/api/v1";
           const res = await fetch(`${API_URL}/games/gregmorn/launch`, {
             method: 'POST',
             headers: {
