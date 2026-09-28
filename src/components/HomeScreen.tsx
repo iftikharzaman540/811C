@@ -363,7 +363,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   }, []);
 
   return (
-    
+    <>
       {/* Game Iframe Overlay */}
       <AnimatePresence>
         {gameUrl && (
@@ -1478,6 +1478,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       )}
 <BottomNav />
     </div>
+    </>
   );
 }
 
