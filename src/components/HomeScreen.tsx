@@ -278,7 +278,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [realGames, setRealGames] = useState<any[]>([]);
   
   useEffect(() => {
-    fetch('/api/v1/games/gregmorn/list')
+    fetch('/api/v1/games/gregmorn/list?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
         if(Array.isArray(data)) setRealGames(data.slice(0, 30));
