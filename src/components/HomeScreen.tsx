@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Gamepad2, ArrowRight, User, Rocket, Plane, Target, Layers, Gem, Gift, RefreshCcw, CircleDollarSign, Aperture, Volume2, Mail, ChevronLeft, ChevronRight, ArrowLeft, Globe, Search, FileText, Share2, Users, Download, Headset, HelpCircle, Info, MapPin, Moon, MessageCircle, Globe as Web, Camera, Send, MessageSquare } from "lucide-react";
 import Footer from "./Footer";
 import BottomNav from "./BottomNav";
+import { useRouter } from "next/navigation";
 
 const gamesList = [
   // Row 1
@@ -316,6 +317,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
   const [isDepositMenuOpen, setIsDepositMenuOpen] = useState(false);
   const [gameUrl, setGameUrl] = useState<string | null>(null);
+  const router = useRouter();
   const { user, logout } = useUser();
 
 
@@ -1316,12 +1318,12 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   { name: "Sports", icon: "⚽" },
                   { name: "Recent", icon: "🕒" },
                 ].map((cat) => (
-                  <button key={cat.name} className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg py-3 flex flex-col items-center justify-center gap-1.5 transition-colors">
+                  <button key={cat.name} onClick={() => { setIsMenuOpen(false); toast.success(`Viewing ${cat.name} games`); }} className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg py-3 flex flex-col items-center justify-center gap-1.5 transition-colors">
                     <span className="text-2xl">{cat.icon}</span>
                     <span className="text-[13px]">{cat.name}</span>
                   </button>
                 ))}
-                <button className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg py-3 flex flex-col items-center justify-center gap-1.5 transition-colors col-span-2 sm:col-span-1">
+                <button onClick={() => { setIsMenuOpen(false); toast.success("Viewing Favorites"); }} className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg py-3 flex flex-col items-center justify-center gap-1.5 transition-colors col-span-2 sm:col-span-1">
                     <span className="text-2xl">⭐</span>
                     <span className="text-[13px]">Favorites</span>
                 </button>
@@ -1329,15 +1331,15 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
               {/* List Actions */}
               <div className="flex flex-col gap-1.5 mt-2">
-                <button className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg p-3 flex items-center gap-3 transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/profile'); }} className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg p-3 flex items-center gap-3 transition-colors text-left w-full">
                   <FileText className="w-5 h-5 text-neutral-400 shrink-0" />
                   <span className="text-[14px]">Bet Record</span>
                 </button>
-                <button className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg p-3 flex items-center gap-3 transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/invite'); }} className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg p-3 flex items-center gap-3 transition-colors text-left w-full">
                   <Share2 className="w-5 h-5 text-neutral-400 shrink-0" />
                   <span className="text-[14px]">Share</span>
                 </button>
-                <button className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg p-3 flex items-center gap-3 transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/invite'); }} className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg p-3 flex items-center gap-3 transition-colors text-left w-full">
                   <Users className="w-5 h-5 text-neutral-400 shrink-0" />
                   <span className="text-[14px]">Invite</span>
                 </button>
@@ -1346,39 +1348,39 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               {/* Offer Center */}
               <div className="mt-3 text-center text-neutral-500 text-[13px]">Offer Center</div>
               <div className="grid grid-cols-2 gap-2 mt-2">
-                <div className="relative bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">Event</span>
                   <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">3</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">🎯</div>
                 </div>
-                <div className="relative bg-gradient-to-br from-green-400 to-green-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-green-400 to-green-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">Mission</span>
                   <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">1</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">📅</div>
                 </div>
-                <div className="relative bg-gradient-to-br from-red-400 to-red-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-red-400 to-red-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">Spins</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">🎡</div>
                 </div>
-                <div className="relative bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">Rebate</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">💰</div>
                 </div>
-                <div className="relative bg-gradient-to-br from-blue-400 to-blue-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-blue-400 to-blue-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">VIP</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">👑</div>
                 </div>
-                <div className="relative bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/deposit"); }} className="relative bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">Fund</span>
                   <span className="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-1 rounded-bl-lg z-20">50%</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">👛</div>
                 </div>
-                <div className="relative bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative leading-tight">Unclaim<br/>ed</span>
                   <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">2</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">🎁</div>
                 </div>
-                <div className="relative bg-gradient-to-br from-orange-400 to-orange-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/profile"); }} className="relative bg-gradient-to-br from-orange-400 to-orange-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">History</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">📜</div>
                 </div>
@@ -1386,22 +1388,22 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
               {/* Text Links */}
               <div className="flex flex-col gap-1 mt-4">
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); toast.success("Downloading app..."); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <Download className="w-5 h-5 shrink-0" /> <span className="text-[14px]">APP Download</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <Headset className="w-5 h-5 shrink-0" /> <span className="text-[14px]">Customer Service</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <HelpCircle className="w-5 h-5 shrink-0" /> <span className="text-[14px]">FAQ</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); toast.success("About 8111c.com V1.0"); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <Info className="w-5 h-5 shrink-0" /> <span className="text-[14px]">About 8111c.com</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <MapPin className="w-5 h-5 shrink-0" /> <span className="text-[14px]">Find us</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
+                <button onClick={() => toast.success("Night mode toggled!")} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <Moon className="w-5 h-5 shrink-0" /> <span className="text-[14px]">Night mode</span>
                 </button>
               </div>
@@ -1409,23 +1411,23 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               {/* Official Channels */}
               <div className="mt-4 mb-2 text-neutral-500 text-[13px] px-2 text-left w-full">Official Channel</div>
               <div className="flex flex-col gap-1">
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
                   <div className="w-6 h-6 rounded bg-[#25D366] flex items-center justify-center shrink-0"><MessageCircle className="w-4 h-4 text-white" /></div>
                   <span className="text-[14px]">Whatsapp Channel</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
                   <div className="w-6 h-6 rounded bg-[#1877F2] flex items-center justify-center shrink-0"><Web className="w-4 h-4 text-white" /></div>
                   <span className="text-[14px]">Facebook channel</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
                   <div className="w-6 h-6 rounded bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] flex items-center justify-center shrink-0"><Camera className="w-4 h-4 text-white" /></div>
                   <span className="text-[14px]">Instagram channel</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
                   <div className="w-6 h-6 rounded bg-[#0088cc] flex items-center justify-center shrink-0"><Send className="w-4 h-4 text-white -ml-0.5" /></div>
                   <span className="text-[14px]">Telegram channel</span>
                 </button>
-                <button className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:bg-[#242424] rounded-lg transition-colors text-left w-full">
                   <div className="w-6 h-6 rounded bg-black border border-neutral-700 flex items-center justify-center shrink-0"><MessageSquare className="w-4 h-4 text-white" /></div>
                   <span className="text-[14px]">Twitter</span>
                 </button>
