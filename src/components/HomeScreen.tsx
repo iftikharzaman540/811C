@@ -305,8 +305,8 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       const data = await res.json();
       toast.dismiss('launch');
       if (res.ok && data.url) {
-        window.location.href = data.url;
-      } else {
+          setGameUrl(data.url);
+        } else {
         toast.error("Failed to launch game");
       }
     } catch (e) {
@@ -363,7 +363,35 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-[#111111] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTExIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjMTkxOTE5IiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+')] text-white font-sans relative pb-[90px] sm:pb-[100px]">
+    
+      {/* Game Iframe Overlay */}
+      <AnimatePresence>
+        {gameUrl && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="fixed inset-0 z-[500] bg-black flex flex-col"
+          >
+            <div className="h-12 bg-neutral-900 flex items-center justify-between px-4 border-b border-neutral-800 shrink-0">
+              <span className="text-white font-bold text-sm">Playing Game</span>
+              <button 
+                onClick={() => setGameUrl(null)}
+                className="bg-[#cc0000] hover:bg-[#ff0000] text-white px-4 py-1.5 rounded text-xs font-bold transition-colors"
+              >
+                Close Game
+              </button>
+            </div>
+            <iframe 
+              src={gameUrl} 
+              className="w-full flex-1 border-0"
+              allow="autoplay; fullscreen"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+<div className="min-h-screen w-full bg-[#111111] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTExIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjMTkxOTE5IiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+')] text-white font-sans relative pb-[90px] sm:pb-[100px]">
       
       {/* Premium Top App Banner */}
       <div className="w-full max-w-md mx-auto bg-[#0a0a0a] flex items-center justify-between px-3 py-2 border-b border-neutral-900 sticky top-0 z-50 h-[50px]">
