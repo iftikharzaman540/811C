@@ -43,7 +43,6 @@ export default function DepositScreen() {
       setShowAutoPrompt(true);
     }
     
-    const token = localStorage.getItem("token");
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://169.58.50.184:4000/api/v1";
     
     try {
