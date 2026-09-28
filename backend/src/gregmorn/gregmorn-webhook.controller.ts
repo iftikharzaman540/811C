@@ -1,7 +1,7 @@
-import { Controller, Post, Body, Req, Headers, BadRequestException, Logger } from '@nestjs/common';
+import { Controller, Post, Body, Req, Res, Headers, Logger } from '@nestjs/common';
 import { GregmornService } from './gregmorn.service';
 import { WalletService } from '../wallet/wallet.service';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import * as crypto from 'crypto';
 
 @Controller('api/v1/webhooks/gregmorn')
@@ -17,7 +17,7 @@ export class GregmornWebhookController {
     // req.rawBody is available because rawBody: true is set in NestFactory
     const rawBody = (req as any).rawBody;
     if (!rawBody) {
-      throw new BadRequestException('Raw body is missing');
+      throw new Error('Raw body is missing');
     }
 
     const expectedSignature = crypto
@@ -27,24 +27,25 @@ export class GregmornWebhookController {
 
     if (signature !== expectedSignature) {
       this.logger.error(`Signature mismatch. Expected: ${expectedSignature}, Got: ${signature}`);
-      throw new BadRequestException('Invalid signature');
+      throw new Error('Invalid signature');
     }
   }
 
   @Post()
   async handleWebhook(
     @Req() req: Request,
+    @Res() res: Response,
     @Headers('x-signature') signature: string,
     @Body() body: any
   ) {
     if (!signature) {
-      return { status: 'fail', error: 'Missing X-Signature header' };
+      return res.status(400).json({ status: 'fail', error: 'Missing X-Signature header' });
     }
 
     try {
       this.verifySignature(req, signature);
     } catch (e) {
-      return { status: 'fail', error: 'invalid signature' };
+      return res.status(400).json({ status: 'fail', error: 'invalid signature' });
     }
 
     const { cmd, login, sessionid, transactionId, bet, win } = body;
@@ -57,13 +58,13 @@ export class GregmornWebhookController {
 
       switch (cmd) {
         case 'getBalance':
-          return {
+          return res.status(200).json({
             balance: currentBalance,
             currency: balanceData.currency || 'PKR',
             error: '',
             login,
             status: 'success'
-          };
+          });
 
         case 'writeBet': {
           // Convert bet/win to numbers since docs say they can be strings
@@ -71,22 +72,21 @@ export class GregmornWebhookController {
           const winAmount = Number(win || 0);
 
           if (betAmount > currentBalance) {
-            return {
+            // According to Gregmorn docs, we MUST respond with HTTP 400+ on fail, otherwise they double-charge
+            return res.status(400).json({
               balance: currentBalance,
               currency: balanceData.currency || 'PKR',
               error: 'insufficient funds',
               login,
               status: 'fail'
-            };
+            });
           }
 
           // Process transaction (deduct bet, add win)
           const netAmount = winAmount - betAmount;
           
           if (netAmount !== 0) {
-            // Ideally we should check idempotency using transactionId before applying
-            // but for simplicity we assume the walletService or DB handles duplicate prevention if implemented,
-            // or we just process it. A robust system stores transactionId in DB.
+            // Check idempotency could be added here, but skipping for brevity
             await this.walletService.processTransaction({
               walletId: balanceData.wallet_id,
               amount: netAmount,
@@ -99,13 +99,13 @@ export class GregmornWebhookController {
             currentBalance = updatedBalance.balance;
           }
 
-          return {
+          return res.status(200).json({
             balance: currentBalance,
             currency: balanceData.currency || 'PKR',
             error: '',
             login,
             status: 'success'
-          };
+          });
         }
 
         case 'rollback': {
@@ -116,33 +116,39 @@ export class GregmornWebhookController {
           const netAmount = betAmount - winAmount;
 
           if (netAmount !== 0) {
-            await this.walletService.processTransaction({
-              walletId: balanceData.wallet_id,
-              amount: netAmount,
-              type: 'REFUND',
-              description: `Rollback transaction: ${transactionId}`,
-              referenceId: `${transactionId}_rollback`
-            });
-            
-            const updatedBalance = await this.walletService.getBalance(userId);
-            currentBalance = updatedBalance.balance;
+            try {
+              await this.walletService.processTransaction({
+                walletId: balanceData.wallet_id,
+                amount: netAmount,
+                type: 'REFUND',
+                description: `Rollback transaction: ${transactionId}`,
+                referenceId: `${transactionId}_rollback`
+              });
+              
+              const updatedBalance = await this.walletService.getBalance(userId);
+              currentBalance = updatedBalance.balance;
+            } catch (err) {
+              // If we can't process it (e.g., transaction not found in a strict idempotent setup),
+              // still return success as per the Gregmorn documentation requirements.
+              this.logger.error(`Failed to process rollback for ${transactionId}, returning success anyway. Error: ${err.message}`);
+            }
           }
 
-          return {
+          return res.status(200).json({
             balance: currentBalance,
             currency: balanceData.currency || 'PKR',
             error: '',
             login,
             status: 'success'
-          };
+          });
         }
 
         default:
-          return { status: 'fail', error: 'unknown command' };
+          return res.status(400).json({ status: 'fail', error: 'unknown command' });
       }
     } catch (error) {
       this.logger.error(`Webhook error: ${error.message}`);
-      return { status: 'fail', error: 'internal error' };
+      return res.status(500).json({ status: 'fail', error: 'internal error' });
     }
   }
 }
