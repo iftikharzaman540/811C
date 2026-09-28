@@ -40,8 +40,8 @@ export default function AdminDashboardPage() {
   const stats = [
     { label: "Total Users", value: data.total_users, icon: <Users className="w-8 h-8 text-[#ffdf00]" /> },
     { label: "Active Users", value: data.active_users, icon: <Users className="w-8 h-8 text-[#ffdf00]" /> },
-    { label: "Total Deposits Volume", value: `Rs ${data.total_deposits_volume?.toFixed(2) || '0.00'}`, icon: <Download className="w-8 h-8 text-[#ffdf00]" /> },
-    { label: "Total Withdrawals Volume", value: `Rs ${data.total_withdrawals_volume?.toFixed(2) || '0.00'}`, icon: <Activity className="w-8 h-8 text-[#ffdf00]" /> },
+    { label: "Total Deposits Volume", value: `Rs ${Number(data.total_deposits_volume || 0).toFixed(2)}`, icon: <Download className="w-8 h-8 text-[#ffdf00]" /> },
+    { label: "Total Withdrawals Volume", value: `Rs ${Number(data.total_withdrawals_volume || 0).toFixed(2)}`, icon: <Activity className="w-8 h-8 text-[#ffdf00]" /> },
   ];
 
   return (
