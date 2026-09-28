@@ -323,37 +323,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
   useEffect(() => {
     (window as any).handleLaunchGame = async (gameName: string) => {
-      if (!user) {
+      const token = localStorage.getItem("token");
+      if (!token) {
         toast.error("Please login to play games!");
         if (onLoginClick) onLoginClick();
         return;
       }
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
-        toast.loading(`Launching ${gameName}...`);
-        const res = await fetch(`${API_URL}/games/launch/${encodeURIComponent(gameName)}`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        toast.dismiss();
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.url) {
-            setGameUrl(data.url);
-          } else {
-            toast.success(`Game ${gameName} launched!`);
-          }
-        } else {
-          const error = await res.json();
-          toast.error(error.message || "Failed to launch game");
-        }
-      } catch (e) {
-        toast.dismiss();
-        toast.error("Error launching game");
-      }
+      toast.error(`"${gameName}" is a UI Demo. Please play real games from the 'Slot Game' section below!`, { duration: 4000 });
     };
 
     const timer = setInterval(() => {
