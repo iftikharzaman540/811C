@@ -6,13 +6,13 @@ export class GregmornService {
   private readonly logger = new Logger(GregmornService.name);
 
   // Default to STAGE endpoints unless overriden by env
-  private officeApiUrl = process.env.GREGMORN_OFFICE_API || 'https://office-api.gamble-hub.net';
-  private clientApiUrl = process.env.GREGMORN_CLIENT_API || 'https://client-api.gamble-hub.net';
+  private officeApiUrl = process.env.GREGMORN_OFFICE_API || 'https://office-api-dev.helcenac.com';
+  private clientApiUrl = process.env.GREGMORN_CLIENT_API || 'https://client-api-dev.helcenac.com';
 
   private loginId = process.env.GREGMORN_LOGIN || '8111C';
-  private password = process.env.GREGMORN_PASSWORD || 'pK3l<V9Db*3]yE8';
-  public userId = process.env.GREGMORN_USER_ID || 'cd32db12-418a-4ea7-b957-b772ed503f47';
-  public secretKey = process.env.GREGMORN_SECRET_KEY || '!@{R>{bed{(6+XO';
+  private password = process.env.GREGMORN_PASSWORD || '9!J!k<Qh{)AZD)q';
+  public userId = process.env.GREGMORN_USER_ID || 'dd684b6f-2c8e-41b0-a6dd-742bd956920a';
+  public secretKey = process.env.GREGMORN_SECRET_KEY || 'Q6NLPylw_Kzi';
 
   private accessToken: string | null = null;
   private tokenExpiry: number = 0;
@@ -81,7 +81,6 @@ export class GregmornService {
       this.logger.error(`Gregmorn getGames error: ${error.message}`);
       throw new InternalServerErrorException('Failed to fetch game list');
     }
-  }
   }
 
   async openGame(playerLogin: string, gameId: string, currency: string = 'PKR', isDemo: boolean = false) {
