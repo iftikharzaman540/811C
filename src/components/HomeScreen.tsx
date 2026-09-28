@@ -283,6 +283,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       .then(r => r.json())
       .then(data => {
         if(Array.isArray(data)) setRealGames(data.slice(0, 250));
+        setLoadingGames(false);
       })
       .catch(e => console.error("Error fetching games", e)).finally(() => setLoadingGames(false));
   }, []);
@@ -505,63 +506,67 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         {/* Main Banner (Animated Carousel) */}
         <div onClick={() => toast.success("Opening promotion...")} className="px-3 mb-3 relative h-[140px] cursor-pointer">
           <AnimatePresence mode="wait">
-  <motion.div
-    key={activeTab}
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
-    className="pb-24 pt-4"
-  >
-    {loadingGames ? (
-      <div className="w-full flex items-center justify-center p-12">
-        <div className="w-8 h-8 border-4 border-[#ff0b0b] border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    ) : realGames.length > 0 ? (
-      <div className="grid grid-cols-3 gap-2.5">
-        {realGames
-          .slice(
-            activeTab === 'hot' ? 0 :
-            activeTab === 'original' ? 30 :
-            activeTab === 'slots' ? 60 :
-            activeTab === 'fishing' ? 90 :
-            activeTab === 'cards' ? 120 :
-            activeTab === 'live' ? 150 :
-            activeTab === 'sports' ? 180 : 0,
-
-            activeTab === 'hot' ? 30 :
-            activeTab === 'original' ? 60 :
-            activeTab === 'slots' ? 90 :
-            activeTab === 'fishing' ? 120 :
-            activeTab === 'cards' ? 150 :
-            activeTab === 'live' ? 180 :
-            activeTab === 'sports' ? 210 : 30
-          )
-          .map((game, gIdx) => (
-            <motion.div 
-              key={game.id || gIdx}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleLaunchGame(game.id)}
-              className="aspect-[3/4] bg-neutral-900 rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]"
+            <motion.div
+              key={heroIndex}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className={`w-full h-full rounded-xl absolute inset-0 mx-3 overflow-hidden bg-gradient-to-r ${heroBanners[heroIndex].bg} border ${heroBanners[heroIndex].border} ${heroBanners[heroIndex].shadow}`}
+              style={{ width: 'calc(100% - 24px)' }}
             >
-              <div className="absolute inset-0">
-                <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+              {/* Cyber matrix background effect */}
+              <div className="absolute inset-0 opacity-20 bg-[linear-gradient(90deg,transparent_49%,rgba(255,255,255,0.2)_50%,transparent_51%)] bg-[length:40px_100%]"></div>
+              
+              <div className="relative z-10 p-4 h-full flex flex-col justify-between w-[70%]">
+                <h2 className={`${heroBanners[heroIndex].primaryText} font-black text-[22px] italic tracking-tight leading-none drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]`}>
+                  {heroBanners[heroIndex].title}
+                </h2>
+                
+                <div className={`bg-black/90 rounded-full border ${heroBanners[heroIndex].badgeBorder} px-2.5 py-1.5 my-1 shadow-sm inline-block w-fit`}>
+                  <p className="text-white text-[11px] font-bold leading-tight whitespace-pre-line">
+                    {heroBanners[heroIndex].subtitle}
+                  </p>
+                </div>
+                
+                <p className="text-white text-[12px] font-bold mt-1 tracking-tight">
+                  {heroBanners[heroIndex].highlight.split(' ').map((word, i, arr) => 
+                    (i === arr.length - 1 || i === arr.length - 2) ? 
+                      <span key={i} className={`${heroBanners[heroIndex].highlightColor} mr-1`}>{word}</span> : 
+                      <span key={i} className="mr-1">{word}</span>
+                  )}
+                </p>
               </div>
-              <div className="absolute top-0 right-0 px-2 py-0.5 bg-[#cc0000] text-white text-[9px] font-bold rounded-bl-lg shadow-md z-10">
-                {game.provider}
-              </div>
-              <div className="mt-auto p-2 relative z-10">
-                <h3 className="text-white text-[11px] font-bold leading-tight line-clamp-2 drop-shadow-md">{game.title}</h3>
+              
+              {/* Right side placeholder for 3D elements */}
+              <div className="absolute right-0 top-0 bottom-0 w-[45%] pointer-events-none flex items-center justify-center">
+                <motion.div 
+                  initial={{ scale: 0.8, y: 10 }}
+                  animate={{ scale: 1, y: -8 }}
+                  transition={{ type: "spring", bounce: 0.5 }}
+                  className="text-6xl drop-shadow-2xl translate-x-2"
+                >
+                  {heroBanners[heroIndex].emoji1}
+                </motion.div>
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="absolute bottom-2 right-2 text-4xl drop-shadow-xl z-20"
+                >
+                  {heroBanners[heroIndex].emoji2}
+                </motion.div>
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="absolute bottom-6 right-10 text-3xl drop-shadow-xl z-10"
+                >
+                  {heroBanners[heroIndex].emoji3}
+                </motion.div>
               </div>
             </motion.div>
-          ))}
-      </div>
-    ) : (
-      <div className="w-full text-center text-neutral-400 p-8">No games found.</div>
-    )}
-  </motion.div>
-</AnimatePresence>
+          </AnimatePresence>
 
           {/* Carousel Dots */}
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
@@ -648,566 +653,49 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           </div>
         </div>
 
-        {/* Single Main Grid Section (Hot) */}
-        <div className="mb-8 px-4">
-          
-          {/* Section Header */}
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,100,0,0.8)] -ml-1">🔥</span>
-              <h2 className="text-[17px] font-bold text-white tracking-tight">Hot</h2>
-            </div>
+        {/* Real Games Grid */}
+          <div className="mb-8 px-4">
             
-            {/* Pill Navigation: <- | All | -> */}
-            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
-                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
-              </button>
-              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
-                All
+            <div className="flex justify-between items-center mb-3">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,100,0,0.8)] -ml-1">🎰</span>
+                <h2 className="text-[17px] font-bold text-white tracking-tight">Real Games</h2>
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </button>
             </div>
-          </div>
 
-          {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {gamesList.map((game, gIdx) => (
-              <motion.div 
-                key={gIdx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  if (typeof window !== 'undefined' && (window as any).handleLaunchGame) {
-                    (window as any).handleLaunchGame(game.name);
-                  }
-                }}
-                className={`aspect-[3/4] ${game.img} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
-              >
-                {/* Top Bar */}
-                <div className="w-full flex justify-between items-start p-1.5 z-10 relative">
-                  <div className="flex gap-1 items-center">
-                    {game.hot && (
-                      <span className="text-[8px] bg-[#cc0000] text-white font-black px-1 rounded-sm italic leading-tight shadow-md">HOT</span>
-                    )}
-                    <span className="text-[14px] font-black italic drop-shadow-md text-transparent bg-clip-text bg-gradient-to-b from-[#ffdf00] to-[#ffaa00]" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</span>
-                  </div>
-                  <div className="w-5 h-5 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-sm border border-white/10 shadow-sm">
-                    <svg className="w-3 h-3 text-neutral-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  </div>
-                </div>
-
-                {/* Main graphic placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl">
-                  {game.graphic}
-                </div>
-                
-                {/* Free to claim pill (Matches Screenshot) */}
-                <div className="absolute bottom-7 w-[90%] left-[5%] bg-black border border-[#ffdf00] rounded-full py-0.5 text-center z-20 shadow-md">
-                   <span className="text-white text-[9px] font-bold">Free to claim <span className="text-[#ffdf00]">Rs 888</span></span>
-                </div>
-
-                {/* Bottom Name Plate */}
-                <div className="w-full bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-6 pb-1.5 text-center mt-auto relative z-10">
-                  <span className="text-[12px] font-black tracking-tight text-white drop-shadow-md">{game.title || game.name}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Mini Games Section (Pixel Perfect) */}
-        <div className="mb-8 px-4">
-          
-          {/* Section Header */}
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-1.5">
-              <div className="flex flex-col items-center justify-center w-5 h-5 relative mr-1">
-                 <div className="w-2 h-2 bg-[#00aaff] rounded-[1px] absolute top-0.5 transform rotate-45 shadow-[0_0_5px_#00aaff]"></div>
-                 <div className="w-2 h-2 bg-[#00aaff] rounded-[1px] absolute bottom-0.5 left-0.5 transform rotate-45 shadow-[0_0_5px_#00aaff]"></div>
-                 <div className="w-2 h-2 bg-[#00aaff] rounded-[1px] absolute bottom-0.5 right-0.5 transform rotate-45 shadow-[0_0_5px_#00aaff]"></div>
+            {loadingGames ? (
+              <div className="w-full flex items-center justify-center p-12">
+                <div className="w-8 h-8 border-4 border-[#ff0b0b] border-t-transparent rounded-full animate-spin"></div>
               </div>
-              <h2 className="text-[17px] font-bold text-white tracking-tight">Mini Games</h2>
-            </div>
-            
-            {/* Pill Navigation: <- | All | -> */}
-            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
-                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
-              </button>
-              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
-                All
-              </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {miniGamesList.map((game, gIdx) => (
-              <motion.div 
-                key={gIdx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  if (typeof window !== 'undefined' && (window as any).handleLaunchGame) {
-                    (window as any).handleLaunchGame(game.name);
-                  }
-                }}
-                className={`aspect-[3/4] ${game.img} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
-              >
-                {/* Main graphic placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl -translate-y-4">
-                  {game.graphic}
-                </div>
-                
-                {/* Fake popups for specific games */}
-                {game.popups?.includes("coin") && (
-                  <div className="absolute bottom-2 left-0 w-12 h-12 bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-3 z-20">
-                     <span className="text-[8px] font-bold text-white">Rs600</span>
-                  </div>
-                )}
-
-                {/* Bottom Name Plate */}
-                <div className="w-full text-center mt-auto relative z-10 pb-2">
-                  <div className="text-[14px] font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Slot Section (Pixel Perfect) */}
-        <div className="mb-8 px-4">
-          
-          {/* Section Header */}
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,255,255,0.4)] -ml-1">🎰</span>
-              <h2 className="text-[17px] font-bold text-white tracking-tight">Slot</h2>
-            </div>
-            
-            {/* Pill Navigation: <- | All | -> */}
-            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
-                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
-              </button>
-              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
-                All
-              </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Slot Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {realGames.slice(12, 100).map((game, gIdx) => (
-              <motion.div 
-                key={game.id || gIdx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleLaunchGame(game.id)}
-                className="aspect-[3/4] bg-neutral-900 rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]"
-              >
-                <div className="absolute inset-0">
-                  <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                </div>
-                <div className="absolute top-0 right-0 px-2 py-0.5 bg-[#cc0000] text-white text-[9px] font-bold rounded-bl-lg shadow-md z-10">
-                  {game.provider}
-                </div>
-                <div className="mt-auto p-2 relative z-10">
-                  <h3 className="text-white text-[11px] font-bold leading-tight line-clamp-2 drop-shadow-md">{game.title}</h3>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Fishing Section (Pixel Perfect) */}
-        <div className="mb-8 px-4">
-          
-          {/* Section Header */}
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(0,100,255,0.6)] -ml-1 transform -scale-x-100">🦈</span>
-              <h2 className="text-[17px] font-bold text-white tracking-tight">Fishing</h2>
-            </div>
-            
-            {/* Pill Navigation: <- | All | -> */}
-            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
-                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
-              </button>
-              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
-                All
-              </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {fishingGamesList.map((game, gIdx) => (
-              <motion.div 
-                key={gIdx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  if (typeof window !== 'undefined' && (window as any).handleLaunchGame) {
-                    (window as any).handleLaunchGame(game.name);
-                  }
-                }}
-                className={`aspect-[3/4] ${game.img} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
-              >
-                {/* Main graphic placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
-                  {game.graphic}
-                </div>
-                
-                {/* Bottom Name Plate */}
-                <div className="w-full text-center mt-auto relative z-10 pb-2">
-                  <div className="font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Cards Section (Pixel Perfect) */}
-        <div className="mb-8 px-4">
-          
-          {/* Section Header */}
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,255,255,0.6)] -ml-1">🃏</span>
-              <h2 className="text-[17px] font-bold text-white tracking-tight">Cards</h2>
-            </div>
-            
-            {/* Pill Navigation: <- | All | -> */}
-            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
-                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
-              </button>
-              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
-                All
-              </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {cardsGamesList.map((game, gIdx) => (
-              <motion.div 
-                key={gIdx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  if (typeof window !== 'undefined' && (window as any).handleLaunchGame) {
-                    (window as any).handleLaunchGame(game.name);
-                  }
-                }}
-                className={`aspect-[3/4] ${game.img} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
-              >
-                {/* Main graphic placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
-                  {game.graphic}
-                </div>
-                
-                {/* Fake popups for specific games */}
-                {game.popups?.includes("coin_top") && (
-                  <div className="absolute top-4 left-0 w-11 h-11 bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-2 z-20">
-                     <span className="text-[7px] font-bold text-white">Rs600</span>
-                  </div>
-                )}
-                {game.popups?.includes("huge_bottom") && (
-                  <div className="absolute bottom-6 -left-2 flex flex-col items-start z-20 transform scale-90">
-                     <span className="text-3xl drop-shadow-xl translate-x-3 translate-y-2">🛩️</span>
-                     <div className="bg-[#ffdf00] text-white text-[10px] font-black px-2 py-0.5 rounded-full border border-white shadow-lg whitespace-nowrap">Rs 10000</div>
-                  </div>
-                )}
-                {game.popups?.includes("trophies") && (
-                  <div className="absolute bottom-6 -right-2 flex flex-col items-center z-20">
-                     <span className="text-4xl drop-shadow-xl translate-y-2">🏆</span>
-                     <span className="text-3xl drop-shadow-xl absolute right-5 top-2 scale-75 opacity-90">🏆</span>
-                     <span className="text-3xl drop-shadow-xl absolute left-5 top-2 scale-75 opacity-90">🏆</span>
-                  </div>
-                )}
-
-                {/* Bottom Name Plate */}
-                <div className="w-full text-center mt-auto relative z-10 pb-2">
-                  <div className="font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Live Section (Pixel Perfect) */}
-        <div className="mb-8 px-4">
-          
-          {/* Section Header */}
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,255,255,0.6)] -ml-1">👩‍💼</span>
-              <h2 className="text-[17px] font-bold text-white tracking-tight">Live</h2>
-            </div>
-            
-            {/* Pill Navigation: <- | All | -> */}
-            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
-                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
-              </button>
-              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
-                All
-              </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {liveGamesList.map((game, gIdx) => (
-              <motion.div 
-                key={gIdx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  if (typeof window !== 'undefined' && (window as any).handleLaunchGame) {
-                    (window as any).handleLaunchGame(game.name);
-                  }
-                }}
-                className={`aspect-[3/4] ${game.img} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
-              >
-                {/* Optional Star in Top Right */}
-                {game.star && (
-                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-sm border border-white/10 shadow-sm z-20">
-                    <svg className="w-3.5 h-3.5 text-neutral-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  </div>
-                )}
-              
-                {/* Main graphic placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
-                  {game.graphic}
-                </div>
-                
-                {/* Bottom Name Plate */}
-                <div className="w-full text-center mt-auto relative z-10 pb-2">
-                  <div className="font-black italic drop-shadow-md text-white mb-0.5">{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Sports Section (Pixel Perfect) */}
-        <div className="mb-8 px-4">
-          
-          {/* Section Header */}
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-1.5">
-              <span className="text-[20px] drop-shadow-[0_2px_4px_rgba(255,255,255,0.6)] -ml-1">⚽</span>
-              <h2 className="text-[17px] font-bold text-white tracking-tight">Sports</h2>
-            </div>
-            
-            {/* Pill Navigation: <- | All | -> */}
-            <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
-                <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
-              </button>
-              <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
-                All
-              </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </button>
-            </div>
-          </div>
-
-          {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {sportsGamesList.map((game, gIdx) => (
-              <motion.div 
-                key={gIdx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  if (typeof window !== 'undefined' && (window as any).handleLaunchGame) {
-                    (window as any).handleLaunchGame(game.name);
-                  }
-                }}
-                className={`aspect-[3/4] ${game.img} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
-              >
-                {/* Optional Star in Top Right */}
-                {game.star && (
-                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-sm border border-white/10 shadow-sm z-20">
-                    <svg className="w-3.5 h-3.5 text-neutral-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                  </div>
-                )}
-              
-                {/* Main graphic placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
-                  {game.graphic}
-                </div>
-
-                {/* Fake popups for specific games */}
-                {game.popups?.includes("coin_top") && (
-                  <div className="absolute top-4 left-0 w-11 h-11 bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-2 z-20">
-                     <span className="text-[7px] font-bold text-white">Rs600</span>
-                  </div>
-                )}
-                {game.popups?.includes("wheel_bottom") && (
-                  <div className="absolute bottom-6 left-0 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-2 z-20">
-                     <div className="absolute bottom-0 w-full bg-[#ffdf00] text-white text-[7px] font-bold text-center border-2 border-white rounded">Rs 888</div>
-                  </div>
-                )}
-                {game.popups?.includes("deposit_rewards") && (
-                  <div className="absolute bottom-6 right-0 flex flex-col items-center z-20 transform scale-90 translate-x-1">
-                     <span className="text-2xl drop-shadow-xl absolute top-1 -left-2 z-10">🪙</span>
-                     <span className="text-4xl drop-shadow-xl text-yellow-300 font-black italic z-0 -translate-y-2">10%</span>
-                     <div className="text-white text-[8px] font-black leading-none drop-shadow-md z-20 -mt-2">Deposit rewards</div>
-                     <div className="text-yellow-400 text-[10px] font-black leading-none drop-shadow-md z-20 mt-0.5">7 days</div>
-                     {/* Green X Close button on popup */}
-                     <div className="absolute top-2 left-2 w-4 h-4 bg-black/60 rounded-full border border-neutral-600 flex items-center justify-center z-30 shadow-md">
-                        <span className="text-white text-[8px] font-bold">x</span>
-                     </div>
-                  </div>
-                )}
-                
-                {/* Bottom Name Plate */}
-                <div className="w-full text-center mt-auto relative z-10 pb-2">
-                  <div className="font-black italic drop-shadow-md text-white mb-0.5 flex justify-center">{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Grand Prize Record */}
-        <div className="mb-8 px-4 pb-4">
-          <div className="bg-[#1c1c1c] rounded-xl py-3.5 overflow-hidden shadow-lg border border-neutral-800/50">
-            {/* Title */}
-            <h2 className="text-center text-[13px] text-white font-medium mb-3 flex items-center justify-center gap-1.5">
-              <div className="flex gap-0.5 opacity-50">
-                <div className="w-1.5 h-1.5 border border-white transform rotate-45"></div>
-                <div className="w-1.5 h-1.5 bg-white transform rotate-45"></div>
-              </div>
-              Grand Prize Record
-              <div className="flex gap-0.5 opacity-50">
-                <div className="w-1.5 h-1.5 bg-white transform rotate-45"></div>
-                <div className="w-1.5 h-1.5 border border-white transform rotate-45"></div>
-              </div>
-            </h2>
-            
-            {/* Left to Right Marquee Container */}
-            <div className="w-full overflow-hidden relative">
-              {/* Fade masks */}
-              <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#1c1c1c] to-transparent z-10 pointer-events-none"></div>
-              <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#1c1c1c] to-transparent z-10 pointer-events-none"></div>
-              
-              {/* Left-to-right animation */}
-              <motion.div 
-                animate={{ x: ["-50%", "0%"] }} 
-                transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                className="flex gap-4 w-max px-2"
-              >
-                {marqueeWinners.map((winner, idx) => (
-                  <div key={idx} className="flex flex-col items-center w-[75px] shrink-0 cursor-pointer group">
-                    {/* Game Icon */}
-                    <div className={`w-[75px] h-[75px] rounded-[14px] ${winner.img} flex flex-col items-center justify-center mb-1.5 shadow-md relative overflow-hidden group-hover:scale-105 transition-transform`}>
-                       <span className="text-white/80 text-[10px] absolute top-1 font-black">{winner.game}</span>
-                       <span className="text-4xl drop-shadow-lg mt-2">{winner.icon}</span>
+            ) : realGames.length > 0 ? (
+              <div className="grid grid-cols-3 gap-2.5">
+                {realGames.map((game, gIdx) => (
+                  <motion.div 
+                    key={game.id || gIdx}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleLaunchGame(game.id)}
+                    className="aspect-[3/4] bg-neutral-900 rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]"
+                  >
+                    <div className="absolute inset-0">
+                      <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                     </div>
-                    {/* User */}
-                    <div className="text-center w-full">
-                       <span className="text-neutral-400 text-[10px]">{winner.user}</span>
-                       <span className="text-[#ff3333] text-[10px] ml-1 font-bold">win</span>
+                    <div className="absolute top-0 right-0 px-2 py-0.5 bg-[#cc0000] text-white text-[9px] font-bold rounded-bl-lg shadow-md z-10">
+                      {game.provider}
                     </div>
-                    {/* Amount */}
-                    <div className="flex items-center justify-center gap-0.5 mt-0.5">
-                       <span className="text-yellow-500 text-[8px] font-black border border-yellow-500 rounded-full w-[13px] h-[13px] flex items-center justify-center pt-[1px]">Rs</span>
-                       <span className="text-yellow-500 text-[12px] font-black tracking-tighter leading-none">{winner.amount}</span>
-                       <span className="text-neutral-500 text-[10px] leading-none ml-0.5">›</span>
+                    <div className="mt-auto p-2 relative z-10">
+                      <h3 className="text-white text-[11px] font-bold leading-tight line-clamp-2 drop-shadow-md">{game.title}</h3>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </motion.div>
-            </div>
-          </div>
-        </div>
-        
-        {/* Fixed Left Global Popups */}
-        <div className="fixed top-[45%] left-1 -translate-y-1/2 z-50 flex flex-col items-start pointer-events-none">
-          
-          {/* Top Coin Popup */}
-          <div onClick={() => toast.success("Claimed bonus!")} className="relative mb-3 pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:translate-x-1">
-            {/* Green arrow indicator */}
-            <div className="absolute -left-1 z-20 w-4 h-4 bg-[#ffdf00] rounded-full flex items-center justify-center shadow-md">
-               <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="4" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-            </div>
-            
-            <div className="w-[42px] h-[42px] bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(255,200,0,0.5)] border-2 border-[#ffdf00] relative z-10 ml-1.5">
-               <span className="text-[9px] font-black text-white italic drop-shadow-sm">Rs600</span>
-               <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-black rounded-full flex items-center justify-center shadow-lg border border-neutral-700 group-hover:bg-neutral-800 transition-colors">
-                 <span className="text-white text-[7px] font-bold">x</span>
-               </div>
-            </div>
-          </div>
-          
-          {/* Bottom Wheel Popup */}
-          <div onClick={() => toast.success("Opening lucky wheel!")} className="relative pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:translate-x-1">
-            <div className="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center shadow-xl border-[2.5px] border-[#ffdf00] relative z-10">
-               <div className="absolute -top-1.5 right-0 w-3.5 h-3.5 bg-black rounded-full flex items-center justify-center shadow-lg border border-neutral-700 group-hover:bg-neutral-800 transition-colors z-30">
-                 <span className="text-white text-[7px] font-bold">x</span>
-               </div>
-               {/* Inner wheel mockup */}
-               <div className="w-7 h-7 rounded-full border border-pink-400 flex items-center justify-center overflow-hidden shadow-inner">
-                 <div className="w-3 h-3 bg-[#ffdf00] rounded-full absolute shadow-inner"></div>
-               </div>
-               <div className="absolute -bottom-1 w-[110%] bg-[#ffdf00] text-white text-[8px] font-black text-center rounded px-0.5 shadow-md">Rs 500</div>
-               
-               <div className="absolute -top-2 -left-1 text-[13px] drop-shadow-md z-20 pointer-events-none">🐔</div>
-               <div className="absolute top-1 -right-3 text-[18px] drop-shadow-md z-0 pointer-events-none">💃</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Fixed Right Global Popups */}
-        <div className="fixed top-[35%] sm:top-[40%] right-1 -translate-y-1/2 z-50 flex flex-col items-end pointer-events-none">
-          
-          {/* Deposit Rewards Popup */}
-          <div onClick={() => toast.success("Viewing deposit rewards!")} className="relative pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:-translate-x-1">
-            <div className="flex flex-col items-center bg-black/95 p-1.5 rounded-xl border border-yellow-400/80 shadow-[0_0_12px_rgba(255,200,0,0.2)] relative z-10 w-[50px]">
-              <div className="absolute top-0 right-1 w-3.5 h-3.5 bg-neutral-900 rounded-full flex items-center justify-center shadow-lg z-30 border border-neutral-700 group-hover:bg-neutral-800 transition-colors">
-                 <span className="text-white text-[7px] font-bold">x</span>
               </div>
-              <span className="text-[14px] drop-shadow-xl absolute top-1.5 left-0 z-10">🪙</span>
-              <span className="text-[28px] drop-shadow-xl text-yellow-300 font-black italic z-0 leading-none mt-1" style={{textShadow: "0 2px 6px rgba(0,0,0,0.8)"}}>15<span className="text-[12px]">%</span></span>
-              <div className="text-white text-[6px] font-black leading-none drop-shadow-md z-20 mt-1 text-center">Deposit rewards</div>
-              <div className="text-yellow-400 text-[7px] font-black leading-none drop-shadow-md z-20 mt-0.5 mb-0.5">15 days</div>
-            </div>
+            ) : (
+              <div className="w-full text-center text-neutral-400 p-8">No games found.</div>
+            )}
           </div>
-        </div>
 
-        <Footer />
+          <Footer />
         
         {/* Floating TOP Button */}
         <div className="fixed bottom-[85px] right-4 z-50 pointer-events-auto">
