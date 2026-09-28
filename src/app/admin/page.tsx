@@ -13,7 +13,7 @@ export default function AdminDashboardPage() {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://169.58.50.184:4000/api/v1";
+      const API_URL = "/api/v1";
       const res = await fetch(`${API_URL}/admin/dashboard`, {
         headers: {
           Authorization: `Bearer ${token}`

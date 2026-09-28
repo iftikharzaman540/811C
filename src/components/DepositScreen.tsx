@@ -43,7 +43,7 @@ export default function DepositScreen() {
       setShowAutoPrompt(true);
     }
     
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://169.58.50.184:4000/api/v1";
+    const API_URL = "/api/v1";
     
     try {
       const endpoint = tab === "online" ? "auto-deposit" : "deposit";

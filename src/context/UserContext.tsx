@@ -32,7 +32,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://169.58.50.184:4000/api/v1";
+      const API_URL = "/api/v1";
       const res = await fetch(`${API_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`
