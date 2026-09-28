@@ -276,14 +276,15 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [heroIndex, setHeroIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [realGames, setRealGames] = useState<any[]>([]);
+    const [loadingGames, setLoadingGames] = useState(true);
   
   useEffect(() => {
     fetch('/api/v1/games/gregmorn/list?t=' + Date.now())
       .then(r => r.json())
       .then(data => {
-        if(Array.isArray(data)) setRealGames(data.slice(0, 30));
+        if(Array.isArray(data)) setRealGames(data.slice(0, 250));
       })
-      .catch(e => console.error("Error fetching games", e));
+      .catch(e => console.error("Error fetching games", e)).finally(() => setLoadingGames(false));
   }, []);
 
   const handleLaunchGame = async (gameId: string) => {
@@ -504,67 +505,63 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         {/* Main Banner (Animated Carousel) */}
         <div onClick={() => toast.success("Opening promotion...")} className="px-3 mb-3 relative h-[140px] cursor-pointer">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={heroIndex}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className={`w-full h-full rounded-xl absolute inset-0 mx-3 overflow-hidden bg-gradient-to-r ${heroBanners[heroIndex].bg} border ${heroBanners[heroIndex].border} ${heroBanners[heroIndex].shadow}`}
-              style={{ width: 'calc(100% - 24px)' }}
+  <motion.div
+    key={activeTab}
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -10 }}
+    className="pb-24 pt-4"
+  >
+    {loadingGames ? (
+      <div className="w-full flex items-center justify-center p-12">
+        <div className="w-8 h-8 border-4 border-[#ff0b0b] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    ) : realGames.length > 0 ? (
+      <div className="grid grid-cols-3 gap-2.5">
+        {realGames
+          .slice(
+            activeTab === 'hot' ? 0 :
+            activeTab === 'original' ? 30 :
+            activeTab === 'slots' ? 60 :
+            activeTab === 'fishing' ? 90 :
+            activeTab === 'cards' ? 120 :
+            activeTab === 'live' ? 150 :
+            activeTab === 'sports' ? 180 : 0,
+
+            activeTab === 'hot' ? 30 :
+            activeTab === 'original' ? 60 :
+            activeTab === 'slots' ? 90 :
+            activeTab === 'fishing' ? 120 :
+            activeTab === 'cards' ? 150 :
+            activeTab === 'live' ? 180 :
+            activeTab === 'sports' ? 210 : 30
+          )
+          .map((game, gIdx) => (
+            <motion.div 
+              key={game.id || gIdx}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleLaunchGame(game.id)}
+              className="aspect-[3/4] bg-neutral-900 rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]"
             >
-              {/* Cyber matrix background effect */}
-              <div className="absolute inset-0 opacity-20 bg-[linear-gradient(90deg,transparent_49%,rgba(255,255,255,0.2)_50%,transparent_51%)] bg-[length:40px_100%]"></div>
-              
-              <div className="relative z-10 p-4 h-full flex flex-col justify-between w-[70%]">
-                <h2 className={`${heroBanners[heroIndex].primaryText} font-black text-[22px] italic tracking-tight leading-none drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]`}>
-                  {heroBanners[heroIndex].title}
-                </h2>
-                
-                <div className={`bg-black/90 rounded-full border ${heroBanners[heroIndex].badgeBorder} px-2.5 py-1.5 my-1 shadow-sm inline-block w-fit`}>
-                  <p className="text-white text-[11px] font-bold leading-tight whitespace-pre-line">
-                    {heroBanners[heroIndex].subtitle}
-                  </p>
-                </div>
-                
-                <p className="text-white text-[12px] font-bold mt-1 tracking-tight">
-                  {heroBanners[heroIndex].highlight.split(' ').map((word, i, arr) => 
-                    (i === arr.length - 1 || i === arr.length - 2) ? 
-                      <span key={i} className={`${heroBanners[heroIndex].highlightColor} mr-1`}>{word}</span> : 
-                      <span key={i} className="mr-1">{word}</span>
-                  )}
-                </p>
+              <div className="absolute inset-0">
+                <img src={game.imageUrl} alt={game.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
               </div>
-              
-              {/* Right side placeholder for 3D elements */}
-              <div className="absolute right-0 top-0 bottom-0 w-[45%] pointer-events-none flex items-center justify-center">
-                <motion.div 
-                  initial={{ scale: 0.8, y: 10 }}
-                  animate={{ scale: 1, y: -8 }}
-                  transition={{ type: "spring", bounce: 0.5 }}
-                  className="text-6xl drop-shadow-2xl translate-x-2"
-                >
-                  {heroBanners[heroIndex].emoji1}
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="absolute bottom-2 right-2 text-4xl drop-shadow-xl z-20"
-                >
-                  {heroBanners[heroIndex].emoji2}
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="absolute bottom-6 right-10 text-3xl drop-shadow-xl z-10"
-                >
-                  {heroBanners[heroIndex].emoji3}
-                </motion.div>
+              <div className="absolute top-0 right-0 px-2 py-0.5 bg-[#cc0000] text-white text-[9px] font-bold rounded-bl-lg shadow-md z-10">
+                {game.provider}
+              </div>
+              <div className="mt-auto p-2 relative z-10">
+                <h3 className="text-white text-[11px] font-bold leading-tight line-clamp-2 drop-shadow-md">{game.title}</h3>
               </div>
             </motion.div>
-          </AnimatePresence>
+          ))}
+      </div>
+    ) : (
+      <div className="w-full text-center text-neutral-400 p-8">No games found.</div>
+    )}
+  </motion.div>
+</AnimatePresence>
 
           {/* Carousel Dots */}
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
@@ -714,7 +711,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
                 {/* Bottom Name Plate */}
                 <div className="w-full bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-6 pb-1.5 text-center mt-auto relative z-10">
-                  <span className="text-[12px] font-black tracking-tight text-white drop-shadow-md">{game.name}</span>
+                  <span className="text-[12px] font-black tracking-tight text-white drop-shadow-md">{game.title || game.name}</span>
                 </div>
               </motion.div>
             ))}
@@ -778,7 +775,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 {/* Bottom Name Plate */}
                 <div className="w-full text-center mt-auto relative z-10 pb-2">
                   <div className="text-[14px] font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.name}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
                 </div>
               </motion.div>
             ))}
@@ -811,7 +808,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
           {/* Slot Game Grid */}
           <div className="grid grid-cols-3 gap-2.5">
-            {realGames.length > 0 ? realGames.map((game, gIdx) => (
+            {realGames.slice(12, 100).map((game, gIdx) => (
               <motion.div 
                 key={game.id || gIdx}
                 whileHover={{ scale: 1.05 }}
@@ -828,59 +825,6 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 </div>
                 <div className="mt-auto p-2 relative z-10">
                   <h3 className="text-white text-[11px] font-bold leading-tight line-clamp-2 drop-shadow-md">{game.title}</h3>
-                </div>
-              </motion.div>
-            )) : slotGamesList.map((game, gIdx) => (
-              <motion.div 
-                key={gIdx}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
-              >
-                
-                {game.collage ? (
-                  <div className="absolute inset-0 flex flex-col">
-                    <div className="flex w-full h-[55%]">
-                       <div className={`w-1/2 h-full ${game.collage[0]} flex justify-center items-center text-3xl border-r border-b border-white/20`}>{game.graphic[0]}</div>
-                       <div className={`w-1/2 h-full ${game.collage[1]} flex justify-center items-center text-3xl border-b border-white/20`}>{game.graphic[1]}</div>
-                    </div>
-                    <div className={`w-full h-[45%] ${game.collage[2]} flex justify-center items-center text-4xl`}>{game.graphic[2]}</div>
-                    
-                    {/* SVG overlay for the V shaped partition (simulated with standard borders above, but lets add a subtle inset shadow) */}
-                    <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] pointer-events-none"></div>
-                  </div>
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl -translate-y-4">
-                    {game.graphic}
-                  </div>
-                )}
-                
-                {/* Fake popups for specific games */}
-                {game.popups?.includes("coin_top") && (
-                  <div className="absolute top-2 left-0 w-12 h-12 bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-3 z-20">
-                     <span className="text-[8px] font-bold text-white">Rs600</span>
-                  </div>
-                )}
-                {game.popups?.includes("wheel_bottom") && (
-                  <div className="absolute bottom-6 left-0 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg border-2 border-[#ffdf00] -translate-x-2 z-20">
-                     <div className="absolute bottom-0 w-full bg-[#cc0000] text-white text-[8px] font-bold text-center border-2 border-[#ffdf00] rounded">Rs 888</div>
-                  </div>
-                )}
-                {game.popups?.includes("aviator_multiplier") && (
-                  <div className="absolute top-1/2 right-0 w-14 h-12 bg-black/90 rounded-l flex flex-col items-center justify-center shadow-lg border border-neutral-700 z-20 overflow-hidden translate-x-1">
-                     <span className="text-[20px] text-[#ff3366] -mt-1 leading-none drop-shadow-md">🛩️</span>
-                     <span className="text-white text-[9px] font-black mt-1">354.77x</span>
-                     {/* Green X Close button on popup */}
-                     <div className="absolute -top-1.5 right-1 w-3 h-3 bg-neutral-800 rounded-full border border-neutral-600 flex items-center justify-center">
-                        <span className="text-white text-[6px]">x</span>
-                     </div>
-                  </div>
-                )}
-
-                {/* Bottom Name Plate */}
-                <div className="w-full bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-6 pb-2 text-center mt-auto relative z-10">
-                  <div className="text-[14px] font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
-                  <div className="text-[12px] font-medium tracking-tight text-white drop-shadow-md">{game.name}</div>
                 </div>
               </motion.div>
             ))}
@@ -933,7 +877,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 {/* Bottom Name Plate */}
                 <div className="w-full text-center mt-auto relative z-10 pb-2">
                   <div className="font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.name}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
                 </div>
               </motion.div>
             ))}
@@ -1006,7 +950,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 {/* Bottom Name Plate */}
                 <div className="w-full text-center mt-auto relative z-10 pb-2">
                   <div className="font-black italic drop-shadow-md text-white mb-0.5" style={{WebkitTextStroke: "0.5px white"}}>{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.name}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
                 </div>
               </motion.div>
             ))}
@@ -1066,7 +1010,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 {/* Bottom Name Plate */}
                 <div className="w-full text-center mt-auto relative z-10 pb-2">
                   <div className="font-black italic drop-shadow-md text-white mb-0.5">{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.name}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
                 </div>
               </motion.div>
             ))}
@@ -1150,7 +1094,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 {/* Bottom Name Plate */}
                 <div className="w-full text-center mt-auto relative z-10 pb-2">
                   <div className="font-black italic drop-shadow-md text-white mb-0.5 flex justify-center">{game.logo}</div>
-                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.name}</div>
+                  <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md">{game.title || game.name}</div>
                 </div>
               </motion.div>
             ))}
