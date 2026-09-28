@@ -6,13 +6,13 @@ export class GregmornService {
   private readonly logger = new Logger(GregmornService.name);
 
   // Default to STAGE endpoints unless overriden by env
-  private officeApiUrl = process.env.GREGMORN_OFFICE_API || 'https://office-api-dev.helcenac.com';
-  private clientApiUrl = process.env.GREGMORN_CLIENT_API || 'https://client-api-dev.helcenac.com';
+  private officeApiUrl = 'https://office-api.helcenac.com';
+  private clientApiUrl = 'https://client-api.helcenac.com';
 
   private loginId = process.env.GREGMORN_LOGIN || '8111C';
-  private password = process.env.GREGMORN_PASSWORD || '9!J!k<Qh{)AZD)q';
+  private password = 'pK3l<V9Db*3]yE8';
   public userId = process.env.GREGMORN_USER_ID || 'dd684b6f-2c8e-41b0-a6dd-742bd956920a';
-  public secretKey = process.env.GREGMORN_SECRET_KEY || 'Q6NLPylw_Kzi';
+  public secretKey = '!@{R>{bed{(6+XO';
 
   private accessToken: string | null = null;
   private tokenExpiry: number = 0;
@@ -46,6 +46,7 @@ export class GregmornService {
       }
 
       this.accessToken = data.accessToken;
+      this.userId = data.user.id;
       // Assume token is valid for a short time (e.g. 5 minutes) to be safe before refreshing
       this.tokenExpiry = Date.now() + 5 * 60 * 1000;
       
