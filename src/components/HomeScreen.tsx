@@ -277,14 +277,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [realGames, setRealGames] = useState<any[]>([]);
   
-  useEffect(() => {
-    fetch('https://8111c.com/api/v1/games/gregmorn/list?t=' + Date.now())
-      .then(r => r.json())
-      .then(data => {
-        if(Array.isArray(data)) setRealGames(data.slice(0, 30));
-      })
-      .catch(e => console.error("Error fetching games", e));
-  }, []);
+  
 
   const handleLaunchGame = async (gameId: string) => {
     const token = localStorage.getItem('token');
