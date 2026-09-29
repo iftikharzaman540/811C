@@ -515,7 +515,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Main Banner (Animated Carousel) */}
-        <div onClick={() => toast.success("Opening promotion...")} className="px-3 mb-3 relative h-[140px] cursor-pointer">
+        <div onClick={() => toast.success("Opening promotion...")} className="px-3 mb-1 relative h-[140px] cursor-pointer">
           <AnimatePresence mode="wait">
             <motion.div
               key={heroIndex}
@@ -542,7 +542,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Category Navigation Slider (Beautiful) */}
-        <div className="relative px-0 mb-8">
+        <div className="relative px-0 mb-2">
           {/* Left Arrow */}
           <div className="absolute left-2 top-1/2 -translate-y-1/2 z-20">
             <button onClick={() => {
