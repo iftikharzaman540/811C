@@ -554,7 +554,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           </div>
 
           {/* Slider Container */}
-          <div id="category-scroll-container" className="flex justify-between items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-8 gap-3" style={{ scrollBehavior: 'smooth' }}>
+          <div id="category-scroll-container" className="flex justify-between items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-4 gap-3" style={{ scrollBehavior: 'smooth' }}>
             {[
               { name: "Hot", id: "section-hot", icon: "🔥", active: activeCategory === "section-hot" || activeCategory === "All" },
               { name: "Mini", id: "section-mini", icon: "🎲", active: activeCategory === "section-mini" },
@@ -592,7 +592,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Single Main Grid Section (Hot) */}
-        <div id="section-hot" className="mb-8 px-4 scroll-mt-[100px]">
+        <div id="section-hot" className="mb-4 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -654,7 +654,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Mini Games Section (Pixel Perfect) */}
-        <div id="section-mini" className="mb-8 px-4 scroll-mt-[100px]">
+        <div id="section-mini" className="mb-4 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -714,7 +714,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Slot Section (Pixel Perfect) */}
-        <div id="section-slot" className="mb-8 px-4 scroll-mt-[100px]">
+        <div id="section-slot" className="mb-4 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -797,7 +797,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Fishing Section (Pixel Perfect) */}
-        <div id="section-fishing" className="mb-8 px-4 scroll-mt-[100px]">
+        <div id="section-fishing" className="mb-4 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -846,7 +846,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Cards Section (Pixel Perfect) */}
-        <div id="section-cards" className="mb-8 px-4 scroll-mt-[100px]">
+        <div id="section-cards" className="mb-4 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -915,7 +915,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Live Section (Pixel Perfect) */}
-        <div id="section-live" className="mb-8 px-4 scroll-mt-[100px]">
+        <div id="section-live" className="mb-4 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -971,7 +971,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Sports Section (Pixel Perfect) */}
-        <div id="section-sports" className="mb-8 px-4 scroll-mt-[100px]">
+        <div id="section-sports" className="mb-4 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -1051,7 +1051,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Grand Prize Record */}
-        <div className="mb-8 px-4 pb-4">
+        <div className="mb-2 px-4 pb-4">
           <div className="bg-[#1c1c1c] rounded-xl py-3.5 overflow-hidden shadow-lg border border-neutral-800/50">
             {/* Title */}
             <h2 className="text-center text-[13px] text-white font-medium mb-3 flex items-center justify-center gap-1.5">
