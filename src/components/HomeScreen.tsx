@@ -488,17 +488,17 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
       </div>
 
-      <div className="max-w-md mx-auto relative pt-4">
+      <div className="max-w-md mx-auto relative pt-1">
         
         {/* Quick Links (Pixel Perfect) */}
         <div className="grid grid-cols-6 gap-1.5 px-3 mb-2 mt-0">
           {[
-            { name: "Invite", icon: <User className="w-5 h-5 text-[#ffdf00]" /> },
-            { name: "VIP", icon: <Gem className="w-5 h-5 text-[#ffdf00]" /> },
-            { name: "Receive", icon: <Gift className="w-5 h-5 text-[#ffdf00]" /> },
-            { name: "Rebate", icon: <RefreshCcw className="w-5 h-5 text-[#ffdf00]" /> },
-            { name: "Subsidy", icon: <CircleDollarSign className="w-5 h-5 text-[#ffdf00]" /> },
-            { name: "Spins", icon: <Aperture className="w-5 h-5 text-[#ffdf00]" /> },
+            { name: "Invite", icon: <User className="w-4 h-4 text-[#ffdf00]" /> },
+            { name: "VIP", icon: <Gem className="w-4 h-4 text-[#ffdf00]" /> },
+            { name: "Receive", icon: <Gift className="w-4 h-4 text-[#ffdf00]" /> },
+            { name: "Rebate", icon: <RefreshCcw className="w-4 h-4 text-[#ffdf00]" /> },
+            { name: "Subsidy", icon: <CircleDollarSign className="w-4 h-4 text-[#ffdf00]" /> },
+            { name: "Spins", icon: <Aperture className="w-4 h-4 text-[#ffdf00]" /> },
           ].map((item, i) => (
             <div key={i} onClick={() => {
     if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); return; }
@@ -506,10 +506,10 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     else if (item.name === "Spins" || item.name === "Rebate") window.location.href = "/promo";
     else toast.success(item.name + " opened");
   }} className="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform">
-              <div className="w-full aspect-square rounded-[10px] bg-gradient-to-b from-[#2a0505] to-black border-t-[2px] border-t-[#ff0b0b] border-x border-b border-[#330000] flex items-center justify-center shadow-[0_0_12px_rgba(255,11,11,0.3)] mb-0.5">
+              <div className="w-[75%] aspect-square rounded-[8px] bg-gradient-to-b from-[#2a0505] to-black border-t-[2px] border-t-[#ff0b0b] border-x border-b border-[#330000] flex items-center justify-center shadow-[0_0_12px_rgba(255,11,11,0.3)] mb-0.5">
                 {item.icon}
               </div>
-              <span className="text-white text-[10px] font-medium">{item.name}</span>
+              <span className="text-white text-[9px] font-medium leading-tight">{item.name}</span>
             </div>
           ))}
         </div>
