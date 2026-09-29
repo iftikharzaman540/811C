@@ -633,17 +633,20 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           {/* Slider Container */}
           <div id="category-scroll-container" className="flex justify-between items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-10 gap-4" style={{ scrollBehavior: 'smooth' }}>
             {[
-              { name: "All", id: "All", icon: "🌟", active: activeCategory === "All" },
-              { name: "Mini", id: "Mini Games", icon: "🎲", active: activeCategory === "Mini Games" },
-              { name: "Slot", id: "Slot", icon: "🎰", active: activeCategory === "Slot" },
-              { name: "Fishing", id: "Fishing", icon: "🦈", active: activeCategory === "Fishing" },
-              { name: "Cards", id: "Cards", icon: "🃏", active: activeCategory === "Cards" },
-              { name: "Live", id: "Live", icon: "👩‍💼", active: activeCategory === "Live" },
-              { name: "Sports", id: "Sports", icon: "⚽", active: activeCategory === "Sports" },
+              { name: "Hot", id: "section-hot", icon: "🔥", active: activeCategory === "section-hot" || activeCategory === "All" },
+              { name: "Mini", id: "section-mini", icon: "🎲", active: activeCategory === "section-mini" },
+              { name: "Slot", id: "section-slot", icon: "🎰", active: activeCategory === "section-slot" },
+              { name: "Fishing", id: "section-fishing", icon: "🦈", active: activeCategory === "section-fishing" },
+              { name: "Cards", id: "section-cards", icon: "🃏", active: activeCategory === "section-cards" },
+              { name: "Live", id: "section-live", icon: "👩‍💼", active: activeCategory === "section-live" },
+              { name: "Sports", id: "section-sports", icon: "⚽", active: activeCategory === "section-sports" },
             ].map((cat, i) => (
               <div key={i} onClick={() => {
                 setActiveCategory(cat.id);
-                window.scrollTo({ top: 400, behavior: 'smooth' });
+                const el = document.getElementById(cat.id);
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
               }} className="flex flex-col items-center cursor-pointer group shrink-0">
                 <div className={"w-[54px] h-[54px] rounded-[18px] flex flex-col items-center justify-center mb-2 transition-all duration-300 " + (cat.active ? 'bg-gradient-to-br from-[#ffdf00] to-[#ffaa00] shadow-[0_0_15px_rgba(255,223,0,0.4)] scale-110' : 'bg-gradient-to-br from-[#1f1f1f] to-[#0a0a0a] border border-neutral-800 shadow-inner group-hover:border-neutral-600 group-hover:scale-105')}>
                   <span className={"text-[28px] drop-shadow-md transition-transform " + (cat.active ? 'scale-110' : 'grayscale-[0.3] group-hover:grayscale-0')}>{cat.icon}</span>
@@ -716,7 +719,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           <>
 
         {/* Single Main Grid Section (Hot) */}
-        <div id="section-hot" className="mb-8 px-4" style={{ display: (activeCategory === "All" || activeCategory === "Hot") ? "block" : "none" }}>
+        <div id="section-hot" className="mb-8 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -782,7 +785,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Mini Games Section (Pixel Perfect) */}
-        <div id="section-mini" className="mb-8 px-4" style={{ display: (activeCategory === "All" || activeCategory === "Mini Games") ? "block" : "none" }}>
+        <div id="section-mini" className="mb-8 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -842,7 +845,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Slot Section (Pixel Perfect) */}
-        <div id="section-slot" className="mb-8 px-4" style={{ display: (activeCategory === "All" || activeCategory === "Slot") ? "block" : "none" }}>
+        <div id="section-slot" className="mb-8 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -925,7 +928,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Fishing Section (Pixel Perfect) */}
-        <div id="section-fishing" className="mb-8 px-4" style={{ display: (activeCategory === "All" || activeCategory === "Fishing") ? "block" : "none" }}>
+        <div id="section-fishing" className="mb-8 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -974,7 +977,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Cards Section (Pixel Perfect) */}
-        <div id="section-cards" className="mb-8 px-4" style={{ display: (activeCategory === "All" || activeCategory === "Cards") ? "block" : "none" }}>
+        <div id="section-cards" className="mb-8 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -1043,7 +1046,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Live Section (Pixel Perfect) */}
-        <div id="section-live" className="mb-8 px-4" style={{ display: (activeCategory === "All" || activeCategory === "Live") ? "block" : "none" }}>
+        <div id="section-live" className="mb-8 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
@@ -1099,7 +1102,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Sports Section (Pixel Perfect) */}
-        <div id="section-sports" className="mb-8 px-4" style={{ display: (activeCategory === "All" || activeCategory === "Sports") ? "block" : "none" }}>
+        <div id="section-sports" className="mb-8 px-4 scroll-mt-[100px]">
           
           {/* Section Header */}
           <div className="flex justify-between items-center mb-3">
