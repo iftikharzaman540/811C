@@ -220,54 +220,8 @@ const grandPrizeWinners = [
 const marqueeWinners = [...grandPrizeWinners, ...grandPrizeWinners, ...grandPrizeWinners, ...grandPrizeWinners];
 
 const heroBanners = [
-  {
-    title: "Become an agent",
-    subtitle: "Multiple agent\npromotion rebate offers",
-    highlight: "Easily earn millions per month",
-    bg: "from-[#2e0a0a] via-[#1f0000] to-[#3a0a0a]",
-    border: "border-[#ff0b0b]",
-    shadow: "shadow-[0_0_15px_rgba(255,11,11,0.3)]",
-    primaryText: "text-[#ffdf00]",
-    badgeBorder: "border-[#ff0b0b]",
-    highlightColor: "text-[#ffdf00]",
-    emoji1: "🤵‍♂️", emoji2: "💰", emoji3: "🌍"
-  },
-  {
-    title: "Welcome Bonus",
-    subtitle: "New member\nfirst deposit 100% bonus",
-    highlight: "Get up to Rs 8,888 free",
-    bg: "from-[#3a0a0a] via-[#240000] to-[#4a1f1f]",
-    border: "border-[#ff0b0b]",
-    shadow: "shadow-[0_0_15px_rgba(255,11,11,0.3)]",
-    primaryText: "text-[#ffdf00]",
-    badgeBorder: "border-[#ff0b0b]",
-    highlightColor: "text-[#ffdf00]",
-    emoji1: "🎁", emoji2: "💵", emoji3: "✨"
-  },
-  {
-    title: "Daily Check-in",
-    subtitle: "Log in every day\nto claim free rewards",
-    highlight: "7 days streak for VIP box",
-    bg: "from-[#1a0000] via-[#2a0505] to-[#330000]",
-    border: "border-[#ff0b0b]",
-    shadow: "shadow-[0_0_15px_rgba(255,11,11,0.3)]",
-    primaryText: "text-[#ffdf00]",
-    badgeBorder: "border-[#ff0b0b]",
-    highlightColor: "text-[#ffdf00]",
-    emoji1: "📅", emoji2: "💎", emoji3: "🔥"
-  },
-  {
-    title: "VIP Club",
-    subtitle: "Upgrade VIP level\nunlock exclusive benefits",
-    highlight: "Weekly salary & loss rebate",
-    bg: "from-[#220000] via-[#330000] to-[#440000]",
-    border: "border-[#ff0b0b]",
-    shadow: "shadow-[0_0_15px_rgba(255,11,11,0.3)]",
-    primaryText: "text-[#ffdf00]",
-    badgeBorder: "border-[#ff0b0b]",
-    highlightColor: "text-[#ffdf00]",
-    emoji1: "👑", emoji2: "⭐", emoji3: "🚀"
-  }
+  { imageUrl: "/banners/banner1.jpg" },
+  { imageUrl: "/banners/banner2.jpg" }
 ];
 
 import toast from "react-hot-toast";
@@ -541,59 +495,10 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className={`w-full h-full rounded-xl absolute inset-0 mx-3 overflow-hidden bg-gradient-to-r ${heroBanners[heroIndex].bg} border ${heroBanners[heroIndex].border} ${heroBanners[heroIndex].shadow}`}
+              className="w-full h-full rounded-xl absolute inset-0 mx-3 overflow-hidden shadow-[0_0_15px_rgba(255,11,11,0.3)] border border-[#ff0b0b]"
               style={{ width: 'calc(100% - 24px)' }}
             >
-              {/* Cyber matrix background effect */}
-              <div className="absolute inset-0 opacity-20 bg-[linear-gradient(90deg,transparent_49%,rgba(255,255,255,0.2)_50%,transparent_51%)] bg-[length:40px_100%]"></div>
-              
-              <div className="relative z-10 p-4 h-full flex flex-col justify-between w-[70%]">
-                <h2 className={`${heroBanners[heroIndex].primaryText} font-black text-[22px] italic tracking-tight leading-none drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]`}>
-                  {heroBanners[heroIndex].title}
-                </h2>
-                
-                <div className={`bg-black/90 rounded-full border ${heroBanners[heroIndex].badgeBorder} px-2.5 py-1.5 my-1 shadow-sm inline-block w-fit`}>
-                  <p className="text-white text-[11px] font-bold leading-tight whitespace-pre-line">
-                    {heroBanners[heroIndex].subtitle}
-                  </p>
-                </div>
-                
-                <p className="text-white text-[12px] font-bold mt-1 tracking-tight">
-                  {heroBanners[heroIndex].highlight.split(' ').map((word, i, arr) => 
-                    (i === arr.length - 1 || i === arr.length - 2) ? 
-                      <span key={i} className={`${heroBanners[heroIndex].highlightColor} mr-1`}>{word}</span> : 
-                      <span key={i} className="mr-1">{word}</span>
-                  )}
-                </p>
-              </div>
-              
-              {/* Right side placeholder for 3D elements */}
-              <div className="absolute right-0 top-0 bottom-0 w-[45%] pointer-events-none flex items-center justify-center">
-                <motion.div 
-                  initial={{ scale: 0.8, y: 10 }}
-                  animate={{ scale: 1, y: -8 }}
-                  transition={{ type: "spring", bounce: 0.5 }}
-                  className="text-6xl drop-shadow-2xl translate-x-2"
-                >
-                  {heroBanners[heroIndex].emoji1}
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="absolute bottom-2 right-2 text-4xl drop-shadow-xl z-20"
-                >
-                  {heroBanners[heroIndex].emoji2}
-                </motion.div>
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="absolute bottom-6 right-10 text-3xl drop-shadow-xl z-10"
-                >
-                  {heroBanners[heroIndex].emoji3}
-                </motion.div>
-              </div>
+              <img src={heroBanners[heroIndex].imageUrl} className="w-full h-full object-cover" alt="Promotion Banner" />
             </motion.div>
           </AnimatePresence>
 
