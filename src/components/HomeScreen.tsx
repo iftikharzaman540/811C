@@ -619,25 +619,36 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
         {/* Category Navigation Slider (Beautiful) */}
         <div className="relative px-0 mb-8">
-          
+          {/* Left Fade */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
 
           {/* Left Arrow */}
           <div className="absolute left-2 top-1/2 -translate-y-1/2 z-20">
-            <button onClick={() => toast("Scrolling left")} className="w-7 h-7 rounded-full bg-black/80 backdrop-blur-sm border border-neutral-700 flex items-center justify-center text-white/70 hover:text-white hover:bg-[#ffdf00]/20 hover:border-[#ffdf00] transition-all shadow-lg">
+            <button onClick={() => {
+              const container = document.getElementById('category-scroll-container');
+              if (container) container.scrollBy({ left: -100, behavior: 'smooth' });
+            }} className="w-7 h-7 rounded-full bg-black/80 backdrop-blur-sm border border-neutral-700 flex items-center justify-center text-white/70 hover:text-white hover:bg-[#ffdf00]/20 hover:border-[#ffdf00] transition-all shadow-lg">
               <ChevronLeft className="w-4 h-4 -ml-0.5" />
             </button>
           </div>
 
           {/* Slider Container */}
-          <div className="flex justify-between items-center overflow-x-auto no-scrollbar px-10 gap-4">
+          <div id="category-scroll-container" className="flex justify-between items-center overflow-x-auto no-scrollbar px-10 gap-4" style={{ scrollBehavior: 'smooth' }}>
             {[
-              { name: "Slot", icon: "🎰", active: true },
-              { name: "Fishing", icon: "🦈" },
-              { name: "Cards", icon: "🃏" },
-              { name: "Live", icon: "👩‍💼" },
-              { name: "Sports", icon: "⚽" },
+              { name: "Mini", id: "section-mini", icon: "🎲" },
+              { name: "Slot", id: "section-slot", icon: "🎰", active: true },
+              { name: "Fishing", id: "section-fishing", icon: "🦈" },
+              { name: "Cards", id: "section-cards", icon: "🃏" },
+              { name: "Live", id: "section-live", icon: "👩‍💼" },
+              { name: "Sports", id: "section-sports", icon: "⚽" },
             ].map((cat, i) => (
-              <div key={i} onClick={() => toast.success(`Viewing ${cat.name} games`)} className="flex flex-col items-center cursor-pointer group shrink-0">
+              <div key={i} onClick={() => {
+                const el = document.getElementById(cat.id);
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  toast.success(`Jumped to ${cat.name} games`);
+                }
+              }} className="flex flex-col items-center cursor-pointer group shrink-0">
                 <div className={`w-[54px] h-[54px] rounded-[18px] flex flex-col items-center justify-center mb-2 transition-all duration-300 ${cat.active ? 'bg-gradient-to-br from-[#ffdf00] to-[#ffaa00] shadow-[0_0_15px_rgba(255,223,0,0.4)] scale-110' : 'bg-gradient-to-br from-[#1f1f1f] to-[#0a0a0a] border border-neutral-800 shadow-inner group-hover:border-neutral-600 group-hover:scale-105'}`}>
                   <span className={`text-[28px] drop-shadow-md transition-transform ${cat.active ? 'scale-110' : 'grayscale-[0.3] group-hover:grayscale-0'}`}>{cat.icon}</span>
                 </div>
@@ -647,11 +658,15 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             ))}
           </div>
 
-          
+          {/* Right Fade */}
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
 
           {/* Right Arrow */}
           <div className="absolute right-2 top-1/2 -translate-y-1/2 z-20">
-            <button onClick={() => toast("Scrolling right")} className="w-7 h-7 rounded-full bg-black/80 backdrop-blur-sm border border-neutral-700 flex items-center justify-center text-white/70 hover:text-white hover:bg-[#ffdf00]/20 hover:border-[#ffdf00] transition-all shadow-lg">
+            <button onClick={() => {
+              const container = document.getElementById('category-scroll-container');
+              if (container) container.scrollBy({ left: 100, behavior: 'smooth' });
+            }} className="w-7 h-7 rounded-full bg-black/80 backdrop-blur-sm border border-neutral-700 flex items-center justify-center text-white/70 hover:text-white hover:bg-[#ffdf00]/20 hover:border-[#ffdf00] transition-all shadow-lg">
               <ChevronRight className="w-4 h-4 -mr-0.5" />
             </button>
           </div>
