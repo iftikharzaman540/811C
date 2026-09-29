@@ -692,20 +692,20 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-hot')?.scrollBy({ left: -(window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-hot')?.scrollBy({ left: (window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div id="scroll-hot" className="flex overflow-x-auto no-scrollbar gap-2.5 snap-x snap-mandatory scroll-smooth pb-2">
             {realGames.slice(0, 21).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -818,20 +818,20 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-slot')?.scrollBy({ left: -(window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-slot')?.scrollBy({ left: (window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Slot Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div id="scroll-slot" className="flex overflow-x-auto no-scrollbar gap-2.5 snap-x snap-mandatory scroll-smooth pb-2">
             {realGames.slice(33, 42).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -901,20 +901,20 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-fishing')?.scrollBy({ left: -(window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-fishing')?.scrollBy({ left: (window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div id="scroll-fishing" className="flex overflow-x-auto no-scrollbar gap-2.5 snap-x snap-mandatory scroll-smooth pb-2">
             {realGames.slice(42, 48).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -950,20 +950,20 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-cards')?.scrollBy({ left: -(window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-cards')?.scrollBy({ left: (window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div id="scroll-cards" className="flex overflow-x-auto no-scrollbar gap-2.5 snap-x snap-mandatory scroll-smooth pb-2">
             {realGames.slice(48, 54).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -1019,20 +1019,20 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-live')?.scrollBy({ left: -(window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-live')?.scrollBy({ left: (window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div id="scroll-live" className="flex overflow-x-auto no-scrollbar gap-2.5 snap-x snap-mandatory scroll-smooth pb-2">
             {realGames.slice(54, 60).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -1075,20 +1075,20 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-sports')?.scrollBy({ left: -(window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => document.getElementById('scroll-sports')?.scrollBy({ left: (window.innerWidth - 30), behavior: 'smooth' })} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div id="scroll-sports" className="flex overflow-x-auto no-scrollbar gap-2.5 snap-x snap-mandatory scroll-smooth pb-2">
             {realGames.slice(60, 66).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
