@@ -277,6 +277,8 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [realGames, setRealGames] = useState<any[]>([]);
   const [isLoadingGames, setIsLoadingGames] = useState(true);
+  const [globalSearch, setGlobalSearch] = useState("");
+  const [pages, setPages] = useState<any>({ hot: 0, mini: 0, slot: 0, fishing: 0, cards: 0, live: 0, sports: 0 });
   
   
 
@@ -680,6 +682,57 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           </div>
         </div>
 
+        
+        {/* GLOBAL SEARCH BAR */}
+        <div className="px-4 mb-6">
+          <div className="relative w-full h-12 bg-[#141414] rounded-full border border-neutral-800 shadow-inner flex items-center px-4 overflow-hidden focus-within:border-[#cc0000] focus-within:shadow-[0_0_15px_rgba(204,0,0,0.3)] transition-all">
+            <svg className="w-5 h-5 text-neutral-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <input 
+              type="text" 
+              placeholder="Search for any game..." 
+              value={globalSearch}
+              onChange={(e) => setGlobalSearch(e.target.value)}
+              className="w-full bg-transparent text-white placeholder-neutral-600 text-sm focus:outline-none"
+            />
+            {globalSearch && (
+              <button onClick={() => setGlobalSearch("")} className="ml-2 w-6 h-6 bg-neutral-800 rounded-full flex items-center justify-center text-white hover:bg-neutral-700">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {globalSearch ? (
+          <div className="mb-8 px-4">
+            <div className="flex items-center gap-1.5 mb-4">
+              <span className="text-[20px]">🔍</span>
+              <h2 className="text-[17px] font-bold text-white tracking-tight">Search Results</h2>
+            </div>
+            <div className="grid grid-cols-3 gap-2.5">
+              {realGames.filter((g: any) => (g.title || g.name)?.toLowerCase().includes(globalSearch.toLowerCase())).map((game: any, gIdx: number) => (
+                <motion.div 
+                  key={gIdx}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
+                  className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
+                >
+                  <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl">
+                    {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
+                  </div>
+                  <div className="w-full text-center mt-auto relative z-10 pb-2">
+                    <div className="text-[11px] font-medium tracking-tight text-white drop-shadow-md bg-black/60 mx-1 rounded">{game.title || game.name}</div>
+                  </div>
+                </motion.div>
+              ))}
+              {realGames.filter((g: any) => (g.title || g.name)?.toLowerCase().includes(globalSearch.toLowerCase())).length === 0 && (
+                <div className="col-span-3 text-center text-neutral-500 py-10">No games found matching "{globalSearch}"</div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <>
+
         {/* Single Main Grid Section (Hot) */}
         <div className="mb-8 px-4">
           
@@ -692,13 +745,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, hot: Math.max(0, p.hot - 1) }))} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, hot: p.hot + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
@@ -706,7 +759,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
           {/* Unified Game Grid */}
           <div className="grid grid-cols-3 gap-2.5">
-            {realGames.slice(0, 21).map((game: any, gIdx: number) => (
+            {realGames.slice(0 + pages.hot * 21, 0 + (pages.hot + 1) * 21).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
@@ -818,13 +871,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, slot: Math.max(0, p.slot - 1) }))} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, slot: p.slot + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
@@ -832,7 +885,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
           {/* Slot Game Grid */}
           <div className="grid grid-cols-3 gap-2.5">
-            {realGames.slice(33, 42).map((game: any, gIdx: number) => (
+            {realGames.slice(33 + pages.slot * 9, 33 + (pages.slot + 1) * 9).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
@@ -901,13 +954,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, fishing: Math.max(0, p.fishing - 1) }))} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, fishing: p.fishing + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
@@ -915,7 +968,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
           {/* Unified Game Grid */}
           <div className="grid grid-cols-3 gap-2.5">
-            {realGames.slice(42, 48).map((game: any, gIdx: number) => (
+            {realGames.slice(42 + pages.fishing * 6, 42 + (pages.fishing + 1) * 6).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
@@ -950,13 +1003,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, cards: Math.max(0, p.cards - 1) }))} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, cards: p.cards + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
@@ -964,7 +1017,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
           {/* Unified Game Grid */}
           <div className="grid grid-cols-3 gap-2.5">
-            {realGames.slice(48, 54).map((game: any, gIdx: number) => (
+            {realGames.slice(48 + pages.cards * 6, 48 + (pages.cards + 1) * 6).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
@@ -1019,13 +1072,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, live: Math.max(0, p.live - 1) }))} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, live: p.live + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
@@ -1033,7 +1086,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
           {/* Unified Game Grid */}
           <div className="grid grid-cols-3 gap-2.5">
-            {realGames.slice(54, 60).map((game: any, gIdx: number) => (
+            {realGames.slice(54 + pages.live * 6, 54 + (pages.live + 1) * 6).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
@@ -1075,13 +1128,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, sports: Math.max(0, p.sports - 1) }))} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, sports: p.sports + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
@@ -1089,7 +1142,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
           {/* Unified Game Grid */}
           <div className="grid grid-cols-3 gap-2.5">
-            {realGames.slice(60, 66).map((game: any, gIdx: number) => (
+            {realGames.slice(60 + pages.sports * 6, 60 + (pages.sports + 1) * 6).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
@@ -1196,6 +1249,10 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           </div>
         </div>
         
+        </>
+        )
+        }
+
         {/* Fixed Left Global Popups */}
         <div className="fixed top-[45%] left-1 -translate-y-1/2 z-50 flex flex-col items-start pointer-events-none">
           
