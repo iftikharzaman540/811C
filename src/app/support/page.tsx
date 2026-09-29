@@ -1,64 +1,113 @@
 "use client";
 import toast from "react-hot-toast";
 
-
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, MessageCircle, Download, HelpCircle, FileText, Search, Settings } from "lucide-react";
+import { ChevronLeft, ChevronRight, MessageCircle, Download, HelpCircle, FileText, Search, Settings, X } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { motion, AnimatePresence } from "framer-motion";
+
+const INITIAL_NEWS = [
+  { id: 'n1', title: "🔥 8 great benefits for referring friends", date: "26/09/2026 00:00:00", read: false, content: "Invite friends and get up to 8 amazing benefits! For every friend who signs up and recharges, you get exclusive bonuses and daily rebate boosts." },
+  { id: 'n2', title: "🔥 BREAKING NEWS: Live Sports Event", date: "14/09/2026 00:00:00", read: false, content: "The UEFA Champions League finals are here! Bet on your favorite team with 0% margin and get extra cashback if they win." },
+  { id: 'n3', title: "🎉 Welcome to 8111C.com Platform", date: "13/08/2026 00:00:00", read: false, content: "Welcome to 8111C, the best online casino platform. Enjoy thousands of games from top providers, instant withdrawals, and 24/7 customer support." },
+  { id: 'n4', title: "🎉 8111C grandly launches agent bet...", date: "10/08/2026 00:00:00", read: false, content: "Become an agent today and earn commission for life! We provide the best rates in the industry, up to 55% revenue share." }
+];
+
+const INITIAL_NOTICES = [
+  { id: 'no1', title: "🌸 New User Recharge bonus", date: "23/09/2026 12:00:00", read: false, content: "New users who recharge for the first time will receive a 100% bonus up to 10,000 RS. Claim it in the Offer Center!" },
+  { id: 'no2', title: "🌸 New VIP tier system update", date: "22/09/2026 12:00:00", read: false, content: "We've updated our VIP system. You can now level up faster by playing slot games. Enjoy higher withdrawal limits and personal account managers." },
+  { id: 'no3', title: "🎉 Huge Tuesday Bonus Waiting!", date: "22/09/2026 12:00:00", read: false, content: "Log in today and spin the Lucky Wheel for a chance to win up to 50,000 RS! Every Tuesday brings massive rewards." },
+  { id: 'no4', title: "📢 EVO Live Casino Weekly Rewards", date: "21/09/2026 12:00:00", read: false, content: "Play Evolution Gaming live tables this week and get a 5% rebate on all your bets, automatically credited every Monday." },
+  { id: 'no5', title: "📢 Cricket Sport Weekly Allowances", date: "21/09/2026 08:00:00", read: false, content: "Get a free 500 RS bet on any Cricket match every weekend. Valid for all users with a minimum deposit history." },
+  { id: 'no6', title: "🚀 Hey 8111C Players in Pakistan! 🎉", date: "21/09/2026 00:00:00", read: false, content: "We have fully integrated EasyPaisa and JazzCash for instant deposits and withdrawals. Enjoy seamless transactions!" },
+  { id: 'no7', title: "🌸 System Maintenance Complete", date: "20/09/2026 12:00:00", read: false, content: "Our scheduled maintenance is complete. All systems are operational and faster than ever." },
+  { id: 'no8', title: "🌸 Withdrawal Limit Increased", date: "18/09/2026 12:00:00", read: false, content: "Due to popular demand, we have increased the daily withdrawal limit for all VIP 3+ members." }
+];
+
+const INITIAL_MARQUEE = [
+  { id: 'm1', title: "8111c official website 【 8111c.vip 】 Collection ~ ...", read: false, content: "Bookmark our official domains: 8111c.com, 8111c.vip. Beware of fake sites!" },
+  { id: 'm2', title: "Welcome to 8111C.com - The Premier Online ...", read: false, content: "Play responsibly and enjoy the best gaming experience with 8111C." }
+];
+
 
 export default function SupportPage() {
   const [activeTab, setActiveTab] = useState("Support");
   const [subTab, setSubTab] = useState("Other Support");
 
+  const [news, setNews] = useState(INITIAL_NEWS);
+  const [notices, setNotices] = useState(INITIAL_NOTICES);
+  const [marquees, setMarquees] = useState(INITIAL_MARQUEE);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
+
+  const unreadNews = news.filter(n => !n.read).length;
+  const unreadNotices = notices.filter(n => !n.read).length;
+
   const tabs = [
     { id: "Support", badge: null },
-    { id: "News", badge: 4 },
-    { id: "Notice", badge: 27 },
+    { id: "News", badge: unreadNews > 0 ? unreadNews : null },
+    { id: "Notice", badge: unreadNotices > 0 ? unreadNotices : null },
     { id: "Marquee", badge: null }
   ];
 
-  return (
-    <main className="min-h-screen bg-[#0a0a0a] text-white flex flex-col pb-24 font-sans overflow-x-hidden">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#141414] border-b border-neutral-800 flex items-center justify-center h-[50px] px-4">
-        <Link href="/" className="absolute left-4">
-          <ChevronLeft className="w-6 h-6 text-neutral-400" />
-        </Link>
-        <h1 className="text-[17px] font-medium tracking-wide">Message Center</h1>
-      </header>
+  const handleMessageClick = (msg: any, type: string) => {
+    setSelectedMessage({ ...msg, type });
+    if (type === 'news') {
+      setNews(news.map(n => n.id === msg.id ? { ...n, read: true } : n));
+    } else if (type === 'notice') {
+      setNotices(notices.map(n => n.id === msg.id ? { ...n, read: true } : n));
+    } else if (type === 'marquee') {
+      setMarquees(marquees.map(n => n.id === msg.id ? { ...n, read: true } : n));
+    }
+  };
 
-      {/* Tabs Menu */}
-      <div className="sticky top-[50px] z-40 bg-[#141414] border-b border-neutral-800">
-        <div className="flex overflow-x-auto no-scrollbar px-1">
+  const filteredNews = news.filter(n => n.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredNotices = notices.filter(n => n.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredMarquees = marquees.filter(n => n.title.toLowerCase().includes(searchQuery.toLowerCase()));
+
+  return (
+    <main className="flex flex-col min-h-screen bg-[#0a0a0a] text-white font-sans pb-20 relative">
+      
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-[#141414] border-b border-neutral-800">
+        <div className="flex items-center h-14 px-4">
+          <Link href="/" className="w-8 h-8 flex items-center justify-center -ml-2 rounded-full hover:bg-white/10 transition-colors">
+            <ChevronLeft className="w-6 h-6 text-neutral-400" />
+          </Link>
+          <div className="flex-1 text-center font-bold text-[16px] text-white">Message Center</div>
+          <div className="w-8 h-8 flex items-center justify-center -mr-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer">
+            <Settings className="w-5 h-5 text-neutral-400" />
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex px-2 overflow-x-auto no-scrollbar border-b border-neutral-800">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`relative px-4 py-3 text-[14px] font-medium whitespace-nowrap transition-colors flex items-center gap-1 ${
-                activeTab === tab.id ? "text-[#ffdf00]" : "text-white"
+              onClick={() => { setActiveTab(tab.id); setSearchQuery(""); }}
+              className={`relative px-5 py-3 text-[14px] font-bold whitespace-nowrap transition-colors ${
+                activeTab === tab.id ? "text-[#ffdf00]" : "text-neutral-400 hover:text-neutral-200"
               }`}
             >
               {tab.id}
               {tab.badge && (
-                <div className="bg-[#cc0000] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center -translate-y-2 shadow-md">
+                <span className="absolute top-2 right-1 bg-[#ff0b0b] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-md">
                   {tab.badge}
-                </div>
+                </span>
               )}
               {activeTab === tab.id && (
-                <motion.div
-                  layoutId="support-tab"
-                  className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#ff0b0b]"
-                />
+                <motion.div layoutId="supportTabIndicator" className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ff0b0b]" />
               )}
             </button>
           ))}
         </div>
-      </div>
+      </header>
 
-      {/* Content Area */}
-      <div className="flex-1 w-full max-w-md mx-auto">
+      {/* Main Content */}
+      <div className="flex-1 overflow-y-auto no-scrollbar relative">
         <AnimatePresence mode="wait">
           
           {activeTab === "Support" && (
@@ -226,16 +275,16 @@ export default function SupportPage() {
                 
                 <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
                   <button onClick={() => toast.success('Starting APK download...')} className="shrink-0 flex items-center gap-1.5 bg-[#cc0000] border border-[#ff0b0b] text-white text-[12px] font-bold px-3 py-1.5 rounded shadow-md hover:scale-105 transition-transform"><Download className="w-3.5 h-3.5" /> Download APP</button>
-                  <button onClick={() => toast.success('Fetching Proxy FAQ...')} className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 hover:text-white hover:border-[#ffdf00] transition-colors hover:text-white hover:border-[#ffdf00] transition-colors text-[12px] font-medium px-3 py-1.5 rounded">
+                  <button onClick={() => toast.success('Fetching Proxy FAQ...')} className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 hover:text-white hover:border-[#ffdf00] transition-colors text-[12px] font-medium px-3 py-1.5 rounded">
                     🤝 Proxy Problem
                   </button>
-                  <button onClick={() => toast.success('Fetching Reload FAQ...')} className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 text-[12px] font-medium px-3 py-1.5 rounded">
+                  <button onClick={() => toast.success('Fetching Reload FAQ...')} className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 hover:text-white hover:border-[#ffdf00] transition-colors text-[12px] font-medium px-3 py-1.5 rounded">
                     💳 Reload Que...
                   </button>
                 </div>
 
                 <div className="mt-2">
-                  <button onClick={() => toast('1. Download APK\n2. Enable Unknown Sources\n3. Install & Play', { icon: 'ðŸ“±', style: { background: '#333', color: '#fff'} })} className="w-full flex justify-between items-center text-[12px] font-medium text-white hover:text-[#ffdf00] transition-colors py-1"><span>1. APP installation steps</span><ChevronRight className="w-4 h-4 text-neutral-500" /></button>
+                  <button onClick={() => toast('1. Download APK\\n2. Enable Unknown Sources\\n3. Install & Play', { icon: '📱', style: { background: '#333', color: '#fff'} })} className="w-full flex justify-between items-center text-[12px] font-medium text-white hover:text-[#ffdf00] transition-colors py-1"><span>1. APP installation steps</span><ChevronRight className="w-4 h-4 text-neutral-500" /></button>
                 </div>
               </div>
 
@@ -252,35 +301,33 @@ export default function SupportPage() {
                 <div className="bg-[#141414] border border-neutral-700 rounded-full px-3 py-1.5 flex items-center gap-1 text-neutral-400 text-[11px] shrink-0">
                   All <ChevronLeft className="w-3 h-3 -rotate-90 ml-2" />
                 </div>
-                <div className="flex-1 flex items-center bg-[#141414] border border-neutral-700 rounded-full px-3 py-1.5 shadow-inner">
-                  <input type="text" placeholder="Search" className="bg-transparent border-none outline-none text-[11px] text-white w-full placeholder:text-neutral-500" />
+                <div className="flex-1 flex items-center bg-[#141414] border border-neutral-700 rounded-full px-3 py-1.5 shadow-inner focus-within:ring-1 focus-within:ring-[#ffdf00] transition-all">
+                  <input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-transparent border-none outline-none text-[11px] text-white w-full placeholder:text-neutral-500" />
                   <Search className="w-3.5 h-3.5 text-[#ffdf00] shrink-0" />
                 </div>
               </div>
 
               {/* News List */}
               <div className="flex flex-col gap-2.5">
-                {[
-                  { title: "🔥 8 great benefits for referring frien...", date: "26/09/2026 00:00:00" },
-                  { title: "🔥 BREAKING NEWS: Live Sports E...", date: "14/09/2026 00:00:00" },
-                  { title: "🎉 Welcome to 8111C.com Platform ...", date: "13/08/2026 00:00:00" },
-                  { title: "🎉 8111C grandly launches agent bet...", date: "10/08/2026 00:00:00" }
-                ].map((item, i) => (
-                  <div key={i} className="bg-[#1c1c1c] rounded-lg p-3 flex items-center gap-3 border border-neutral-800 shadow-md cursor-pointer hover:border-[#ff0b0b] transition-colors group">
+                {filteredNews.map((item) => (
+                  <div key={item.id} onClick={() => handleMessageClick(item, 'news')} className="bg-[#1c1c1c] rounded-lg p-3 flex items-center gap-3 border border-neutral-800 shadow-md cursor-pointer hover:border-[#ff0b0b] transition-colors group">
                     <div className="relative shrink-0">
-                       <FileText className="w-6 h-6 text-neutral-500 group-hover:text-[#ffdf00] transition-colors" />
-                       <div className="w-2.5 h-2.5 rounded-full bg-[#cc0000] absolute -top-1 -right-1 border-2 border-[#1c1c1c]"></div>
+                       <FileText className={`w-6 h-6 transition-colors ${item.read ? 'text-neutral-600' : 'text-neutral-400 group-hover:text-[#ffdf00]'}`} />
+                       {!item.read && <div className="w-2.5 h-2.5 rounded-full bg-[#cc0000] absolute -top-1 -right-1 border-2 border-[#1c1c1c]"></div>}
                     </div>
                     <div className="flex-1 flex flex-col justify-center">
-                      <h4 className="text-[12px] font-bold text-white truncate">{item.title}</h4>
+                      <h4 className={`text-[12px] font-bold truncate ${item.read ? 'text-neutral-400' : 'text-white'}`}>{item.title}</h4>
                       <span className="text-[9px] text-neutral-500 mt-0.5">{item.date}</span>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
-                      <span className="text-[12px] font-bold text-white group-hover:text-[#ffdf00] transition-colors">Unread</span>
+                      <span className={`text-[12px] font-bold transition-colors ${item.read ? 'text-neutral-600' : 'text-white group-hover:text-[#ffdf00]'}`}>{item.read ? 'Read' : 'Unread'}</span>
                       <ChevronRight className="w-4 h-4 text-neutral-500" />
                     </div>
                   </div>
                 ))}
+                {filteredNews.length === 0 && (
+                  <div className="text-center text-neutral-500 text-[12px] mt-4">No news found</div>
+                )}
               </div>
             </motion.div>
           )}
@@ -294,53 +341,37 @@ export default function SupportPage() {
                 <div className="bg-[#141414] border border-neutral-700 rounded-full px-3 py-1.5 flex items-center gap-1 text-neutral-400 text-[11px] shrink-0">
                   All <ChevronLeft className="w-3 h-3 -rotate-90 ml-2" />
                 </div>
-                <div className="flex-1 flex items-center bg-[#141414] border border-neutral-700 rounded-full px-3 py-1.5 shadow-inner">
-                  <input type="text" placeholder="Search" className="bg-transparent border-none outline-none text-[11px] text-white w-full placeholder:text-neutral-500" />
+                <div className="flex-1 flex items-center bg-[#141414] border border-neutral-700 rounded-full px-3 py-1.5 shadow-inner focus-within:ring-1 focus-within:ring-[#ffdf00] transition-all">
+                  <input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-transparent border-none outline-none text-[11px] text-white w-full placeholder:text-neutral-500" />
                   <Search className="w-3.5 h-3.5 text-[#ffdf00] shrink-0" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-2.5">
-                {[
-                  { title: "🌸 New User Recharge bonus ondep...", date: "23/09/2026 12:00:00" },
-                  { title: "🌸 New User Recharge bonus ondep...", date: "22/09/2026 12:00:00" },
-                  { title: "🎉 Huge Tuesday Bonus Waiting!", date: "22/09/2026 12:00:00" },
-                  { title: "📢 EVO Live Casino Weekly Rewar...", date: "21/09/2026 12:00:00" },
-                  { title: "📢 Cricket Sport Weekly Allowances...", date: "21/09/2026 08:00:00" },
-                  { title: "🚀 Hey 8111C Players in Pakistan! 🎉", date: "21/09/2026 00:00:00" },
-                  { title: "🌸 New User Recharge bonus ondep...", date: "20/09/2026 12:00:00" },
-                  { title: "🌸 New User Recharge bonus ondep...", date: "18/09/2026 12:00:00" }
-                ].map((item, i) => (
-                  <div key={i} className="bg-[#1c1c1c] rounded-lg p-3 flex items-center gap-3 border border-neutral-800 shadow-md cursor-pointer hover:border-[#ff0b0b] transition-colors group">
+                {filteredNotices.map((item) => (
+                  <div key={item.id} onClick={() => handleMessageClick(item, 'notice')} className="bg-[#1c1c1c] rounded-lg p-3 flex items-center gap-3 border border-neutral-800 shadow-md cursor-pointer hover:border-[#ff0b0b] transition-colors group">
                     <div className="relative shrink-0">
-                       <MessageCircle className="w-6 h-6 fill-neutral-600 text-neutral-600 group-hover:fill-[#ffdf00] group-hover:text-[#ffdf00] transition-colors" />
+                       <MessageCircle className={`w-6 h-6 fill-neutral-600 transition-colors ${item.read ? 'text-neutral-600' : 'text-neutral-400 group-hover:fill-[#ffdf00] group-hover:text-[#ffdf00]'}`} />
                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-0.5">
                          <div className="w-1 h-1 bg-[#1c1c1c] rounded-full"></div>
                          <div className="w-1 h-1 bg-[#1c1c1c] rounded-full"></div>
                          <div className="w-1 h-1 bg-[#1c1c1c] rounded-full"></div>
                        </div>
-                       <div className="w-2.5 h-2.5 rounded-full bg-[#cc0000] absolute -top-1 -right-1 border-2 border-[#1c1c1c]"></div>
+                       {!item.read && <div className="w-2.5 h-2.5 rounded-full bg-[#cc0000] absolute -top-1 -right-1 border-2 border-[#1c1c1c]"></div>}
                     </div>
                     <div className="flex-1 flex flex-col justify-center">
-                      <h4 className="text-[12px] font-bold text-white truncate">{item.title}</h4>
+                      <h4 className={`text-[12px] font-bold truncate ${item.read ? 'text-neutral-400' : 'text-white'}`}>{item.title}</h4>
                       <span className="text-[9px] text-neutral-500 mt-0.5">{item.date}</span>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
-                      <span className="text-[12px] font-bold text-white group-hover:text-[#ffdf00] transition-colors">Unread</span>
+                      <span className={`text-[12px] font-bold transition-colors ${item.read ? 'text-neutral-600' : 'text-white group-hover:text-[#ffdf00]'}`}>{item.read ? 'Read' : 'Unread'}</span>
                       <ChevronRight className="w-4 h-4 text-neutral-500" />
                     </div>
                   </div>
                 ))}
-              </div>
-
-              {/* Pagination */}
-              <div className="flex justify-center gap-2 mt-4 pb-4">
-                <button className="w-8 h-8 flex items-center justify-center rounded bg-[#cc0000] text-white font-bold text-[12px] shadow-md">1</button>
-                <button className="w-8 h-8 flex items-center justify-center rounded bg-transparent border border-neutral-700 text-neutral-400 font-bold text-[12px] hover:border-[#ff0b0b] hover:text-[#ffdf00]">2</button>
-                <button className="w-8 h-8 flex items-center justify-center rounded bg-transparent border border-neutral-700 text-neutral-400 font-bold text-[12px] hover:border-[#ff0b0b] hover:text-[#ffdf00]">3</button>
-                <button className="w-8 h-8 flex items-center justify-center rounded bg-transparent border border-neutral-700 text-neutral-400 hover:border-[#ff0b0b] hover:text-[#ffdf00]">
-                  <ChevronRight className="w-4 h-4" />
-                </button>
+                {filteredNotices.length === 0 && (
+                  <div className="text-center text-neutral-500 text-[12px] mt-4">No notices found</div>
+                )}
               </div>
             </motion.div>
           )}
@@ -348,29 +379,29 @@ export default function SupportPage() {
           {(activeTab === "Marquee") && (
             <motion.div key="marquee" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3 pt-3 px-3 pb-8">
               <div className="flex gap-2 mb-2">
-                <div className="flex-1 flex items-center bg-[#141414] border border-neutral-700 rounded-full px-3 py-1.5 shadow-inner max-w-[200px]">
-                  <input type="text" placeholder="Search" className="bg-transparent border-none outline-none text-[11px] text-white w-full placeholder:text-neutral-500" />
+                <div className="flex-1 flex items-center bg-[#141414] border border-neutral-700 rounded-full px-3 py-1.5 shadow-inner w-full focus-within:ring-1 focus-within:ring-[#ffdf00] transition-all">
+                  <input type="text" placeholder="Search" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="bg-transparent border-none outline-none text-[11px] text-white w-full placeholder:text-neutral-500" />
                   <Search className="w-3.5 h-3.5 text-[#ffdf00] shrink-0" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-2.5">
-                {[
-                  { title: "8111c official website 【8111c.vip】 Collection ~ ..." },
-                  { title: "Welcome to 8111C.com - The Premier Online ..." }
-                ].map((item, i) => (
-                  <div key={i} className="bg-[#1c1c1c] rounded-lg py-4 px-3 flex items-center gap-3 border border-neutral-800 shadow-md cursor-pointer hover:border-[#ff0b0b] transition-colors group">
+                {filteredMarquees.map((item) => (
+                  <div key={item.id} onClick={() => handleMessageClick(item, 'marquee')} className="bg-[#1c1c1c] rounded-lg py-4 px-3 flex items-center gap-3 border border-neutral-800 shadow-md cursor-pointer hover:border-[#ff0b0b] transition-colors group">
                     <div className="shrink-0 pl-1">
-                       <span className="text-xl grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all">🔊</span>
+                       <span className={`text-xl transition-all ${item.read ? 'grayscale opacity-30' : 'grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100'}`}>🔊</span>
                     </div>
                     <div className="flex-1 flex flex-col justify-center">
-                      <h4 className="text-[12px] font-bold text-white truncate">{item.title}</h4>
+                      <h4 className={`text-[12px] font-bold truncate ${item.read ? 'text-neutral-500' : 'text-white'}`}>{item.title}</h4>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
                       <ChevronRight className="w-4 h-4 text-neutral-500" />
                     </div>
                   </div>
                 ))}
+                {filteredMarquees.length === 0 && (
+                  <div className="text-center text-neutral-500 text-[12px] mt-4">No marquees found</div>
+                )}
               </div>
             </motion.div>
           )}
@@ -379,6 +410,38 @@ export default function SupportPage() {
       </div>
 
       <BottomNav activeTab="support" />
+
+      {/* Message Viewer Modal */}
+      <AnimatePresence>
+        {selectedMessage && (
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: 50 }} 
+            className="fixed inset-0 z-50 bg-[#0a0a0a] flex flex-col"
+          >
+            <div className="flex items-center h-14 px-4 bg-[#141414] border-b border-neutral-800">
+              <div onClick={() => setSelectedMessage(null)} className="w-8 h-8 flex items-center justify-center -ml-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer">
+                <ChevronLeft className="w-6 h-6 text-neutral-400" />
+              </div>
+              <div className="flex-1 text-center font-bold text-[16px] text-white capitalize">{selectedMessage.type} Details</div>
+              <div className="w-8 h-8"></div>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+              <h2 className="text-[18px] font-bold text-[#ffdf00] leading-snug">{selectedMessage.title}</h2>
+              {selectedMessage.date && <p className="text-[11px] text-neutral-500 border-b border-neutral-800 pb-3">{selectedMessage.date}</p>}
+              <div className="text-[14px] text-neutral-200 leading-relaxed whitespace-pre-wrap">
+                {selectedMessage.content}
+              </div>
+            </div>
+            <div className="p-4 bg-[#141414] border-t border-neutral-800">
+              <button onClick={() => setSelectedMessage(null)} className="w-full bg-[#cc0000] text-white font-bold rounded-lg py-3 hover:bg-[#ff0b0b] transition-colors shadow-lg">
+                Close
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
@@ -392,6 +455,3 @@ function HeadsetIcon(props: any) {
     </svg>
   );
 }
-
-
-
