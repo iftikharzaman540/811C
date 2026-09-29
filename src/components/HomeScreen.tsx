@@ -255,6 +255,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     }
   }, [realGames]);
 
+  const [sidebarSearch, setSidebarSearch] = useState("");
   const [isLoadingGames, setIsLoadingGames] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
   const [globalSearch, setGlobalSearch] = useState("");
@@ -1290,24 +1291,81 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               </div>
 
               {/* Search */}
-              <div className="bg-[#242424] rounded-lg p-3 flex items-center gap-2">
+              <div className="bg-[#242424] rounded-lg p-3 flex items-center gap-2 focus-within:ring-1 focus-within:ring-[#ffdf00] transition-all relative z-50">
                 <Search className="w-5 h-5 text-neutral-400" />
-                <input type="text" placeholder="Search" className="bg-transparent border-none outline-none text-[14px] text-white placeholder-neutral-400 w-full" />
+                <input 
+                  type="text" 
+                  placeholder="Search games..." 
+                  value={sidebarSearch}
+                  onChange={(e) => setSidebarSearch(e.target.value)}
+                  className="bg-transparent border-none outline-none text-[14px] text-white placeholder-neutral-400 w-full" 
+                />
+                {sidebarSearch && (
+                  <button onClick={() => setSidebarSearch("")} className="text-neutral-400 hover:text-white">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                )}
               </div>
+
+              {/* Search Results Dropdown inside Sidebar */}
+              {sidebarSearch && (
+                <div className="mt-2 bg-[#1c1c1c] rounded-lg border border-neutral-800 overflow-hidden max-h-[300px] overflow-y-auto no-scrollbar shadow-xl">
+                  {realGames.filter((g: any) => (g.title || g.name)?.toLowerCase().includes(sidebarSearch.toLowerCase())).length > 0 ? (
+                    <div className="flex flex-col">
+                      {realGames.filter((g: any) => (g.title || g.name)?.toLowerCase().includes(sidebarSearch.toLowerCase())).slice(0, 15).map((game: any, gIdx: number) => (
+                        <div 
+                          key={gIdx}
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setSidebarSearch("");
+                            if (typeof window !== 'undefined' && (window as any).handleLaunchGame) {
+                              (window as any).handleLaunchGame(game.id || game.name);
+                            }
+                          }}
+                          className="flex items-center gap-3 p-3 border-b border-neutral-800/50 hover:bg-[#2a2a2a] cursor-pointer transition-colors"
+                        >
+                          <div className="w-10 h-10 rounded-md overflow-hidden bg-neutral-900 flex shrink-0">
+                            {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover" /> : <div className="m-auto text-xl">{game.graphic}</div>}
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[13px] font-medium text-white">{game.title || game.name}</span>
+                            <span className="text-[10px] text-[#ffdf00]">{game.provider || 'Casino'}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="p-4 text-center text-[12px] text-neutral-500">
+                      No games found matching "{sidebarSearch}"
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Game Categories Grid */}
               <div className="grid grid-cols-2 gap-2 mt-2">
                 {[
-                  { name: "Hot", icon: "🔥" },
-                  { name: "Mini Games", icon: "🎲" },
-                  { name: "Slot", icon: "🎰" },
-                  { name: "Fishing", icon: "🦈" },
-                  { name: "Cards", icon: "🃏" },
-                  { name: "Live", icon: "👩‍💼" },
-                  { name: "Sports", icon: "⚽" },
-                  { name: "Recent", icon: "🕒" },
-                ].map((cat) => (
-                  <button key={cat.name} onClick={() => { setIsMenuOpen(false); toast.success(`Viewing ${cat.name} games`); }} className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg py-3 flex flex-col items-center justify-center gap-1.5 transition-colors">
+                    { name: "Hot", id: "section-hot", icon: "🔥" },
+                    { name: "Mini Games", id: "section-mini", icon: "🎲" },
+                    { name: "Slot", id: "section-slot", icon: "🎰" },
+                    { name: "Fishing", id: "section-fishing", icon: "🦈" },
+                    { name: "Cards", id: "section-cards", icon: "🃏" },
+                    { name: "Live", id: "section-live", icon: "👩‍💼" },
+                    { name: "Sports", id: "section-sports", icon: "⚽" },
+                    { name: "Recent", id: "section-hot", icon: "🕒" },
+                  ].map((cat) => (
+                    <button key={cat.name} onClick={() => { 
+                      setIsMenuOpen(false); 
+                      setTimeout(() => {
+                        const el = document.getElementById(cat.id);
+                        if (el) {
+                          setActiveCategory(cat.id);
+                          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        } else {
+                          toast.success(`Viewing ${cat.name} games`); 
+                        }
+                      }, 300); // Wait for menu to close before scrolling
+                    }} className="bg-[#242424] hover:bg-[#2a2a2a] rounded-lg py-3 flex flex-col items-center justify-center gap-1.5 transition-colors">
                     <span className="text-2xl">{cat.icon}</span>
                     <span className="text-[13px]">{cat.name}</span>
                   </button>
