@@ -1,4 +1,6 @@
 "use client";
+import toast from "react-hot-toast";
+
 
 import { useState } from "react";
 import Link from "next/link";
@@ -69,12 +71,8 @@ export default function SupportPage() {
                   Chat with the professional customer service online to solve your problems.
                 </p>
                 <div className="flex gap-3">
-                  <button className="flex-1 border border-[#ff0b0b] text-[#ffdf00] rounded-lg py-2.5 text-[12px] font-medium hover:bg-[#2e0505] transition-colors">
-                    Customer Service
-                  </button>
-                  <button className="flex-1 border border-[#ff0b0b] text-[#ffdf00] rounded-lg py-2.5 text-[12px] font-medium hover:bg-[#2e0505] transition-colors">
-                    Telegram CS
-                  </button>
+                  <button onClick={() => window.open('https://t.me/Game8111c', '_blank')} className="flex-1 border border-[#ff0b0b] text-[#ffdf00] rounded-lg py-2.5 text-[12px] font-medium hover:bg-[#2e0505] transition-colors shadow-[0_0_10px_rgba(255,11,11,0.2)]">Customer Service</button>
+                  <button onClick={() => window.open('https://t.me/Game8111c', '_blank')} className="flex-1 border border-[#ff0b0b] text-[#ffdf00] rounded-lg py-2.5 text-[12px] font-medium hover:bg-[#2e0505] transition-colors shadow-[0_0_10px_rgba(255,11,11,0.2)]">Telegram CS</button>
                 </div>
               </div>
 
@@ -221,28 +219,23 @@ export default function SupportPage() {
                 <div className="flex items-center justify-between gap-4">
                   <h3 className="text-[15px] font-bold text-white shrink-0">Help Center</h3>
                   <div className="flex-1 flex items-center bg-[#111111] border border-neutral-700 rounded-full px-3 py-1.5 shadow-inner">
-                    <input type="text" placeholder="Enter your question" className="bg-transparent border-none outline-none text-[11px] text-white w-full placeholder:text-neutral-500" />
+                    <input type="text" onKeyDown={(e) => { if(e.key === 'Enter') { toast.success('Searching knowledge base...'); e.currentTarget.value = ''; } }} placeholder="Enter your question" className="bg-transparent border-none outline-none text-[11px] text-white w-full placeholder:text-neutral-500" />
                     <Search className="w-4 h-4 text-[#ffdf00] shrink-0" />
                   </div>
                 </div>
                 
                 <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                  <button className="shrink-0 flex items-center gap-1.5 bg-[#cc0000] border border-[#ff0b0b] text-white text-[12px] font-bold px-3 py-1.5 rounded shadow-md">
-                    <Download className="w-3.5 h-3.5" /> Download APP
-                  </button>
-                  <button className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 text-[12px] font-medium px-3 py-1.5 rounded">
+                  <button onClick={() => toast.success('Starting APK download...')} className="shrink-0 flex items-center gap-1.5 bg-[#cc0000] border border-[#ff0b0b] text-white text-[12px] font-bold px-3 py-1.5 rounded shadow-md hover:scale-105 transition-transform"><Download className="w-3.5 h-3.5" /> Download APP</button>
+                  <button onClick={() => toast.success('Fetching Proxy FAQ...')} className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 hover:text-white hover:border-[#ffdf00] transition-colors hover:text-white hover:border-[#ffdf00] transition-colors text-[12px] font-medium px-3 py-1.5 rounded">
                     🤝 Proxy Problem
                   </button>
-                  <button className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 text-[12px] font-medium px-3 py-1.5 rounded">
+                  <button onClick={() => toast.success('Fetching Reload FAQ...')} className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 text-[12px] font-medium px-3 py-1.5 rounded">
                     💳 Reload Que...
                   </button>
                 </div>
 
                 <div className="mt-2">
-                  <button className="w-full flex justify-between items-center text-[12px] font-medium text-white hover:text-[#ffdf00] transition-colors py-1">
-                    <span>1. APP installation steps</span>
-                    <ChevronRight className="w-4 h-4 text-neutral-500" />
-                  </button>
+                  <button onClick={() => toast('1. Download APK\n2. Enable Unknown Sources\n3. Install & Play', { icon: 'ðŸ“±', style: { background: '#333', color: '#fff'} })} className="w-full flex justify-between items-center text-[12px] font-medium text-white hover:text-[#ffdf00] transition-colors py-1"><span>1. APP installation steps</span><ChevronRight className="w-4 h-4 text-neutral-500" /></button>
                 </div>
               </div>
 
