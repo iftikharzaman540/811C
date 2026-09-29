@@ -643,10 +643,6 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
                 </div>
                 
-                {/* Free to claim pill (Matches Screenshot) */}
-                <div className="absolute bottom-7 w-[90%] left-[5%] bg-black border border-[#ffdf00] rounded-full py-0.5 text-center z-20 shadow-md">
-                   <span className="text-white text-[9px] font-bold">Free to claim <span className="text-[#ffdf00]">Rs 888</span></span>
-                </div>
 
                 {/* Bottom Name Plate */}
                 <div className="w-full bg-gradient-to-t from-black/90 via-black/50 to-transparent pt-6 pb-1.5 text-center mt-auto relative z-10">
