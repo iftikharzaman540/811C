@@ -393,7 +393,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           <img src="/header-logo.jpg" alt="8111C" className="h-[28px] w-auto shrink-0 object-contain mix-blend-screen" />
 
           {/* Text ON ONE LINE */}
-          <div className="truncate text-[13px] font-bold tracking-tight">
+          <div className="truncate text-[11px] font-semibold tracking-tight">
             <span className="text-white">Download app bonus </span>
             <span className="text-[#ffdf00]">Rs 888</span>
           </div>
@@ -491,14 +491,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       <div className="max-w-md mx-auto relative pt-4">
         
         {/* Quick Links (Pixel Perfect) */}
-        <div className="grid grid-cols-6 gap-2 px-3 mb-4 mt-1">
+        <div className="grid grid-cols-6 gap-1.5 px-3 mb-2 mt-0">
           {[
-            { name: "Invite", icon: <User className="w-6 h-6 text-[#ffdf00]" /> },
-            { name: "VIP", icon: <Gem className="w-6 h-6 text-[#ffdf00]" /> },
-            { name: "Receive", icon: <Gift className="w-6 h-6 text-[#ffdf00]" /> },
-            { name: "Rebate", icon: <RefreshCcw className="w-6 h-6 text-[#ffdf00]" /> },
-            { name: "Subsidy", icon: <CircleDollarSign className="w-6 h-6 text-[#ffdf00]" /> },
-            { name: "Spins", icon: <Aperture className="w-6 h-6 text-[#ffdf00]" /> },
+            { name: "Invite", icon: <User className="w-5 h-5 text-[#ffdf00]" /> },
+            { name: "VIP", icon: <Gem className="w-5 h-5 text-[#ffdf00]" /> },
+            { name: "Receive", icon: <Gift className="w-5 h-5 text-[#ffdf00]" /> },
+            { name: "Rebate", icon: <RefreshCcw className="w-5 h-5 text-[#ffdf00]" /> },
+            { name: "Subsidy", icon: <CircleDollarSign className="w-5 h-5 text-[#ffdf00]" /> },
+            { name: "Spins", icon: <Aperture className="w-5 h-5 text-[#ffdf00]" /> },
           ].map((item, i) => (
             <div key={i} onClick={() => {
     if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); return; }
@@ -506,10 +506,10 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     else if (item.name === "Spins" || item.name === "Rebate") window.location.href = "/promo";
     else toast.success(item.name + " opened");
   }} className="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform">
-              <div className="w-full aspect-square rounded-[10px] bg-gradient-to-b from-[#2a0505] to-black border-t-[2px] border-t-[#ff0b0b] border-x border-b border-[#330000] flex items-center justify-center shadow-[0_0_12px_rgba(255,11,11,0.3)] mb-1">
+              <div className="w-full aspect-square rounded-[10px] bg-gradient-to-b from-[#2a0505] to-black border-t-[2px] border-t-[#ff0b0b] border-x border-b border-[#330000] flex items-center justify-center shadow-[0_0_12px_rgba(255,11,11,0.3)] mb-0.5">
                 {item.icon}
               </div>
-              <span className="text-white text-[11px] font-bold">{item.name}</span>
+              <span className="text-white text-[10px] font-medium">{item.name}</span>
             </div>
           ))}
         </div>
@@ -554,7 +554,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           </div>
 
           {/* Slider Container */}
-          <div id="category-scroll-container" className="flex justify-between items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-10 gap-4" style={{ scrollBehavior: 'smooth' }}>
+          <div id="category-scroll-container" className="flex justify-between items-center overflow-x-auto [&::-webkit-scrollbar]:hidden px-8 gap-3" style={{ scrollBehavior: 'smooth' }}>
             {[
               { name: "Hot", id: "section-hot", icon: "🔥", active: activeCategory === "section-hot" || activeCategory === "All" },
               { name: "Mini", id: "section-mini", icon: "🎲", active: activeCategory === "section-mini" },
@@ -571,11 +571,11 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
               }} className="flex flex-col items-center cursor-pointer group shrink-0">
-                <div className={"w-[54px] h-[54px] rounded-[18px] flex flex-col items-center justify-center mb-2 transition-all duration-300 " + (cat.active ? 'bg-gradient-to-br from-[#ffdf00] to-[#ffaa00] shadow-[0_0_15px_rgba(255,223,0,0.4)] scale-110' : 'bg-gradient-to-br from-[#1f1f1f] to-[#0a0a0a] border border-neutral-800 shadow-inner group-hover:border-neutral-600 group-hover:scale-105')}>
-                  <span className={"text-[28px] drop-shadow-md transition-transform " + (cat.active ? 'scale-110' : 'grayscale-[0.3] group-hover:grayscale-0')}>{cat.icon}</span>
+                <div className={"w-[46px] h-[46px] rounded-[14px] flex flex-col items-center justify-center mb-1 transition-all duration-300 " + (cat.active ? 'bg-gradient-to-br from-[#ffdf00] to-[#ffaa00] shadow-[0_0_15px_rgba(255,223,0,0.4)] scale-110' : 'bg-gradient-to-br from-[#1f1f1f] to-[#0a0a0a] border border-neutral-800 shadow-inner group-hover:border-neutral-600 group-hover:scale-105')}>
+                  <span className={"text-[22px] drop-shadow-md transition-transform " + (cat.active ? 'scale-110' : 'grayscale-[0.3] group-hover:grayscale-0')}>{cat.icon}</span>
                 </div>
-                <span className={"text-[13px] font-bold tracking-tight transition-colors " + (cat.active ? 'text-[#ffdf00]' : 'text-neutral-500 group-hover:text-neutral-300')}>{cat.name}</span>
-                {cat.active && <div className="w-1 h-1 bg-[#ffdf00] rounded-full mt-1 shadow-[0_0_5px_#ffdf00]"></div>}
+                <span className={"text-[11px] font-semibold tracking-tight transition-colors " + (cat.active ? 'text-[#ffdf00]' : 'text-neutral-500 group-hover:text-neutral-300')}>{cat.name}</span>
+                {cat.active && <div className="w-1 h-1 bg-[#ffdf00] rounded-full mt-0.5 shadow-[0_0_5px_#ffdf00]"></div>}
               </div>
             ))}
           </div>
