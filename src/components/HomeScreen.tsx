@@ -516,81 +516,102 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           </div>
         </div>
 
-        {/* Alliance Cards (Pixel Perfect) */}
-        <div className="px-3 mb-4 grid grid-cols-3 gap-2">
+        {/* Alliance Cards (Beautiful) */}
+        <div className="px-3 mb-5 grid grid-cols-3 gap-2.5">
           {[
-            { logo: "PKR365", text: "Rs 666", color: "from-[#2e0505]", border: "border-[#ff0b0b]", shadow: "shadow-[0_0_10px_rgba(255,11,11,0.3)]", icon: "🦅" },
-            { logo: "PKRBET", text: "Rs 888", color: "from-[#0a1a2f]", border: "border-[#00aaff]", shadow: "shadow-[0_0_10px_rgba(0,170,255,0.2)]", icon: "🐔" },
-            { logo: "PX8888", text: "Rs 888", color: "from-[#1a1a1a]", border: "border-[#ff0b0b]", shadow: "shadow-[0_0_10px_rgba(255,11,11,0.3)]", icon: "👑" },
+            { logo: "PKR365", text: "Rs 666", color: "from-[#3a0a0a]", border: "border-[#ff0b0b]", shadow: "shadow-[0_0_15px_rgba(255,11,11,0.2)]", icon: "🦅" },
+            { logo: "PKRBET", text: "Rs 888", color: "from-[#0a203f]", border: "border-[#00aaff]", shadow: "shadow-[0_0_15px_rgba(0,170,255,0.2)]", icon: "🐔" },
+            { logo: "PX8888", text: "Rs 888", color: "from-[#2a2a2a]", border: "border-[#ffdf00]", shadow: "shadow-[0_0_15px_rgba(255,223,0,0.15)]", icon: "👑" },
           ].map((card, i) => (
-            <div key={i} className={`relative rounded-xl bg-gradient-to-b ${card.color} to-[#0a0a0a] border border-neutral-800 border-b-[2px] ${card.border} p-1.5 flex flex-col items-center justify-between h-[85px] ${card.shadow}`}>
-              {/* Red dot */}
-              <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#ff3b30] rounded-full border border-black z-10 shadow-sm"></div>
+            <div key={i} className={`relative rounded-2xl bg-gradient-to-b ${card.color} to-black border border-neutral-800 border-b-[3px] ${card.border} p-2 flex flex-col items-center justify-between h-[95px] ${card.shadow} hover:-translate-y-1 transition-transform cursor-pointer overflow-hidden group`}>
+              {/* Shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
-              <h3 className="text-white font-black italic text-[14px] leading-tight flex items-center mt-1">
+              {/* Red dot */}
+              <div className="absolute top-0 right-0 w-4 h-4 bg-[#ff3b30] rounded-bl-xl flex items-center justify-center z-10 shadow-sm border-l border-b border-black">
+                <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+              </div>
+              
+              <h3 className="font-black italic text-[15px] leading-tight flex items-center mt-1 bg-gradient-to-r from-white via-gray-200 to-gray-400 text-transparent bg-clip-text drop-shadow-md">
                  {card.logo}
               </h3>
               
-              <div className="text-[28px] mt-auto mb-1 opacity-90 drop-shadow-md">{card.icon}</div>
+              <div className="text-[32px] mt-auto mb-1 opacity-95 drop-shadow-xl group-hover:scale-110 transition-transform">{card.icon}</div>
               
-              <div className="w-full bg-black/80 rounded-full py-[3px] px-1 border border-white/10 text-center relative z-10 mt-auto flex flex-col items-center">
-                 <p className="text-[8px] text-white font-bold leading-none whitespace-nowrap mb-[2px]">Free to claim <span className="text-[#ffdf00]">{card.text}</span></p>
-                 <div className="bg-black text-white text-[6px] border border-neutral-600 rounded-full py-[1px] px-1 font-bold leading-none w-fit">Cooperation Alliance</div>
+              <div className="w-full rounded-full overflow-hidden border border-white/10 text-center relative z-10 mt-auto flex flex-col">
+                 <div className="bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-700 py-[3px]">
+                   <p className="text-[9px] text-black font-black leading-none whitespace-nowrap drop-shadow-sm">Free to claim {card.text}</p>
+                 </div>
+                 <div className="bg-neutral-900 text-white/70 text-[6px] py-[2px] font-bold leading-none tracking-widest uppercase">Alliance</div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Marquee Bar (Pixel Perfect) */}
-        <div className="px-3 mb-6 flex items-center gap-2">
-          <Volume2 className="w-5 h-5 text-[#ff0b0b] shrink-0" />
-          <div className="flex-1 overflow-hidden relative h-5 flex items-center border-r border-neutral-800">
-             <p className="text-[#ffdf00] text-[13px] whitespace-nowrap absolute left-0 animate-marquee">
-               Welcome to 8111C.com &nbsp;|&nbsp; Bigger Rewards &nbsp;|&nbsp; More Games &nbsp;|&nbsp; Play & Win!
-             </p>
-          </div>
-          <div className="relative shrink-0 ml-1 mr-1">
-            <Mail className="w-6 h-6 text-neutral-500" />
-            <div className="absolute -top-1.5 -right-2 bg-[#ff3b30] text-white text-[10px] font-bold px-1 rounded-md min-w-[18px] text-center shadow-sm leading-tight border border-black">
-              31
+        {/* Marquee Bar (Beautiful) */}
+        <div className="px-3 mb-7">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-[#141414] via-[#1a1a1a] to-[#141414] rounded-full border border-neutral-800 p-1.5 shadow-inner relative overflow-hidden">
+            <div className="absolute left-0 w-8 h-full bg-gradient-to-r from-[#141414] to-transparent z-10"></div>
+            <div className="bg-gradient-to-br from-red-600 to-red-900 w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(255,0,0,0.4)] z-20">
+              <Volume2 className="w-4 h-4 text-white" />
+            </div>
+            <div className="flex-1 overflow-hidden relative h-6 flex items-center">
+               <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] text-[13px] font-medium whitespace-nowrap absolute left-0 animate-marquee z-0">
+                 Welcome to 8111C.com &nbsp;✨&nbsp; Bigger Rewards &nbsp;✨&nbsp; More Games &nbsp;✨&nbsp; Play & Win Big Today!
+               </p>
+            </div>
+            <div className="absolute right-0 w-12 h-full bg-gradient-to-l from-[#141414] to-transparent z-10"></div>
+            <div className="relative shrink-0 ml-1 mr-2 z-20 cursor-pointer hover:scale-110 transition-transform">
+              <Mail className="w-6 h-6 text-neutral-400 hover:text-white transition-colors" />
+              <div className="absolute -top-1.5 -right-2 bg-[#ff0b0b] text-white text-[10px] font-bold px-1.5 rounded-full min-w-[18px] text-center shadow-[0_0_8px_rgba(255,11,11,0.6)] leading-tight border border-black animate-pulse">
+                31
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Category Navigation Slider (Pixel Perfect) */}
-        <div className="relative px-1 mb-8">
+        {/* Category Navigation Slider (Beautiful) */}
+        <div className="relative px-0 mb-8">
+          {/* Left Fade */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
+
           {/* Left Arrow */}
-          <div className="absolute left-1 top-1/2 -translate-y-1/2 z-10">
-            <button onClick={() => toast("Scrolling...")} className="w-6 h-6 rounded-full bg-black/60 border border-neutral-700 flex items-center justify-center text-white/70 hover:text-white hover:bg-black/80 shadow-md">
+          <div className="absolute left-2 top-1/2 -translate-y-1/2 z-20">
+            <button onClick={() => toast("Scrolling left")} className="w-7 h-7 rounded-full bg-black/80 backdrop-blur-sm border border-neutral-700 flex items-center justify-center text-white/70 hover:text-white hover:bg-[#ffdf00]/20 hover:border-[#ffdf00] transition-all shadow-lg">
               <ChevronLeft className="w-4 h-4 -ml-0.5" />
             </button>
           </div>
 
           {/* Slider Container */}
-          <div className="flex justify-between items-center overflow-x-hidden px-8">
+          <div className="flex justify-between items-center overflow-x-auto no-scrollbar px-10 gap-4">
             {[
-              { name: "Slot", icon: "🎰" },
+              { name: "Slot", icon: "🎰", active: true },
               { name: "Fishing", icon: "🦈" },
               { name: "Cards", icon: "🃏" },
               { name: "Live", icon: "👩‍💼" },
               { name: "Sports", icon: "⚽" },
             ].map((cat, i) => (
-              <div key={i} onClick={() => toast.success(`Viewing ${cat.name} games`)} className="flex flex-col items-center opacity-70 hover:opacity-100 cursor-pointer transition-opacity">
-                <span className="text-[26px] mb-1 drop-shadow-md">{cat.icon}</span>
-                <span className="text-[12px] text-neutral-400 font-medium">{cat.name}</span>
+              <div key={i} onClick={() => toast.success(`Viewing ${cat.name} games`)} className="flex flex-col items-center cursor-pointer group shrink-0">
+                <div className={`w-[54px] h-[54px] rounded-[18px] flex flex-col items-center justify-center mb-2 transition-all duration-300 ${cat.active ? 'bg-gradient-to-br from-[#ffdf00] to-[#ffaa00] shadow-[0_0_15px_rgba(255,223,0,0.4)] scale-110' : 'bg-gradient-to-br from-[#1f1f1f] to-[#0a0a0a] border border-neutral-800 shadow-inner group-hover:border-neutral-600 group-hover:scale-105'}`}>
+                  <span className={`text-[28px] drop-shadow-md transition-transform ${cat.active ? 'scale-110' : 'grayscale-[0.3] group-hover:grayscale-0'}`}>{cat.icon}</span>
+                </div>
+                <span className={`text-[13px] font-bold tracking-tight transition-colors ${cat.active ? 'text-[#ffdf00]' : 'text-neutral-500 group-hover:text-neutral-300'}`}>{cat.name}</span>
+                {cat.active && <div className="w-1 h-1 bg-[#ffdf00] rounded-full mt-1 shadow-[0_0_5px_#ffdf00]"></div>}
               </div>
             ))}
           </div>
 
+          {/* Right Fade */}
+          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
+
           {/* Right Arrow */}
-          <div className="absolute right-1 top-1/2 -translate-y-1/2 z-10">
-            <button onClick={() => toast("Scrolling...")} className="w-6 h-6 rounded-full bg-black/60 border border-neutral-700 flex items-center justify-center text-white/70 hover:text-white hover:bg-black/80 shadow-md">
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 z-20">
+            <button onClick={() => toast("Scrolling right")} className="w-7 h-7 rounded-full bg-black/80 backdrop-blur-sm border border-neutral-700 flex items-center justify-center text-white/70 hover:text-white hover:bg-[#ffdf00]/20 hover:border-[#ffdf00] transition-all shadow-lg">
               <ChevronRight className="w-4 h-4 -mr-0.5" />
             </button>
           </div>
         </div>
 
-        
         {/* GLOBAL SEARCH BAR */}
         <div className="px-4 mb-6">
           <div className="relative w-full h-12 bg-[#141414] rounded-full border border-neutral-800 shadow-inner flex items-center px-4 overflow-hidden focus-within:border-[#cc0000] focus-within:shadow-[0_0_15px_rgba(204,0,0,0.3)] transition-all">
