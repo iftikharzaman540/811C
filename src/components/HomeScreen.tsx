@@ -221,7 +221,10 @@ const marqueeWinners = [...grandPrizeWinners, ...grandPrizeWinners, ...grandPriz
 
 const heroBanners = [
   { imageUrl: "/banners/banner1.jpg" },
-  { imageUrl: "/banners/banner2.jpg" }
+  { imageUrl: "/banners/banner2.jpg" },
+  { imageUrl: "/banners/banner3.jpg" },
+  { imageUrl: "/banners/banner4.jpg" },
+  { imageUrl: "/banners/banner5.jpg" }
 ];
 
 import toast from "react-hot-toast";
