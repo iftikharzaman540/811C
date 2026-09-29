@@ -8,7 +8,8 @@ import { useUser } from "@/context/UserContext";
 
 export default function WithdrawScreen() {
   const router = useRouter();
-  const { user, refreshUser } = useUser();
+  const { user, loading: userLoading, refreshUser } = useUser();
+  useEffect(() => { if (!userLoading && !user) { toast.error("Please login first"); router.push("/"); } }, [user, userLoading, router]);
   const [hasPassword, setHasPassword] = useState<boolean | null>(null);
   
   const [password, setPassword] = useState("");
