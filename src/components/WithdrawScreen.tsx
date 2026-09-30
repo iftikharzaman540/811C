@@ -121,6 +121,14 @@ export default function WithdrawScreen() {
     );
   };
 
+  const req = Number(user?.current_wagering_requirement || 0);
+  const comp = Number(user?.current_wagering_completed || 0);
+  const remaining = Math.max(0, req - comp);
+  const progress = req > 0 ? Math.min(100, (comp / req) * 100).toFixed(0) : 100;
+  const isEligible = comp >= req;
+  const todayCount = Number(user?.today_withdrawals_count || 0);
+  const remainingDaily = Math.max(0, 15 - todayCount);
+
   if (hasPassword === null) return <div className="min-h-screen bg-[#111]"></div>;
 
   return (
@@ -195,7 +203,46 @@ export default function WithdrawScreen() {
           </>
         ) : (
           <>
+            
             {/* Real Withdraw UI */}
+            
+            {/* Wagering Progress Box */}
+            <div className="bg-[#1a1a1a] rounded-xl p-4 mb-4 border border-neutral-800 shadow-lg">
+               <h3 className="text-white font-bold mb-3 flex items-center justify-between">
+                 Withdrawal Eligibility
+                 {isEligible ? (
+                   <span className="text-[#1fdf1f] text-xs px-2 py-1 bg-[#1fdf1f]/10 rounded flex items-center gap-1">✅ Available</span>
+                 ) : (
+                   <span className="text-[#ff5555] text-xs px-2 py-1 bg-[#ff5555]/10 rounded flex items-center gap-1">🔒 Locked</span>
+                 )}
+               </h3>
+               
+               <div className="space-y-1.5 text-sm text-neutral-400 mb-3">
+                 <div className="flex justify-between"><span>Required Betting:</span> <span className="text-white">PKR {req}</span></div>
+                 <div className="flex justify-between"><span>Bet Played:</span> <span className="text-white">PKR {comp}</span></div>
+                 <div className="flex justify-between font-medium"><span>Remaining:</span> <span className={isEligible ? "text-[#1fdf1f]" : "text-[#ffdf00]"}>PKR {remaining}</span></div>
+               </div>
+
+               <div className="w-full bg-neutral-800 rounded-full h-2 mb-1 overflow-hidden">
+                 <div className="bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+               </div>
+               <div className="flex justify-between text-xs text-neutral-500">
+                 <span>Progress: {progress}%</span>
+                 {!isEligible && <span className="text-[#ff5555]">Play PKR {remaining} more to unlock</span>}
+               </div>
+            </div>
+
+            <div className="bg-[#1a1a1a] rounded-xl p-4 mb-4 border border-neutral-800 flex justify-between items-center shadow-lg">
+               <div className="text-sm">
+                 <p className="text-neutral-400">Today's Withdrawals</p>
+                 <p className="text-white font-bold">{todayCount} / 15</p>
+               </div>
+               <div className="text-right text-sm">
+                 <p className="text-neutral-400">Remaining Today</p>
+                 <p className={remainingDaily > 0 ? "text-[#1fdf1f] font-bold" : "text-[#ff5555] font-bold"}>{remainingDaily}</p>
+               </div>
+            </div>
+
             <div className="bg-gradient-to-r from-neutral-800 to-neutral-900 rounded-xl p-4 mb-6 border border-neutral-700 shadow-lg">
               <p className="text-neutral-400 text-sm mb-1">Available Balance</p>
               <h2 className="text-3xl font-black text-[#ffdf00]">Rs {user?.balance || "0.00"}</h2>
@@ -228,7 +275,7 @@ export default function WithdrawScreen() {
                   type="number" 
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Minimum 500"
+                  placeholder="Minimum 100"
                   className="w-full bg-black border border-neutral-700 rounded-lg py-3 px-4 text-white font-bold text-lg focus:outline-none focus:border-[#ffdf00] placeholder:text-neutral-600 placeholder:font-normal"
                 />
               </div>

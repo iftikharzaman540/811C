@@ -16,6 +16,18 @@ export class WalletService {
     });
   }
 
+  
+  async updateWageringCompleted(userId: string, betAmount: number) {
+    if (betAmount <= 0) return;
+    
+    // We update current_wagering_completed for this user.
+    await this.prisma.$executeRaw`
+       UPDATE "User" 
+       SET current_wagering_completed = LEAST(current_wagering_completed + ${betAmount}, current_wagering_requirement)
+       WHERE id = '${userId}'
+    `;
+  }
+
   async processTransaction(data: {
     walletId: string;
     amount: number;
@@ -24,11 +36,37 @@ export class WalletService {
     description?: string;
   }) {
     return this.prisma.$transaction(async (tx) => {
-      const wallet = await tx.wallet.findUnique({
-        where: { id: data.walletId },
-      });
+        const wallet = await tx.wallet.findUnique({
+          where: { id: data.walletId },
+          include: { user: true }
+        });
 
-      if (!wallet) throw new BadRequestException('Wallet not found');
+        if (!wallet) throw new BadRequestException('Wallet not found');
+
+        // WAGERING REQUIREMENT UPDATE
+        if (data.type === 'DEPOSIT' && data.amount > 0) {
+           const currentReq = Number(wallet.user.current_wagering_requirement || 0);
+           const currentComp = Number(wallet.user.current_wagering_completed || 0);
+           
+           if (currentComp >= currentReq) {
+              // Reset and set to new deposit amount
+              await tx.user.update({
+                where: { id: wallet.user_id },
+                data: {
+                  current_wagering_requirement: data.amount,
+                  current_wagering_completed: 0
+                }
+              });
+           } else {
+              // Add to existing requirement
+              await tx.user.update({
+                where: { id: wallet.user_id },
+                data: {
+                  current_wagering_requirement: { increment: data.amount }
+                }
+              });
+           }
+        }
 
       const balanceBefore = wallet.balance.toNumber();
       const amount = data.amount;

@@ -94,10 +94,22 @@ export class AuthService {
     });
     if (!user) throw new UnauthorizedException();
     
+    // Count today's withdrawals
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayWithdrawalsCount = await this.prisma.payment.count({
+      where: {
+        user_id: userId,
+        type: 'WITHDRAWAL',
+        created_at: { gte: today }
+      }
+    });
+
     const { password_hash, wallet, ...safeUser } = user;
     return {
       ...safeUser,
-      balance: wallet ? wallet.balance.toNumber() : 0
+      balance: wallet ? wallet.balance.toNumber() : 0,
+      today_withdrawals_count: todayWithdrawalsCount
     };
   }
 

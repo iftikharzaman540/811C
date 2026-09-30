@@ -55,6 +55,9 @@ model User {
   country       String?
   referral_code String?   @unique
   
+  current_wagering_requirement Decimal @default(0.00) @db.Decimal(15, 2)
+  current_wagering_completed   Decimal @default(0.00) @db.Decimal(15, 2)
+
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
 
