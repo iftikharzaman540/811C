@@ -8,6 +8,10 @@ type User = {
   email?: string;
   balance: number;
   role: "USER" | "ADMIN" | "SUPER_ADMIN";
+  current_wagering_requirement?: number;
+  current_wagering_completed?: number;
+  today_withdrawals_count?: number;
+  [key: string]: any;
 };
 
 type UserContextType = {
