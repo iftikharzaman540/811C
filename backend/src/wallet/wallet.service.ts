@@ -112,14 +112,8 @@ export class WalletService {
       user_id: user.id
     };
   }
-  
-    const user = await this.prisma.user.findFirst({
-      where: { id: { startsWith: partialId } }
-    });
-    if (!user) throw new BadRequestException('Wallet not found');
-    return this.getBalance(user.id);
-  }
-\n  async getBalance(userId: string) {
+
+  async getBalance(userId: string) {
     const wallet = await this.prisma.wallet.findUnique({
       where: { user_id: userId },
     });
