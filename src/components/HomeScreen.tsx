@@ -260,6 +260,35 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [activeCategory, setActiveCategory] = useState("All");
   const [globalSearch, setGlobalSearch] = useState("");
   const [pages, setPages] = useState<any>({ hot: 0, mini: 0, slot: 0, fishing: 0, cards: 0, live: 0, sports: 0 });
+
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+  const handleTouchEnd = (category: string, maxPage: number) => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) {
+      setPages((p: any) => ({ ...p, [category]: Math.min(p[category] + 1, maxPage) }));
+    }
+    if (isRightSwipe) {
+      setPages((p: any) => ({ ...p, [category]: Math.max(p[category] - 1, 0) }));
+    }
+  };
+
+  const getMaxPage = (offset: number, pageSize: number) => {
+    return Math.max(0, Math.ceil((realGames.length - offset) / pageSize) - 1);
+  };
+
   
   
 
@@ -609,14 +638,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => setPages((p: any) => ({ ...p, hot: p.hot + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, hot: Math.min(p.hot + 1, getMaxPage(0, 21)) }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-3 gap-2.5" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd("hot", getMaxPage(0, 21))}>
             {realGames.slice(0 + pages.hot * 21, 0 + (pages.hot + 1) * 21).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -669,21 +698,21 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             
             {/* Pill Navigation: <- | All | -> */}
             <div className="flex items-center text-[11px] text-white font-bold bg-[#141414] border border-neutral-800 rounded-full overflow-hidden h-7 shadow-sm">
-              <button onClick={() => toast("Previous page")} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, mini: Math.max(0, p.mini - 1) }))} className="px-3 h-full hover:bg-neutral-800 border-r border-neutral-800 flex items-center justify-center">
                 <ChevronLeft className="w-3.5 h-3.5 text-neutral-400" />
               </button>
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => toast("Next page")} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, mini: Math.min(p.mini + 1, getMaxPage(21, 12)) }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
-            {realGames.slice(21, 33).map((game: any, gIdx: number) => (
+          <div className="grid grid-cols-3 gap-2.5" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd("mini", getMaxPage(21, 12))}>
+            {realGames.slice(21 + pages.mini * 12, 21 + (pages.mini + 1) * 12).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
@@ -731,14 +760,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => setPages((p: any) => ({ ...p, slot: p.slot + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, slot: Math.min(p.slot + 1, getMaxPage(33, 9)) }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Slot Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-3 gap-2.5" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd("slot", getMaxPage(33, 9))}>
             {realGames.slice(33 + pages.slot * 9, 33 + (pages.slot + 1) * 9).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -814,14 +843,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => setPages((p: any) => ({ ...p, fishing: p.fishing + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, fishing: Math.min(p.fishing + 1, getMaxPage(42, 6)) }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-3 gap-2.5" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd("fishing", getMaxPage(42, 6))}>
             {realGames.slice(42 + pages.fishing * 6, 42 + (pages.fishing + 1) * 6).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -863,14 +892,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => setPages((p: any) => ({ ...p, cards: p.cards + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, cards: Math.min(p.cards + 1, getMaxPage(48, 6)) }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-3 gap-2.5" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd("cards", getMaxPage(48, 6))}>
             {realGames.slice(48 + pages.cards * 6, 48 + (pages.cards + 1) * 6).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -932,14 +961,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => setPages((p: any) => ({ ...p, live: p.live + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, live: Math.min(p.live + 1, getMaxPage(54, 6)) }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-3 gap-2.5" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd("live", getMaxPage(54, 6))}>
             {realGames.slice(54 + pages.live * 6, 54 + (pages.live + 1) * 6).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
@@ -988,14 +1017,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               <div onClick={() => toast.success("Viewing All")} className="px-4 h-full flex items-center justify-center cursor-pointer hover:text-[#ffdf00]">
                 All
               </div>
-              <button onClick={() => setPages((p: any) => ({ ...p, sports: p.sports + 1 }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
+              <button onClick={() => setPages((p: any) => ({ ...p, sports: Math.min(p.sports + 1, getMaxPage(60, 6)) }))} className="px-3 h-full hover:bg-neutral-800 border-l border-neutral-800 flex items-center justify-center">
                 <ArrowRight className="w-3.5 h-3.5 text-white" />
               </button>
             </div>
           </div>
 
           {/* Unified Game Grid */}
-          <div className="grid grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-3 gap-2.5" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd("sports", getMaxPage(60, 6))}>
             {realGames.slice(60 + pages.sports * 6, 60 + (pages.sports + 1) * 6).map((game: any, gIdx: number) => (
               <motion.div 
                 key={gIdx}
