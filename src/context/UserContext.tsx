@@ -11,6 +11,9 @@ type User = {
   current_wagering_requirement?: number;
   current_wagering_completed?: number;
   today_withdrawals_count?: number;
+  available_spins?: number;
+  bonus_balance?: number;
+  has_claimed_promotion?: boolean;
   [key: string]: any;
 };
 

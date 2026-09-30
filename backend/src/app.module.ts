@@ -17,6 +17,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { QueuesModule } from './queues/queues.module';
 import { GregmornModule } from './gregmorn/gregmorn.module';
+import { PromoModule } from './promo/promo.module';
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { GregmornModule } from './gregmorn/gregmorn.module';
     PaymentsModule,
     NotificationsModule,
     QueuesModule,
-    GregmornModule
+    GregmornModule,
+    PromoModule
   ],
 })
 export class AppModule {}

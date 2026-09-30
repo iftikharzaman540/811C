@@ -1,41 +1,33 @@
 const fs = require('fs');
-let data = fs.readFileSync('src/components/HomeScreen.tsx', 'utf8');
+let code = fs.readFileSync('src/components/HomeScreen.tsx', 'utf8');
 
-data = data.replace('const { user, logout } = useUser();', `const { user, logout } = useUser();
+// Replace all non-Slot sections
+code = code.replace(/\(realGames\.length > 0 \? realGames\.slice\(0, 21\) : gamesList\)/g, 'realGames.slice(0, 21)');
+code = code.replace(/\(realGames\.length > 0 \? realGames\.slice\(21, 33\) : miniGamesList\)/g, 'realGames.slice(21, 33)');
+code = code.replace(/\(realGames\.length > 0 \? realGames\.slice\(42, 48\) : fishingGamesList\)/g, 'realGames.slice(42, 48)');
+code = code.replace(/\(realGames\.length > 0 \? realGames\.slice\(48, 54\) : cardsGamesList\)/g, 'realGames.slice(48, 54)');
+code = code.replace(/\(realGames\.length > 0 \? realGames\.slice\(54, 60\) : liveGamesList\)/g, 'realGames.slice(54, 60)');
+code = code.replace(/\(realGames\.length > 0 \? realGames\.slice\(60, 66\) : sportsGamesList\)/g, 'realGames.slice(60, 66)');
 
-  const handleLaunchGame = async (gameName: string) => {
-    if (!user) {
-      toast.error("Please login to play games!");
-      return;
-    }
-    const token = localStorage.getItem("token");
-    if (!token) return;
+// Replace the Slot section
+const slotStartRegex = /\{realGames\.length > 0 \? realGames\.map\(\(game, gIdx\) => \(/;
+const slotEndRegex = /\)\) : \(realGames\.length > 0 \? realGames\.slice\(33, 42\) : slotGamesList\)\.map\(\(game: any, gIdx: number\) => \(/;
 
-    try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
-      toast.loading('Launching ' + gameName + '...');
-      const res = await fetch(\`\${API_URL}/games/launch/\${encodeURIComponent(gameName)}\`, {
-        method: "POST",
-        headers: { Authorization: \`Bearer \${token}\` }
-      });
-      toast.dismiss();
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.url) {
-          window.location.href = data.url;
-        } else {
-          toast.success('Game ' + gameName + ' launched!');
-        }
-      } else {
-        const error = await res.json();
-        toast.error(error.message || "Failed to launch game");
-      }
-    } catch (e) {
-      toast.dismiss();
-      toast.error("Error launching game");
-    }
-  };`);
+const lines = code.split('\n');
+let startIdx = -1;
+let endIdx = -1;
+for (let i = 0; i < lines.length; i++) {
+  if (slotStartRegex.test(lines[i])) startIdx = i;
+  if (slotEndRegex.test(lines[i])) endIdx = i;
+}
 
-data = data.replace(/className=\{\`aspect-\[3\/4\] \$\{game\.img\} rounded-xl relative overflow-hidden flex flex-col shadow-\[0_0_10px_rgba\(255,11,11,0\.4\)\] group cursor-pointer border border-\[\#ff0b0b\]\`\}/g, `onClick={() => handleLaunchGame(game.name)}\n                className={\`aspect-[3/4] \${game.img} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]\`}`);
+if (startIdx !== -1 && endIdx !== -1) {
+  lines[startIdx] = '            {realGames.slice(33, 42).map((game: any, gIdx: number) => (';
+  lines.splice(startIdx + 1, endIdx - startIdx);
+  code = lines.join('\n');
+} else {
+  console.log("Could not find Slot section!");
+}
 
-fs.writeFileSync('src/components/HomeScreen.tsx', data);
+fs.writeFileSync('src/components/HomeScreen.tsx', code);
+console.log("Done patching.");

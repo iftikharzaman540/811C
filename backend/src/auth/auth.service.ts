@@ -30,18 +30,35 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
     const user = await this.prisma.$transaction(async (tx) => {
+      const refCode = Math.random().toString(36).substring(2, 8).toUpperCase();
       const newUser = await tx.user.create({
         data: {
           username: dto.username,
           email: dto.email,
           phone: dto.phone,
           password_hash: hashedPassword,
+          referral_code: refCode,
+          available_spins: 1,
+          has_registration_spin: true,
         },
       });
 
       await tx.wallet.create({
         data: { user_id: newUser.id },
       });
+
+      if (dto.referralCode) {
+        const referrer = await tx.user.findUnique({ where: { referral_code: dto.referralCode } });
+        if (referrer) {
+          await tx.user.update({
+             where: { id: referrer.id },
+             data: { available_spins: { increment: 2 } }
+          });
+          await tx.referral.create({
+             data: { user_id: referrer.id, referred_user_id: newUser.id }
+          });
+        }
+      }
 
       return newUser;
     });
@@ -97,6 +114,22 @@ export class AuthService {
     // Count today's withdrawals
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+
+    // Check Daily Login Draw
+    let grantedDailySpin = false;
+    let newSpins = user.available_spins;
+    if (!user.last_login_spin_date || user.last_login_spin_date < today) {
+      // Grant +1 daily spin
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          available_spins: { increment: 1 },
+          last_login_spin_date: new Date()
+        }
+      });
+      grantedDailySpin = true;
+      newSpins += 1;
+    }
     const todayWithdrawalsCount = await this.prisma.payment.count({
       where: {
         user_id: userId,
@@ -109,7 +142,9 @@ export class AuthService {
     return {
       ...safeUser,
       balance: wallet ? wallet.balance.toNumber() : 0,
-      today_withdrawals_count: todayWithdrawalsCount
+      bonus_balance: wallet ? wallet.bonus_balance.toNumber() : 0,
+      today_withdrawals_count: todayWithdrawalsCount,
+      available_spins: newSpins
     };
   }
 
