@@ -53,7 +53,15 @@ export class GregmornWebhookController {
 
     try {
       // Find wallet balance
-      const balanceData = await this.walletService.getBalance(userId);
+      let balanceData;
+      let effectiveUserId = userId;
+      if (userId.startsWith('Player_')) {
+        const partial = userId.replace('Player_', '');
+        balanceData = await this.walletService.getWalletByPartialUserId(partial);
+        effectiveUserId = balanceData.user_id; // Added user_id to getWalletByPartialUserId return
+      } else {
+        balanceData = await this.walletService.getBalance(userId);
+      }
       let currentBalance = balanceData.balance;
 
       switch (cmd) {
@@ -106,7 +114,7 @@ export class GregmornWebhookController {
               referenceId: transactionId
             });
             
-            const updatedBalance = await this.walletService.getBalance(userId);
+            const updatedBalance = await this.walletService.getBalance(effectiveUserId);
             currentBalance = updatedBalance.balance;
           }
 
@@ -142,7 +150,7 @@ export class GregmornWebhookController {
                 referenceId: `${transactionId}_rollback`
               });
               
-              const updatedBalance = await this.walletService.getBalance(userId);
+              const updatedBalance = await this.walletService.getBalance(effectiveUserId);
               currentBalance = updatedBalance.balance;
             } catch (err) {
               // If we can't process it (e.g., transaction not found in a strict idempotent setup),

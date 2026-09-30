@@ -97,7 +97,29 @@ export class WalletService {
     });
   }
 
-  async getBalance(userId: string) {
+  
+  async getWalletByPartialUserId(partialId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { id: { startsWith: partialId } },
+      include: { wallet: true }
+    });
+    if (!user || !user.wallet) throw new BadRequestException('Wallet not found');
+    return {
+      wallet_id: user.wallet.id,
+      balance: user.wallet.balance.toNumber(),
+      bonus_balance: user.wallet.bonus_balance.toNumber(),
+      currency: user.wallet.currency,
+      user_id: user.id
+    };
+  }
+  
+    const user = await this.prisma.user.findFirst({
+      where: { id: { startsWith: partialId } }
+    });
+    if (!user) throw new BadRequestException('Wallet not found');
+    return this.getBalance(user.id);
+  }
+\n  async getBalance(userId: string) {
     const wallet = await this.prisma.wallet.findUnique({
       where: { user_id: userId },
     });
