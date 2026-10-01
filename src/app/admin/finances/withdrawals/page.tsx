@@ -92,7 +92,7 @@ export default function WithdrawalsPage() {
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(req.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
                       <Link href={`/admin/users/${req.user_id}`} className="text-white hover:text-[#ffdf00]">
-                        {req.user?.player_id ? ID:  : (req.user?.username || req.user?.email || req.user_id)}
+                        {req.user?.player_id ? 'ID: ' + req.user.player_id : (req.user?.username || req.user?.email || req.user_id)}
                       </Link>
                       <div className="text-xs text-neutral-500 mt-0.5">Bal: PKR {Number(req.user?.wallet?.balance || 0).toLocaleString()}</div>
                     </td>
@@ -171,4 +171,5 @@ export default function WithdrawalsPage() {
     </div>
   );
 }
+
 
