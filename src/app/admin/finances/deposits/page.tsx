@@ -14,7 +14,7 @@ export default function DepositsPage() {
   const fetchDeposits = async (p = page) => {
     setLoading(true);
     try {
-      const res = await apiRequest(`/admin/finances/deposits?page=\${p}&limit=50`);
+      const res = await apiRequest(`/admin/finances/deposits?page=${p}&limit=50`);
       setDeposits(res.data);
       setMeta(res.meta);
     } catch (error) {
@@ -69,7 +69,7 @@ export default function DepositsPage() {
                     <td className="px-6 py-4 font-mono text-xs">{dep.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(dep.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
-                      <Link href={`/admin/users/\${dep.user_id}`} className="text-white hover:text-[#ffdf00]">
+                      <Link href={`/admin/users/${dep.user_id}`} className="text-white hover:text-[#ffdf00]">
                         {dep.user?.username || dep.user?.email || dep.user_id}
                       </Link>
                     </td>
@@ -80,7 +80,7 @@ export default function DepositsPage() {
                       PKR {Number(dep.amount).toLocaleString()}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold \${
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                         dep.status === 'COMPLETED' ? 'bg-green-500/10 text-green-500' :
                         dep.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-500' :
                         'bg-red-500/10 text-red-500'

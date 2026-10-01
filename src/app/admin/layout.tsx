@@ -96,7 +96,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
 
       {/* Sidebar */}
-      <aside className={`\${mobileMenuOpen ? 'flex' : 'hidden'} md:flex w-full md:w-64 bg-[#111] border-b md:border-b-0 md:border-r border-neutral-800 flex-col shrink-0 fixed md:sticky top-0 h-screen z-50 overflow-y-auto`}>
+      <aside className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:flex w-full md:w-64 bg-[#111] border-b md:border-b-0 md:border-r border-neutral-800 flex-col shrink-0 fixed md:sticky top-0 h-screen z-50 overflow-y-auto`}>
         <div className="p-4 border-b border-neutral-800 hidden md:block">
           <h2 className="text-[#ffdf00] font-bold text-lg leading-tight">Admin Portal</h2>
           <p className="text-xs text-neutral-400 mt-1">{user.email}</p>
@@ -109,7 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div>
                   <button 
                     onClick={() => toggleMenu(item.name)}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-[#1a1a1a] transition-colors \${expandedMenus[item.name] ? 'bg-[#1a1a1a]' : ''}`}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg hover:bg-[#1a1a1a] transition-colors ${expandedMenus[item.name] ? 'bg-[#1a1a1a]' : ''}`}
                   >
                     <div className="flex items-center gap-3">
                       <item.icon className="w-5 h-5 text-[#ffdf00]" />
@@ -124,7 +124,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                           key={child.href} 
                           href={child.href}
                           onClick={() => setMobileMenuOpen(false)}
-                          className={`px-3 py-2 rounded-lg text-sm transition-colors \${pathname === child.href ? 'text-[#ffdf00] bg-[#1a1a1a]' : 'text-neutral-400 hover:text-white hover:bg-[#1a1a1a]'}`}
+                          className={`px-3 py-2 rounded-lg text-sm transition-colors ${pathname === child.href ? 'text-[#ffdf00] bg-[#1a1a1a]' : 'text-neutral-400 hover:text-white hover:bg-[#1a1a1a]'}`}
                         >
                           {child.name}
                         </Link>
@@ -136,9 +136,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link 
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors \${pathname === item.href ? 'bg-[#1a1a1a] text-[#ffdf00]' : 'hover:bg-[#1a1a1a]'}`}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${pathname === item.href ? 'bg-[#1a1a1a] text-[#ffdf00]' : 'hover:bg-[#1a1a1a]'}`}
                 >
-                  <item.icon className={`w-5 h-5 \${pathname === item.href ? 'text-[#ffdf00]' : 'text-[#ffdf00]'}`} />
+                  <item.icon className={`w-5 h-5 ${pathname === item.href ? 'text-[#ffdf00]' : 'text-[#ffdf00]'}`} />
                   <span className="text-sm font-medium">{item.name}</span>
                 </Link>
               )}

@@ -14,7 +14,7 @@ export default function WithdrawalsPage() {
   const fetchWithdrawals = async (p = page) => {
     setLoading(true);
     try {
-      const res = await apiRequest(`/admin/finances/withdrawals?page=\${p}&limit=50`);
+      const res = await apiRequest(`/admin/finances/withdrawals?page=${p}&limit=50`);
       setWithdrawals(res.data);
       setMeta(res.meta);
     } catch (error) {
@@ -69,7 +69,7 @@ export default function WithdrawalsPage() {
                     <td className="px-6 py-4 font-mono text-xs">{req.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(req.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
-                      <Link href={`/admin/users/\${req.user_id}`} className="text-white hover:text-[#ffdf00]">
+                      <Link href={`/admin/users/${req.user_id}`} className="text-white hover:text-[#ffdf00]">
                         {req.user?.username || req.user?.email || req.user_id}
                       </Link>
                       <div className="text-xs text-neutral-500 mt-0.5">Bal: PKR {Number(req.user?.wallet?.balance || 0).toLocaleString()}</div>
@@ -78,7 +78,7 @@ export default function WithdrawalsPage() {
                       PKR {Number(req.amount).toLocaleString()}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold \${
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                         req.status === 'COMPLETED' ? 'bg-green-500/10 text-green-500' :
                         req.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-500' :
                         'bg-red-500/10 text-red-500'

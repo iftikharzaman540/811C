@@ -18,7 +18,7 @@ export default function UsersManagementPage() {
       const query = new URLSearchParams({ page: p.toString(), limit: '20' });
       if (searchTerm) query.append('search', searchTerm);
       
-      const res = await apiRequest(`/admin/users?\${query.toString()}`);
+      const res = await apiRequest(`/admin/users?${query.toString()}`);
       setUsers(res.data);
       setMeta(res.meta);
     } catch (error) {
@@ -96,7 +96,7 @@ export default function UsersManagementPage() {
                       <div className="text-xs text-[#ffdf00]">Bonus: PKR {Number(user.wallet?.bonus_balance || 0).toLocaleString()}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium \${
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                         user.status === 'ACTIVE' ? 'bg-green-500/10 text-green-500' :
                         user.status === 'BANNED' ? 'bg-red-500/10 text-red-500' :
                         'bg-yellow-500/10 text-yellow-500'
@@ -109,7 +109,7 @@ export default function UsersManagementPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <Link 
-                        href={`/admin/users/\${user.id}`}
+                        href={`/admin/users/${user.id}`}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg transition-colors text-xs font-medium"
                       >
                         <Eye className="w-4 h-4" /> View Profile

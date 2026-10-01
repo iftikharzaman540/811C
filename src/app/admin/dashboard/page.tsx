@@ -120,7 +120,7 @@ export default function AdminDashboard() {
                 <span className="text-white font-bold">{stats.activeUsers.toLocaleString()}</span>
               </div>
               <div className="w-full bg-neutral-800 rounded-full h-2">
-                <div className="bg-green-500 h-2 rounded-full" style={{ width: `\${(stats.activeUsers / stats.totalUsers) * 100}%` }}></div>
+                <div className="bg-green-500 h-2 rounded-full" style={{ width: `${(stats.activeUsers / stats.totalUsers) * 100}%` }}></div>
               </div>
             </div>
           </div>
