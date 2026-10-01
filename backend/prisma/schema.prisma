@@ -60,16 +60,17 @@ enum SessionStatus {
 
 model User {
   id            String  @id @default(uuid())
-  username      String? @unique
-  email         String? @unique
-  phone         String? @unique
+  player_id     Int     @default(autoincrement()) @unique
+  username      String?  @unique
+  email         String?  @unique
+  phone         String?  @unique
   password_hash String
-  role          Role    @default(USER)
+  role          Role     @default(USER)
   permissions   String[] @default([]) // Array of module access permissions for admins
-  status        Status  @default(ACTIVE)
+  status        Status   @default(ACTIVE)
   avatar        String?
   country       String?
-  referral_code String? @unique
+  referral_code String?  @unique
 
   current_wagering_requirement Decimal @default(0.00) @db.Decimal(15, 2)
   current_wagering_completed   Decimal @default(0.00) @db.Decimal(15, 2)
@@ -515,3 +516,4 @@ model SystemSetting {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+

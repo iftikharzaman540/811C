@@ -9,12 +9,14 @@ export class AdminUsersService {
   async findAll(page: number = 1, limit: number = 20, search?: string) {
     const skip = (page - 1) * limit;
     
+        const numericSearch = parseInt(search);
     const where: Prisma.UserWhereInput = search
       ? {
           OR: [
             { username: { contains: search, mode: 'insensitive' } },
             { email: { contains: search, mode: 'insensitive' } },
-            { id: { contains: search } }
+            { id: { contains: search } },
+            ...(isNaN(numericSearch) ? [] : [{ player_id: numericSearch }])
           ],
         }
       : {};
@@ -143,3 +145,4 @@ export class AdminUsersService {
     return admin;
   }
 }
+

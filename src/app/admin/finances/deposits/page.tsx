@@ -70,7 +70,7 @@ export default function DepositsPage() {
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(dep.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
                       <Link href={`/admin/users/${dep.user_id}`} className="text-white hover:text-[#ffdf00]">
-                        {dep.user?.username || dep.user?.email || dep.user_id}
+                        {dep.user?.player_id ? ID:  : (dep.user?.username || dep.user?.email || dep.user_id)}
                       </Link>
                     </td>
                     <td className="px-6 py-4">
@@ -120,3 +120,4 @@ export default function DepositsPage() {
     </div>
   );
 }
+

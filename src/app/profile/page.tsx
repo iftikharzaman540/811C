@@ -64,6 +64,7 @@ export default function ProfilePage() {
             ) : (user || hasToken) ? (
               <div className="flex flex-col">
                 <span className="text-white font-bold text-[14px]">{user?.phone || user?.email || "User"}</span>
+                {user?.player_id && <span className="text-neutral-400 text-[11px] mb-1">ID: {user.player_id}</span>}
                 <span className="text-[#ffdf00] font-bold text-[16px]">Rs {(user?.balance || 0).toFixed(2)}</span>
               </div>
             ) : (
@@ -146,3 +147,4 @@ export default function ProfilePage() {
     </main>
   );
 }
+

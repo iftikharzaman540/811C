@@ -97,7 +97,7 @@ export class AdminFinancesService {
         skip, 
         take: limit, 
         orderBy: { created_at: 'desc' }, 
-        include: { user: { select: { username: true, email: true } } } 
+        include: { user: { select: { username: true, email: true, player_id: true } } } 
       }),
       this.prisma.payment.count({ where: { type: 'DEPOSIT' } })
     ]);
@@ -111,7 +111,7 @@ export class AdminFinancesService {
         skip, 
         take: limit, 
         orderBy: { created_at: 'desc' }, 
-        include: { user: { select: { username: true, email: true, wallet: true } } } 
+        include: { user: { select: { username: true, email: true, player_id: true, wallet: true } } } 
       }),
       this.prisma.payment.count({ where: { type: 'WITHDRAWAL' } })
     ]);
@@ -184,3 +184,4 @@ export class AdminFinancesService {
     return { success: true, message: 'Withdrawal rejected and refunded' };
   }
 }
+

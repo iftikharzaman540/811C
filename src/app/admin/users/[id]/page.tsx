@@ -102,7 +102,7 @@ export default function UserProfilePage() {
             <div className="space-y-4">
               <div>
                 <div className="text-xs text-neutral-500 mb-1">User ID</div>
-                <div className="font-mono text-sm text-neutral-300 bg-black p-2 rounded">{user.id}</div>
+                <div className="font-mono text-sm text-[#ffdf00] font-bold bg-black p-2 rounded">{user.player_id} <span className="text-xs text-neutral-600 font-normal ml-2">({user.id})</span></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -210,3 +210,4 @@ export default function UserProfilePage() {
     </div>
   );
 }
+

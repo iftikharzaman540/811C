@@ -87,7 +87,7 @@ export default function UsersManagementPage() {
                         <div>
                           <div className="font-medium text-white">{user.username || 'Unnamed'}</div>
                           <div className="text-xs text-neutral-500">{user.email || user.phone}</div>
-                          <div className="text-[10px] text-neutral-600 font-mono mt-1">{user.id}</div>
+                          <div className="text-[10px] text-[#ffdf00] font-mono mt-1 font-bold">ID: {user.player_id}</div>
                         </div>
                       </div>
                     </td>
@@ -148,3 +148,4 @@ export default function UsersManagementPage() {
     </div>
   );
 }
+
