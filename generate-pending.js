@@ -1,3 +1,19 @@
+const fs = require('fs');
+
+const pending = [
+  'src/app/admin/finances/payment-methods/page.tsx',
+  'src/app/admin/marketing/affiliates/page.tsx',
+  'src/app/admin/marketing/bonuses/page.tsx',
+  'src/app/admin/cms/pages/page.tsx',
+  'src/app/admin/cms/casino/page.tsx',
+  'src/app/admin/cms/sportsbook/page.tsx',
+  'src/app/admin/system/admins/page.tsx',
+  'src/app/admin/system/settings/page.tsx',
+  'src/app/admin/system/providers/page.tsx',
+  'src/app/admin/reports/page.tsx'
+];
+
+const template = `
 "use client";
 import React from 'react';
 import { Settings } from 'lucide-react';
@@ -13,3 +29,11 @@ export default function Page() {
     </div>
   );
 }
+`;
+
+pending.forEach(f => {
+  if (fs.existsSync(f)) {
+    fs.writeFileSync(f, template.trim());
+    console.log('Styled ' + f);
+  }
+});
