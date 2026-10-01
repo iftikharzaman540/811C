@@ -13,3 +13,5 @@ fixFile('src/app/admin/finances/wallet-adjustments/page.tsx');
 fixFile('src/app/admin/system/audit-logs/page.tsx');
 fixFile('src/utils/api.ts');
 fixFile('src/app/admin/dashboard/page.tsx');
+fixFile('src/app/admin/finances/deposits/page.tsx');
+fixFile('src/app/admin/finances/withdrawals/page.tsx');

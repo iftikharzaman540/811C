@@ -88,4 +88,32 @@ export class AdminFinancesService {
       }
     };
   }
+
+  async getDeposits(page: number = 1, limit: number = 20) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.deposit.findMany({ 
+        skip, 
+        take: limit, 
+        orderBy: { created_at: 'desc' }, 
+        include: { user: { select: { username: true, email: true } } } 
+      }),
+      this.prisma.deposit.count()
+    ]);
+    return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
+  }
+
+  async getWithdrawals(page: number = 1, limit: number = 20) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.withdrawal.findMany({ 
+        skip, 
+        take: limit, 
+        orderBy: { created_at: 'desc' }, 
+        include: { user: { select: { username: true, email: true, wallet: true } } } 
+      }),
+      this.prisma.withdrawal.count()
+    ]);
+    return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
+  }
 }

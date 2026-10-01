@@ -23,4 +23,20 @@ export class AdminFinancesController {
       limit ? parseInt(limit) : 20
     );
   }
+
+  @Get('deposits')
+  getDeposits(@Query('page') page?: string, @Query('limit') limit?: string) {
+    return this.adminFinancesService.getDeposits(
+      page ? parseInt(page) : 1,
+      limit ? parseInt(limit) : 50
+    );
+  }
+
+  @Get('withdrawals')
+  getWithdrawals(@Query('page') page?: string, @Query('limit') limit?: string) {
+    return this.adminFinancesService.getWithdrawals(
+      page ? parseInt(page) : 1,
+      limit ? parseInt(limit) : 50
+    );
+  }
 }
