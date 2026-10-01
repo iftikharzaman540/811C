@@ -153,7 +153,7 @@ export default function WalletAdjustmentsPage() {
           <div className="bg-[#111] border border-neutral-800 rounded-xl w-full max-w-md overflow-hidden">
             <div className="p-4 border-b border-neutral-800 flex justify-between items-center bg-[#1a1a1a]">
               <h2 className="font-bold text-white">New Wallet Adjustment</h2>
-              <button onClick={() => setShowModal(false)} className="text-neutral-400 hover:text-white">✕</button>
+              <button onClick={() => setShowModal(false)} className="text-neutral-400 hover:text-white"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>

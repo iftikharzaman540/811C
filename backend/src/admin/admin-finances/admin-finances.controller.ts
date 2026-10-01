@@ -39,4 +39,14 @@ export class AdminFinancesController {
       limit ? parseInt(limit) : 50
     );
   }
+
+  @Get('payment-methods')
+  getPaymentMethods() {
+    return this.adminFinancesService.getPaymentMethods();
+  }
+
+  @Patch('payment-methods/:id')
+  updatePaymentMethod(@Param('id') id: string, @Body() updates: any) {
+    return this.adminFinancesService.updatePaymentMethod(id, updates);
+  }
 }

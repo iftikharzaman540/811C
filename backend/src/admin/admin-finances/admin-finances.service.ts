@@ -116,4 +116,34 @@ export class AdminFinancesService {
     ]);
     return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
   }
+
+  async getPaymentMethods() {
+    const defaultMethods = [
+      { id: 'easypaisa', name: 'EasyPaisa', enabled: true, min_deposit: 100, max_deposit: 50000, fee_percentage: 0 },
+      { id: 'jazzcash', name: 'JazzCash', enabled: true, min_deposit: 100, max_deposit: 50000, fee_percentage: 0 },
+      { id: 'bank_transfer', name: 'Bank Transfer', enabled: true, min_deposit: 500, max_deposit: 1000000, fee_percentage: 0 }
+    ];
+
+    const setting = await this.prisma.systemSetting.findUnique({
+      where: { key: 'payment_methods_config' }
+    });
+
+    if (setting) {
+      return JSON.parse(setting.value);
+    }
+    return defaultMethods;
+  }
+
+  async updatePaymentMethod(id: string, updates: any) {
+    const methods = await this.getPaymentMethods();
+    const updatedMethods = methods.map((m: any) => m.id === id ? { ...m, ...updates } : m);
+    
+    await this.prisma.systemSetting.upsert({
+      where: { key: 'payment_methods_config' },
+      update: { value: JSON.stringify(updatedMethods) },
+      create: { key: 'payment_methods_config', value: JSON.stringify(updatedMethods), description: 'Configuration for payment methods' }
+    });
+
+    return { success: true, methods: updatedMethods };
+  }
 }
