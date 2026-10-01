@@ -65,6 +65,7 @@ model User {
   phone         String? @unique
   password_hash String
   role          Role    @default(USER)
+  permissions   String[] @default([]) // Array of module access permissions for admins
   status        Status  @default(ACTIVE)
   avatar        String?
   country       String?

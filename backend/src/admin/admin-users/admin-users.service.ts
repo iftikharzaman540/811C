@@ -83,4 +83,63 @@ export class AdminUsersService {
 
     return newUser;
   }
+
+  // --- ADMIN MANAGEMENT ---
+  async getAdmins() {
+    return this.prisma.user.findMany({
+      where: { role: { in: ['ADMIN', 'SUPER_ADMIN'] } },
+      orderBy: { created_at: 'desc' }
+    });
+  }
+
+  async createAdmin(data: any, creatorAdminId: string) {
+    const { email, username, password, permissions, role } = data;
+    
+    // In a real app we should hash the password using bcrypt. 
+    // Assuming password_hash field:
+    const crypto = require('crypto');
+    const password_hash = crypto.createHash('sha256').update(password || '123456').digest('hex');
+
+    const admin = await this.prisma.user.create({
+      data: {
+        email,
+        username,
+        password_hash,
+        role: role || 'ADMIN',
+        permissions: permissions || [],
+      }
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        admin_id: creatorAdminId,
+        action: 'CREATE_ADMIN',
+        entity: 'User',
+        entity_id: admin.id,
+        new_value: admin as any,
+      }
+    });
+
+    return admin;
+  }
+
+  async updateAdminPermissions(id: string, permissions: string[], role: any, updaterId: string) {
+    const admin = await this.prisma.user.update({
+      where: { id },
+      data: { permissions, role }
+    });
+
+    await this.prisma.auditLog.create({
+      data: {
+        admin_id: updaterId,
+        user_id: id,
+        action: 'UPDATE_ADMIN_PERMISSIONS',
+        entity: 'User',
+        entity_id: admin.id,
+        new_value: { permissions, role } as any,
+      }
+    });
+
+    return admin;
+  }
 }

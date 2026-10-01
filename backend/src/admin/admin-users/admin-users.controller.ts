@@ -24,6 +24,24 @@ export class AdminUsersController {
     );
   }
 
+  @Get('list-admins') // Using list-admins to avoid conflict with :id
+  @Roles(Role.SUPER_ADMIN)
+  getAdmins() {
+    return this.adminUsersService.getAdmins();
+  }
+
+  @Post('create-admin')
+  @Roles(Role.SUPER_ADMIN)
+  createAdmin(@Body() data: any, @Req() req: any) {
+    return this.adminUsersService.createAdmin(data, req.user.userId);
+  }
+
+  @Patch('update-admin/:id')
+  @Roles(Role.SUPER_ADMIN)
+  updateAdminPermissions(@Param('id') id: string, @Body() body: any, @Req() req: any) {
+    return this.adminUsersService.updateAdminPermissions(id, body.permissions, body.role, req.user.userId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.adminUsersService.findOne(id);

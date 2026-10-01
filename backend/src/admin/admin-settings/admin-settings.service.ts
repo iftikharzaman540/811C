@@ -32,4 +32,21 @@ export class AdminSettingsService {
       }
     };
   }
+
+  // System Settings CRUD
+  async getSettings() {
+    return this.prisma.systemSetting.findMany({ orderBy: { key: 'asc' } });
+  }
+
+  async updateSetting(key: string, value: string, description?: string) {
+    return this.prisma.systemSetting.upsert({
+      where: { key },
+      update: { value, ...(description && { description }) },
+      create: { key, value, description: description || '' }
+    });
+  }
+
+  async deleteSetting(key: string) {
+    return this.prisma.systemSetting.delete({ where: { key } });
+  }
 }

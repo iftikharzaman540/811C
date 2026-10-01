@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { AdminSettingsService } from './admin-settings.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../auth/guards/roles.guard';
@@ -17,5 +17,21 @@ export class AdminSettingsController {
       page ? parseInt(page) : 1,
       limit ? parseInt(limit) : 50
     );
+  }
+
+  // System Settings endpoints
+  @Get('system')
+  getSystemSettings() {
+    return this.adminSettingsService.getSettings();
+  }
+
+  @Post('system')
+  updateSystemSetting(@Body() body: { key: string; value: string; description?: string }) {
+    return this.adminSettingsService.updateSetting(body.key, body.value, body.description);
+  }
+
+  @Delete('system/:key')
+  deleteSystemSetting(@Param('key') key: string) {
+    return this.adminSettingsService.deleteSetting(key);
   }
 }
