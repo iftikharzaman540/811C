@@ -12,6 +12,7 @@ export default function PromoPage() {
   const [activeSideTab, setActiveSideTab] = useState("All");
   const [activeRebateTab, setActiveRebateTab] = useState("Mini Games");
   const [activeMissionTab, setActiveMissionTab] = useState("Newplayer");
+  const [vip1Expanded, setVip1Expanded] = useState(true);
   
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [showRedeemModal, setShowRedeemModal] = useState(false);
