@@ -12,7 +12,8 @@ export class PromoService {
         include: { wallet: true },
       });
 
-      if (!user) throw new BadRequestException('User not found');
+            if (!user) throw new BadRequestException('User not found');
+      if (!user.bonuses_enabled) throw new BadRequestException('Bonuses are currently restricted for your account.');
       if (user.available_spins <= 0) {
         throw new BadRequestException('No free draws available');
       }
@@ -72,7 +73,8 @@ export class PromoService {
         include: { wallet: true }
       });
 
-      if (!user) throw new BadRequestException('User not found');
+            if (!user) throw new BadRequestException('User not found');
+      if (!user.bonuses_enabled) throw new BadRequestException('Bonuses are currently restricted for your account.');
       if (user.has_claimed_promotion) {
         throw new BadRequestException('Promotion has already been claimed');
       }
@@ -120,3 +122,4 @@ export class PromoService {
     });
   }
 }
+

@@ -21,6 +21,9 @@ export class PaymentsService {
   }
 
     async createDeposit(userId: string, amount: number, providerName: PaymentProvider, transactionId?: string, autoApprove?: boolean) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
+    if (!user.deposits_enabled) throw new BadRequestException('Deposits are currently restricted for your account. Please contact support.');
     const reference = transactionId || "DEP-" + uuidv4();
     const status = autoApprove ? 'COMPLETED' : 'PENDING';
     
@@ -102,7 +105,7 @@ export class PaymentsService {
       reference,
       gatewayOrderNo: providerResponse.gatewayOrderNo 
   }
-
+  }
 
   async handleWebhook(payload: any) {
     this.logger.log(`Webhook Payload: ${JSON.stringify(payload)}`);
@@ -190,6 +193,9 @@ export class PaymentsService {
     if (!user || !user.wallet) {
       throw new BadRequestException('User or wallet not found');
     }
+    if (!user.withdrawals_enabled) {
+      throw new BadRequestException('Withdrawals are currently restricted for your account. Please contact support.');
+    }
     
     const wallet = user.wallet;
 
@@ -252,4 +258,7 @@ export class PaymentsService {
     return { payment_id: payment.id, status: 'PENDING_ADMIN_APPROVAL' };
   }
 }
+
+
+
 

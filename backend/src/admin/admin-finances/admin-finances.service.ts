@@ -147,4 +147,40 @@ export class AdminFinancesService {
 
     return { success: true, methods: updatedMethods };
   }
+  async approveWithdrawal(id: string) {
+    const payment = await this.prisma.payment.findUnique({ where: { id } });
+    if (!payment || payment.type !== 'WITHDRAWAL') throw new Error('Withdrawal not found');
+    if (payment.status !== 'PENDING') throw new Error('Withdrawal is not pending');
+
+    await this.prisma.payment.update({
+      where: { id },
+      data: { status: 'COMPLETED' }
+    });
+
+    return { success: true, message: 'Withdrawal approved' };
+  }
+
+  async rejectWithdrawal(id: string) {
+    const payment = await this.prisma.payment.findUnique({ where: { id } });
+    if (!payment || payment.type !== 'WITHDRAWAL') throw new Error('Withdrawal not found');
+    if (payment.status !== 'PENDING') throw new Error('Withdrawal is not pending');
+
+    const wallet = await this.prisma.wallet.findUnique({ where: { user_id: payment.user_id } });
+    
+    // Refund the user's wallet
+    await this.walletService.processTransaction({
+      walletId: wallet.id,
+      amount: payment.amount.toNumber(),
+      type: 'REFUND',
+      description: 'Withdrawal rejected - Refunded',
+      referenceId: payment.id,
+    });
+
+    await this.prisma.payment.update({
+      where: { id },
+      data: { status: 'REJECTED' }
+    });
+
+    return { success: true, message: 'Withdrawal rejected and refunded' };
+  }
 }
