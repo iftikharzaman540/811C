@@ -49,4 +49,14 @@ export class AdminFinancesController {
   updatePaymentMethod(@Param('id') id: string, @Body() updates: any) {
     return this.adminFinancesService.updatePaymentMethod(id, updates);
   }
+
+  @Post('withdrawals/:id/approve')
+  approveWithdrawal(@Param('id') id: string) {
+    return this.adminFinancesService.approveWithdrawal(id);
+  }
+
+  @Post('withdrawals/:id/reject')
+  rejectWithdrawal(@Param('id') id: string) {
+    return this.adminFinancesService.rejectWithdrawal(id);
+  }
 }

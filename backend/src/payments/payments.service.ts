@@ -20,8 +20,10 @@ export class PaymentsService {
     throw new BadRequestException('Unsupported provider');
   }
 
-  async createDeposit(userId: string, amount: number, providerName: PaymentProvider) {
-    const reference = `DEP-${uuidv4()}`;
+    async createDeposit(userId: string, amount: number, providerName: PaymentProvider, transactionId?: string, autoApprove?: boolean) {
+    const reference = transactionId || "DEP-" + uuidv4();
+    const status = autoApprove ? 'COMPLETED' : 'PENDING';
+    
     const payment = await this.prisma.payment.create({
       data: {
         user_id: userId,
@@ -29,12 +31,26 @@ export class PaymentsService {
         provider: providerName,
         type: 'DEPOSIT',
         transaction_reference: reference,
-        status: 'PENDING',
+        status: status,
       },
     });
 
-    return { payment_id: payment.id, reference, success: true, message: 'Deposit recorded manually' };
+    if (autoApprove) {
+      const wallet = await this.prisma.wallet.findUnique({ where: { user_id: userId } });
+      if (wallet) {
+        await this.walletService.processTransaction({
+          walletId: wallet.id,
+          amount,
+          type: 'DEPOSIT',
+          description: "Auto-approved deposit via " + providerName + " (TrxID: " + reference + ")",
+          referenceId: payment.id,
+        });
+      }
+    }
+
+    return { payment_id: payment.id, reference, success: true, message: autoApprove ? 'Deposit approved instantly' : 'Deposit recorded manually' };
   }
+
 
   async createAutoDeposit(userId: string, amount: number, providerName: PaymentProvider, accountNo: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
@@ -85,8 +101,8 @@ export class PaymentsService {
       message: 'Deposit initiated! Please check your phone for MPIN prompt.', 
       reference,
       gatewayOrderNo: providerResponse.gatewayOrderNo 
-    };
   }
+
 
   async handleWebhook(payload: any) {
     this.logger.log(`Webhook Payload: ${JSON.stringify(payload)}`);
@@ -236,3 +252,4 @@ export class PaymentsService {
     return { payment_id: payment.id, status: 'PENDING_ADMIN_APPROVAL' };
   }
 }
+

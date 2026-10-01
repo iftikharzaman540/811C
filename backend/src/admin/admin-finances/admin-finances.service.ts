@@ -1,10 +1,11 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { WalletService } from '../../wallet/wallet.service';
 import { TransactionType } from '@prisma/client';
 
 @Injectable()
 export class AdminFinancesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private walletService: WalletService) {}
 
   async adjustWallet(userId: string, adminId: string, amount: number, type: 'CREDIT' | 'DEBIT', reason: string) {
     if (amount <= 0) throw new BadRequestException('Amount must be greater than zero');
@@ -92,13 +93,13 @@ export class AdminFinancesService {
   async getDeposits(page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
-      this.prisma.deposit.findMany({ 
+      this.prisma.payment.findMany({ where: { type: 'DEPOSIT' }, 
         skip, 
         take: limit, 
         orderBy: { created_at: 'desc' }, 
         include: { user: { select: { username: true, email: true } } } 
       }),
-      this.prisma.deposit.count()
+      this.prisma.payment.count({ where: { type: 'DEPOSIT' } })
     ]);
     return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
   }
@@ -106,13 +107,13 @@ export class AdminFinancesService {
   async getWithdrawals(page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
     const [data, total] = await Promise.all([
-      this.prisma.withdrawal.findMany({ 
+      this.prisma.payment.findMany({ where: { type: 'WITHDRAWAL' }, 
         skip, 
         take: limit, 
         orderBy: { created_at: 'desc' }, 
         include: { user: { select: { username: true, email: true, wallet: true } } } 
       }),
-      this.prisma.withdrawal.count()
+      this.prisma.payment.count({ where: { type: 'WITHDRAWAL' } })
     ]);
     return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
   }

@@ -20,7 +20,7 @@ export default function DepositScreen() {
   const [promoExpanded, setPromoExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [accountNo, setAccountNo] = useState("");
-  const [showAutoPrompt, setShowAutoPrompt] = useState(false);
+    const [trxId, setTrxId] = useState("");
 
   const handleDeposit = async () => {
     const token = localStorage.getItem("token");
@@ -34,85 +34,55 @@ export default function DepositScreen() {
       toast.error("Please enter a valid amount");
       return;
     }
-    if (tab === "online" && accountNo.length < 10) {
-      toast.error("Please enter a valid mobile number (e.g., 03001234567)");
-      return;
+    if (tab === "online") {
+      if (accountNo.length < 10) {
+        toast.error("Please enter a valid mobile number (e.g., 03001234567)");
+        return;
+      }
+      if (trxId.length < 5) {
+        toast.error("Please enter a valid Payment Code / Trx ID");
+        return;
+      }
     }
     
     setLoading(true);
-    if (tab === "online") {
-      setShowAutoPrompt(true);
-    }
     
     const API_URL = "https://8111c.com/api/v1";
     
     try {
-      const endpoint = tab === "online" ? "auto-deposit" : "deposit";
       const payload = tab === "online"
-        ? { amount: Number(amount), provider: method.toUpperCase(), accountNo }
+        ? { amount: Number(amount), provider: method.toUpperCase(), accountNo, transactionId: trxId, autoApprove: true }
         : { amount: Number(amount), provider: "MANUAL" };
 
-      const res = await fetch(`${API_URL}/payments/${endpoint}`, {
+      const res = await fetch(API_URL + '/payments/deposit', {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
         body: JSON.stringify(payload),
       });
       
       const resData = await res.json();
       if (!res.ok) {
         toast.error(resData.message || "Deposit failed");
-        setShowAutoPrompt(false);
         setLoading(false);
         return;
       }
 
       if (tab === "online") {
-        // Start polling the status
-        const ref = resData.reference;
-        let attempts = 0;
-        let success = false;
-        
-        while (attempts < 30) {
-          await new Promise(r => setTimeout(r, 2000));
-          const statusRes = await fetch(`${API_URL}/payments/status/${ref}`, {
-            headers: { "Authorization": `Bearer ${token}` }
-          });
-          const statusData = await statusRes.json();
-          if (statusData.status === 'COMPLETED') {
-            success = true;
-            break;
-          } else if (statusData.status === 'REJECTED') {
-            toast.error("Payment failed or cancelled on phone.");
-            setShowAutoPrompt(false);
-            setLoading(false);
-            return;
-          }
-          attempts++;
-        }
-        
-        if (success) {
-          toast.success("Deposit Successful! Balance updated.");
-        } else {
-          toast.success("Deposit pending. Please check your balance shortly.");
-        }
-        
+        toast.success("Deposit Successful! Balance updated instantly.");
       } else {
         toast.success("Deposit request sent!");
       }
 
       setAmount("");
-      setShowAutoPrompt(false);
+      setTrxId("");
       router.push("/profile");
       
     } catch (e) {
       toast.error("Deposit request failed");
-      setShowAutoPrompt(false);
     } finally {
       setLoading(false);
     }
-  };
-
-  // Computed bonuses
+  };  // Computed bonuses
   const getBonus = (amt: number) => {
     if (tab === "crypto") {
       return (amt * 0.06).toFixed(2);
@@ -220,7 +190,7 @@ export default function DepositScreen() {
           </div>
         )}
 
-        {tab === "online" && (
+                {tab === "online" && (
           <div className="mb-6">
             <h2 className="text-sm font-bold mb-3">Mobile Number (JazzCash / EasyPaisa)</h2>
             <div className="flex bg-[#1a1a1a] border border-neutral-700 rounded-md items-center px-3 h-[46px] focus-within:border-[#1fdf1f]">
@@ -230,6 +200,21 @@ export default function DepositScreen() {
                 value={accountNo}
                 onChange={(e) => setAccountNo(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
                 placeholder="3001234567" 
+                className="bg-transparent border-none outline-none w-full text-white text-[15px]"
+              />
+            </div>
+          </div>
+        )}
+
+        {tab === "online" && (
+          <div className="mb-6">
+            <h2 className="text-sm font-bold mb-3 text-[#ffdf00]">Payment Code (Trx ID)</h2>
+            <div className="flex bg-[#1a1a1a] border border-neutral-700 rounded-md items-center px-3 h-[46px] focus-within:border-[#ffdf00]">
+              <input 
+                type="text" 
+                value={trxId}
+                onChange={(e) => setTrxId(e.target.value)}
+                placeholder="Enter 11-digit Trx ID from SMS" 
                 className="bg-transparent border-none outline-none w-full text-white text-[15px]"
               />
             </div>
@@ -352,3 +337,5 @@ export default function DepositScreen() {
     </div>
   );
 }
+
+

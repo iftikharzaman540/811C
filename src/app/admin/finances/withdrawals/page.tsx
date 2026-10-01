@@ -28,6 +28,27 @@ export default function WithdrawalsPage() {
     fetchWithdrawals(page);
   }, [page]);
 
+  const handleApprove = async (id: string) => {
+    if (!confirm('Are you sure you want to approve this withdrawal?')) return;
+    try {
+      await apiRequest('/admin/finances/withdrawals/' + id + '/approve', { method: 'POST' });
+      alert('Withdrawal approved successfully');
+      fetchWithdrawals(page);
+    } catch (e: any) {
+      alert(e.message || 'Failed to approve');
+    }
+  };
+
+  const handleReject = async (id: string) => {
+    if (!confirm('Are you sure you want to reject this withdrawal? The amount will be refunded to the user.')) return;
+    try {
+      await apiRequest('/admin/finances/withdrawals/' + id + '/reject', { method: 'POST' });
+      alert('Withdrawal rejected successfully');
+      fetchWithdrawals(page);
+    } catch (e: any) {
+      alert(e.message || 'Failed to reject');
+    }
+  };
   return (
     <div className="space-y-6">
       <div>
@@ -102,13 +123,13 @@ export default function WithdrawalsPage() {
                       {req.status === 'PENDING' ? (
                         <div className="flex justify-end gap-2">
                           <button 
-                            onClick={() => alert('Approve API coming soon')}
+                            onClick={() => handleApprove(req.id)}
                             className="p-1.5 bg-green-500/20 text-green-500 hover:bg-green-500 hover:text-white rounded transition-colors" title="Approve"
                           >
                             <Check className="w-4 h-4" />
                           </button>
                           <button 
-                            onClick={() => alert('Reject API coming soon')}
+                            onClick={() => handleReject(req.id)}
                             className="p-1.5 bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white rounded transition-colors" title="Reject"
                           >
                             <X className="w-4 h-4" />
