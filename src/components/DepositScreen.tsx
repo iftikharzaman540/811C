@@ -320,6 +320,7 @@ export default function DepositScreen() {
           {loading ? "Processing..." : "Deposit Now"}
         </button>
       
+      </div>
     </div>
   );
 }
