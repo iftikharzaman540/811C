@@ -32,6 +32,10 @@ export default function AdminDashboard() {
     return <div className="text-white text-center py-20">Loading dashboard metrics...</div>;
   }
 
+  if (!stats) {
+    return <div className="text-red-500 text-center py-20">Failed to load dashboard metrics. Please check your connection and try again.</div>;
+  }
+
   const formatCurrency = (val: number) => 'PKR ' + val.toLocaleString();
 
   return (

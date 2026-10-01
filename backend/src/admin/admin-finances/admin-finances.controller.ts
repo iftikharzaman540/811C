@@ -5,7 +5,7 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { Role } from '@prisma/client';
 
-@Controller('admin/finances')
+@Controller('api/v1/admin/finances')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Roles(Role.SUPER_ADMIN, Role.ADMIN) // Ideally we would have FINANCE_ADMIN role checking here
 export class AdminFinancesController {
