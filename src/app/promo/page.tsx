@@ -12,49 +12,11 @@ export default function PromoPage() {
   const [activeSideTab, setActiveSideTab] = useState("All");
   const [activeRebateTab, setActiveRebateTab] = useState("Mini Games");
   const [activeMissionTab, setActiveMissionTab] = useState("Newplayer");
-  const [activeSpinWheel, setActiveSpinWheel] = useState("Silver");
-  const [activeSpinTimes, setActiveSpinTimes] = useState(1);
-  const [vip1Expanded, setVip1Expanded] = useState(true);
-  const [luckyPoints, setLuckyPoints] = useState(150000);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [spinRotation, setSpinRotation] = useState(0);
-
-  const handleSpin = () => {
-    if (isSpinning) return;
-    
-    let cost = 10000;
-    if (activeSpinWheel === "Gold") cost = 50000;
-    if (activeSpinWheel === "Diamond") cost = 150000;
-    
-    const totalCost = cost * activeSpinTimes;
-    
-    if (luckyPoints < totalCost) {
-      toast.error("Insufficient lucky points to spin");
-      return;
-    }
-
-    setLuckyPoints(prev => prev - totalCost);
-    setIsSpinning(true);
-    
-    const extraSpins = 5 * 360; // 5 full rotations
-    const randomSegment = Math.floor(Math.random() * 10);
-    const stopAngle = extraSpins + (randomSegment * 36) + 18; // point to middle of segment
-    
-    setSpinRotation(prev => prev + stopAngle);
-    
-    setTimeout(() => {
-      setIsSpinning(false);
-      const prizes = [7.00, 10.00, 15.00, 27.00, 77.00, 130.00, 200.00, 250.00, 300.00, 377.00];
-      // Due to rotation backwards vs prize array
-      const wonAmount = prizes[(10 - randomSegment % 10) % 10] * activeSpinTimes;
-      toast.success(`Congratulations! You won Rs ${wonAmount.toFixed(2)}`, { duration: 4000 });
-    }, 3000);
-  };
   
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [showRedeemModal, setShowRedeemModal] = useState(false);
 
-  const topTabs = ["Event", "Unclaimed", "Rebate", "Mission", "Spins", "VIP", "History", "Fund"];
+  const topTabs = ["Event", "Unclaimed", "Rebate", "Mission", "VIP", "History", "Fund"];
   
   const eventSideTabs = [
     { id: "All", icon: <Grid className="w-5 h-5" /> },
@@ -385,93 +347,6 @@ export default function PromoPage() {
                 <p><span className="text-white font-bold">1. Applicable Objects:</span> New users registering on the platform for the first time.</p>
                 <p><span className="text-white font-bold">2. Task Deadline:</span> Valid within 10 days from the date of successful registration; reward will expire after this period.</p>
                 <p><span className="text-white font-bold">3. Claim Conditions:</span> The following tasks must be completed to claim: SMS verification, Payment method binding</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* SPINS TAB CONTENT */}
-        {activeTopTab === "Spins" && (
-          <div className="flex-1 flex flex-col overflow-y-auto no-scrollbar bg-gradient-to-b from-[#4a0000] to-[#111] relative">
-            <div className="bg-black/50 py-1.5 px-3 flex items-center text-[11px] border-b border-neutral-800">
-              <span className="mr-2">🎉</span>
-              <div className="text-neutral-300 truncate w-full">3926***4475 only used <span className="text-white font-bold">10000</span> luck to win the prize <span className="text-[#ffdf00] font-bold">300.00</span> in <span className="text-[#ff0b0b] font-bold">Red Wheel</span></div>
-            </div>
-
-            <div className="p-4">
-              <div className="bg-black/60 rounded-xl p-3 flex justify-between items-center border border-neutral-800 shadow-xl backdrop-blur-sm mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-[#ffdf00] text-[20px] drop-shadow-md">⭐</span>
-                  <span className="text-white font-bold text-[16px]">{luckyPoints.toLocaleString()}</span>
-                  <RefreshCw onClick={() => toast.success("Lucky points updated")} className="w-4 h-4 text-[#ff0b0b] cursor-pointer" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-neutral-400 text-[11px]">Valid Bets <span className="text-white font-bold">1=1</span> Lucky point <Info className="w-3 h-3 inline text-[#ffdf00]" /></span>
-                  <button onClick={() => window.location.href="/deposit"} className="bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] text-white font-bold text-[12px] px-4 py-1.5 rounded shadow-lg border border-red-500">GO</button>
-                </div>
-              </div>
-
-              {/* Wheel Tabs */}
-              <div className="flex gap-2 mb-4">
-                <button onClick={() => setActiveSpinWheel("Silver")} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg border-2 transition-all ${activeSpinWheel === "Silver" ? "bg-gradient-to-b from-neutral-300 to-neutral-400 border-white text-black shadow-lg" : "bg-transparent border-neutral-700 text-neutral-400"}`}>
-                  <span className="font-bold text-[12px]">Silver Wheel</span>
-                  <span className="text-[10px] font-medium flex items-center gap-1">⭐ 10000</span>
-                </button>
-                <button onClick={() => setActiveSpinWheel("Gold")} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg border-2 transition-all ${activeSpinWheel === "Gold" ? "bg-gradient-to-b from-[#ffdf00] to-[#ffaa00] border-[#fff3e0] text-[#4a2e00] shadow-lg" : "bg-transparent border-neutral-700 text-neutral-400"}`}>
-                  <span className="font-bold text-[12px]">Gold Wheel</span>
-                  <span className="text-[10px] font-medium flex items-center gap-1">⭐ 50000</span>
-                </button>
-                <button onClick={() => setActiveSpinWheel("Diamond")} className={`flex-1 flex flex-col items-center justify-center py-2 rounded-lg border-2 transition-all ${activeSpinWheel === "Diamond" ? "bg-gradient-to-b from-[#cc0000] to-[#ff0b0b] border-red-400 text-white shadow-[0_0_15px_rgba(255,11,11,0.5)]" : "bg-transparent border-neutral-700 text-neutral-400"}`}>
-                  <span className="font-bold text-[12px]">Diamond Wheel</span>
-                  <span className="text-[10px] font-medium flex items-center gap-1">⭐ 150000</span>
-                </button>
-              </div>
-
-              {/* Times Tabs */}
-              <div className="flex gap-4 justify-center mb-10">
-                <button onClick={() => setActiveSpinTimes(1)} className={`px-4 py-1.5 rounded-full text-[12px] font-bold border transition-all flex items-center gap-1.5 ${activeSpinTimes === 1 ? "bg-[#cc0000] border-[#ff0b0b] text-white shadow-[0_0_10px_rgba(255,11,11,0.3)]" : "bg-transparent border-neutral-600 text-neutral-400"}`}>
-                  {activeSpinTimes === 1 && <CheckCircle2 className="w-3.5 h-3.5" />} 1 time
-                </button>
-                <button onClick={() => setActiveSpinTimes(10)} className={`px-4 py-1.5 rounded-full text-[12px] font-bold border transition-all flex items-center gap-1.5 ${activeSpinTimes === 10 ? "bg-[#cc0000] border-[#ff0b0b] text-white shadow-[0_0_10px_rgba(255,11,11,0.3)]" : "bg-transparent border-neutral-600 text-neutral-400"}`}>
-                  {activeSpinTimes === 10 && <CheckCircle2 className="w-3.5 h-3.5" />} 10 times
-                </button>
-                <button onClick={() => setActiveSpinTimes(50)} className={`px-4 py-1.5 rounded-full text-[12px] font-bold border transition-all flex items-center gap-1.5 ${activeSpinTimes === 50 ? "bg-[#cc0000] border-[#ff0b0b] text-white shadow-[0_0_10px_rgba(255,11,11,0.3)]" : "bg-transparent border-neutral-600 text-neutral-400"}`}>
-                  {activeSpinTimes === 50 && <CheckCircle2 className="w-3.5 h-3.5" />} 50 times
-                </button>
-              </div>
-
-              {/* Fake Wheel CSS Construction */}
-              <div className="relative w-64 h-64 mx-auto mt-4 mb-20 drop-shadow-[0_0_30px_rgba(255,11,11,0.4)]">
-                {/* Pointer */}
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[30px] border-[#ffdf00] drop-shadow-md"></div>
-                
-                {/* Wheel Base */}
-                <div className="w-full h-full rounded-full border-[10px] border-neutral-300/20 bg-gradient-to-br from-[#cc0000] to-[#4a0000] relative overflow-hidden flex items-center justify-center shadow-2xl">
-                  
-                  {/* Rotatable Layer */}
-                  <div className="absolute inset-0 w-full h-full" style={{ transform: `rotate(-${spinRotation}deg)`, transition: isSpinning ? "transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99)" : "none" }}>
-                    {/* Wheel segments using CSS conic gradient */}
-                    <div className="absolute inset-0 rounded-full" style={{ background: 'conic-gradient(#cc0000 0deg 36deg, #ff0b0b 36deg 72deg, #cc0000 72deg 108deg, #ff0b0b 108deg 144deg, #cc0000 144deg 180deg, #ff0b0b 180deg 216deg, #cc0000 216deg 252deg, #ff0b0b 252deg 288deg, #cc0000 288deg 324deg, #ff0b0b 324deg 360deg)' }}></div>
-                    
-                    {/* Inner text (Simulated) */}
-                    <div className="absolute inset-0 flex items-center justify-center rotate-[-18deg]">
-                      {[7.00, 10.00, 15.00, 27.00, 77.00, 130.00, 200.00, 250.00, 300.00, 377.00].map((amt, i) => (
-                        <div key={i} className="absolute w-full h-full flex justify-center pt-4" style={{ transform: `rotate(${i * 36}deg)` }}>
-                          <span className="text-[#ffdf00] font-bold text-[11px] drop-shadow-md">{amt.toFixed(2)}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Center Draw Button */}
-                  <div onClick={handleSpin} className={`w-20 h-20 bg-gradient-to-br from-[#2e0505] to-[#111] rounded-full z-10 flex flex-col items-center justify-center border-4 border-[#ffdf00] shadow-[0_0_20px_rgba(255,223,0,0.5)] transition-transform ${isSpinning ? 'opacity-70 scale-95' : 'cursor-pointer hover:scale-105'}`}>
-                    <span className="text-[#ffdf00] font-black text-[11px]">x0</span>
-                    <span className="text-white font-bold text-[14px]">Draw</span>
-                  </div>
-                </div>
-
-                {/* Pedestal */}
-                <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-48 h-12 bg-gradient-to-t from-[#ffdf00]/30 to-transparent rounded-full blur-xl -z-10"></div>
               </div>
             </div>
           </div>
