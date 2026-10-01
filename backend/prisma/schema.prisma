@@ -306,6 +306,7 @@ model AuditLog {
 enum PaymentProvider {
   JAZZCASH
   EASYPAISA
+  BANK_TRANSFER
   MANUAL
 }
 

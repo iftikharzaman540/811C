@@ -17,6 +17,9 @@ export default function WithdrawScreen() {
 
   const [amount, setAmount] = useState("");
   const [accountNo, setAccountNo] = useState("");
+  const [accountTitle, setAccountTitle] = useState("");
+  const [cnic, setCnic] = useState("");
+  const [bankName, setBankName] = useState("");
   const [provider, setProvider] = useState("EASYPAISA");
   const [withdrawPwd, setWithdrawPwd] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,9 +55,28 @@ export default function WithdrawScreen() {
       toast.error("Minimum withdrawal is 500");
       return;
     }
-    if (!accountNo || accountNo.length < 10) {
-      toast.error("Please enter a valid account number");
+    if (!accountTitle || accountTitle.trim().length < 3) {
+      toast.error("Please enter a valid account title");
       return;
+    }
+    if (!cnic || cnic.trim().length < 13) {
+      toast.error("Please enter a valid CNIC (without dashes)");
+      return;
+    }
+    if (provider === "BANK_TRANSFER") {
+      if (!bankName || bankName.trim().length < 3) {
+        toast.error("Please enter a valid Bank Name");
+        return;
+      }
+      if (!accountNo || accountNo.length < 10) {
+        toast.error("Please enter a valid bank account number");
+        return;
+      }
+    } else {
+      if (!accountNo || accountNo.length < 10) {
+        toast.error("Please enter a valid mobile number");
+        return;
+      }
     }
     if (withdrawPwd !== localStorage.getItem("withdraw_pwd")) {
       toast.error("Incorrect withdrawal password");
@@ -72,17 +94,25 @@ export default function WithdrawScreen() {
     
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://8111c.com/api/v1";
+      
+      const payload = {
+        amount: Number(amount),
+        provider,
+        accountDetails: {
+          accountNo,
+          accountTitle,
+          cnic,
+          ...(provider === "BANK_TRANSFER" && { bankName })
+        }
+      };
+
       const res = await fetch(`${API_URL}/payments/withdraw`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({
-          amount: Number(amount),
-          provider: provider,
-          accountDetails: { accountNo }
-        })
+        body: JSON.stringify(payload)
       });
 
       toast.dismiss();
@@ -213,7 +243,7 @@ export default function WithdrawScreen() {
 
             <div className="mb-5">
               <label className="text-sm font-medium text-neutral-300 block mb-2">Withdrawal Method</label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <button 
                   onClick={() => setProvider("EASYPAISA")} 
                   className={`flex flex-col items-center justify-center py-3 rounded-lg border-2 transition-all ${provider === "EASYPAISA" ? "border-[#ffdf00] bg-[#1a1a1a]" : "border-neutral-700 bg-black"}`}
@@ -228,6 +258,13 @@ export default function WithdrawScreen() {
                   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Jazzcash.png/1200px-Jazzcash.png" className="h-6 mb-1 object-contain bg-white px-2 py-1 rounded" alt="JazzCash" />
                   <span className="text-xs font-medium">JazzCash</span>
                 </button>
+                <button 
+                  onClick={() => setProvider("BANK_TRANSFER")} 
+                  className={`flex flex-col items-center justify-center py-3 rounded-lg border-2 transition-all ${provider === "BANK_TRANSFER" ? "border-[#ffdf00] bg-[#1a1a1a]" : "border-neutral-700 bg-black"}`}
+                >
+                  <div className="h-6 mb-1 flex items-center justify-center text-white"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg></div>
+                  <span className="text-xs font-medium">Bank</span>
+                </button>
               </div>
             </div>
 
@@ -238,19 +275,56 @@ export default function WithdrawScreen() {
                   type="number" 
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Minimum 100"
+                  placeholder="Minimum 500"
                   className="w-full bg-black border border-neutral-700 rounded-lg py-3 px-4 text-white font-bold text-lg focus:outline-none focus:border-[#ffdf00] placeholder:text-neutral-600 placeholder:font-normal"
                 />
               </div>
             </div>
 
+            {provider === "BANK_TRANSFER" && (
+              <div className="mb-5">
+                <label className="text-sm font-medium text-neutral-300 block mb-2">Bank Name</label>
+                <input 
+                  type="text" 
+                  value={bankName}
+                  onChange={(e) => setBankName(e.target.value)}
+                  placeholder="e.g. Meezan Bank, HBL"
+                  className="w-full bg-black border border-neutral-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#ffdf00]"
+                />
+              </div>
+            )}
+
             <div className="mb-5">
-              <label className="text-sm font-medium text-neutral-300 block mb-2">Account Number (Phone)</label>
+              <label className="text-sm font-medium text-neutral-300 block mb-2">Account Title</label>
+              <input 
+                type="text" 
+                value={accountTitle}
+                onChange={(e) => setAccountTitle(e.target.value)}
+                placeholder="Name on account"
+                className="w-full bg-black border border-neutral-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#ffdf00]"
+              />
+            </div>
+
+            <div className="mb-5">
+              <label className="text-sm font-medium text-neutral-300 block mb-2">CNIC Number</label>
+              <input 
+                type="text" 
+                value={cnic}
+                onChange={(e) => setCnic(e.target.value.replace(/\D/g, '').slice(0, 13))}
+                placeholder="13-digit CNIC (without dashes)"
+                className="w-full bg-black border border-neutral-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#ffdf00]"
+              />
+            </div>
+
+            <div className="mb-5">
+              <label className="text-sm font-medium text-neutral-300 block mb-2">
+                {provider === "BANK_TRANSFER" ? "Bank Account Number / IBAN" : "Mobile Account Number"}
+              </label>
               <input 
                 type="text" 
                 value={accountNo}
                 onChange={(e) => setAccountNo(e.target.value)}
-                placeholder="e.g. 03001234567"
+                placeholder={provider === "BANK_TRANSFER" ? "e.g. PK00MEZN0001234..." : "e.g. 03001234567"}
                 className="w-full bg-black border border-neutral-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#ffdf00]"
               />
             </div>
@@ -271,8 +345,8 @@ export default function WithdrawScreen() {
 
             <button 
               onClick={handleWithdraw}
-              disabled={isSubmitting || withdrawPwd.length !== 6 || !amount || !accountNo}
-              className={`w-full py-4 rounded-lg font-bold text-[16px] text-black ${!isSubmitting && withdrawPwd.length === 6 && amount && accountNo ? "bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] shadow-[0_4px_15px_rgba(255,223,0,0.3)] hover:scale-[0.98]" : "bg-[#807000] text-neutral-400 cursor-not-allowed"} transition-all`}
+              disabled={isSubmitting || withdrawPwd.length !== 6 || !amount || !accountNo || !accountTitle || cnic.length !== 13 || (provider === "BANK_TRANSFER" && !bankName)}
+              className={`w-full py-4 rounded-lg font-bold text-[16px] text-black ${!isSubmitting && withdrawPwd.length === 6 && amount && accountNo && accountTitle && cnic.length === 13 && (provider !== "BANK_TRANSFER" || bankName) ? "bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] shadow-[0_4px_15px_rgba(255,223,0,0.3)] hover:scale-[0.98]" : "bg-[#807000] text-neutral-400 cursor-not-allowed"} transition-all`}
             >
               {isSubmitting ? "Processing..." : "Submit Withdrawal"}
             </button>

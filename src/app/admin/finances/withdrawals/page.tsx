@@ -50,6 +50,7 @@ export default function WithdrawalsPage() {
                 <th className="px-6 py-4 font-medium">Date</th>
                 <th className="px-6 py-4 font-medium">User</th>
                 <th className="px-6 py-4 font-medium">Amount</th>
+                <th className="px-6 py-4 font-medium">Provider & Details</th>
                 <th className="px-6 py-4 font-medium">Status</th>
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
               </tr>
@@ -57,16 +58,16 @@ export default function WithdrawalsPage() {
             <tbody className="divide-y divide-neutral-800">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-neutral-500">Loading withdrawals...</td>
+                  <td colSpan={7} className="px-6 py-8 text-center text-neutral-500">Loading withdrawals...</td>
                 </tr>
               ) : withdrawals.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-neutral-500">No withdrawal requests found.</td>
+                  <td colSpan={7} className="px-6 py-8 text-center text-neutral-500">No withdrawal requests found.</td>
                 </tr>
               ) : (
                 withdrawals.map(req => (
                   <tr key={req.id} className="hover:bg-[#1a1a1a] transition-colors">
-                    <td className="px-6 py-4 font-mono text-xs">{req.id}</td>
+                    <td className="px-6 py-4 font-mono text-xs">{req.id.slice(-8)}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(req.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
                       <Link href={`/admin/users/${req.user_id}`} className="text-white hover:text-[#ffdf00]">
@@ -76,6 +77,17 @@ export default function WithdrawalsPage() {
                     </td>
                     <td className="px-6 py-4 font-bold text-red-500">
                       PKR {Number(req.amount).toLocaleString()}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="font-bold text-[#ffdf00] text-xs mb-1">{req.provider}</div>
+                      {req.metadata?.accountDetails && (
+                        <div className="text-xs text-neutral-400 max-w-[200px]">
+                          {req.metadata.accountDetails.accountTitle && <div><span className="text-neutral-500">Title:</span> <span className="text-white">{req.metadata.accountDetails.accountTitle}</span></div>}
+                          {req.metadata.accountDetails.accountNo && <div><span className="text-neutral-500">A/C:</span> <span className="text-white">{req.metadata.accountDetails.accountNo}</span></div>}
+                          {req.metadata.accountDetails.cnic && <div><span className="text-neutral-500">CNIC:</span> <span className="text-white">{req.metadata.accountDetails.cnic}</span></div>}
+                          {req.metadata.accountDetails.bankName && <div><span className="text-neutral-500">Bank:</span> <span className="text-white">{req.metadata.accountDetails.bankName}</span></div>}
+                        </div>
+                      )}
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
