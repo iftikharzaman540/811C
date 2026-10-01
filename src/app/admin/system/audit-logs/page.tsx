@@ -8,7 +8,7 @@ export default function AuditLogsPage() {
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [meta, setMeta] = useState({ total: 0, totalPages: 1 });
+  const [meta, setMeta] = useState({ total: 0, totalPages: 1, page: 1, limit: 20 });
 
   const fetchLogs = async (p = page) => {
     setLoading(true);

@@ -10,7 +10,7 @@ export default function UsersManagementPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const [meta, setMeta] = useState({ total: 0, totalPages: 1 });
+  const [meta, setMeta] = useState({ total: 0, totalPages: 1, page: 1, limit: 20 });
 
   const fetchUsers = async (searchTerm = search, p = page) => {
     setLoading(true);
