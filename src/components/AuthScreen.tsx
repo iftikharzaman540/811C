@@ -51,7 +51,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
         if (data.user && (data.user.role === "SUPER_ADMIN" || data.user.role === "ADMIN")) {
           window.location.href = "/admin";
         } else {
-          setShowLuckyDrawPopup(true);
+          if (onLogin) onLogin();
         }
       } else {
         // Log them in immediately after register
@@ -290,8 +290,8 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
       </motion.div>
       {showSuccessPopup && (
         <RegistrationSuccessPopup 
-          onClose={() => { setShowSuccessPopup(false); setShowLuckyDrawPopup(true); }} 
-          onNext={() => { setShowSuccessPopup(false); setShowLuckyDrawPopup(true); }} 
+          onClose={() => { setShowSuccessPopup(false); if (onLogin) onLogin(); }} 
+          onNext={() => { setShowSuccessPopup(false); if (onLogin) onLogin(); }} 
         />
       )}
       {showLuckyDrawPopup && (
