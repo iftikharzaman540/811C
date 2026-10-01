@@ -13,7 +13,7 @@ export default function AuditLogsPage() {
   const fetchLogs = async (p = page) => {
     setLoading(true);
     try {
-      const res = await apiRequest(\`/admin/settings/audit-logs?page=\${p}&limit=50\`);
+      const res = await apiRequest(`/admin/settings/audit-logs?page=\${p}&limit=50`);
       setLogs(res.data);
       setMeta(res.meta);
     } catch (error) {

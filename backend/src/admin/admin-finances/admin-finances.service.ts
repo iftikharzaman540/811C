@@ -33,11 +33,11 @@ export class AdminFinancesService {
       const transaction = await tx.walletTransaction.create({
         data: {
           wallet_id: wallet.id,
-          type: type === 'CREDIT' ? TransactionType.BONUS : TransactionType.WITHDRAWAL, // Need a generic MANUAL type ideally, but using existing ones. Let's use DEPOSIT/WITHDRAWAL logic or add MANUAL_ADJUSTMENT to schema later.
+          type: TransactionType.ADJUSTMENT,
           amount: amount,
           balance_before: balanceBefore,
           balance_after: balanceAfter,
-          description: \`Manual \${type} by Admin: \${reason}\`,
+          description: `Manual \${type} by Admin: \${reason}`,
         }
       });
 
@@ -46,7 +46,7 @@ export class AdminFinancesService {
         data: {
           admin_id: adminId,
           user_id: userId,
-          action: \`MANUAL_WALLET_\${type}\`,
+          action: `MANUAL_WALLET_\${type}`,
           entity: 'Wallet',
           entity_id: wallet.id,
           old_value: { balance: balanceBefore },

@@ -30,7 +30,7 @@ export default function UserProfilePage() {
 
   const fetchUser = async () => {
     try {
-      const res = await apiRequest(\`/admin/users/\${id}\`);
+      const res = await apiRequest(`/admin/users/\${id}`);
       setUser(res);
       setFormData({
         status: res.status,
@@ -53,7 +53,7 @@ export default function UserProfilePage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await apiRequest(\`/admin/users/\${id}\`, {
+      await apiRequest(`/admin/users/\${id}`, {
         method: 'PATCH',
         body: JSON.stringify(formData)
       });
@@ -152,7 +152,7 @@ export default function UserProfilePage() {
               </div>
               
               <Link 
-                href={\`/admin/finances/wallet-adjustments?userId=\${user.id}\`}
+                href={`/admin/finances/wallet-adjustments?userId=\${user.id}`}
                 className="mt-2 w-full py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg text-center text-sm font-medium transition-colors"
               >
                 Manual Adjustment

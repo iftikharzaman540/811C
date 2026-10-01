@@ -122,15 +122,15 @@ export default function WalletAdjustmentsPage() {
                         <div className="text-xs font-mono text-neutral-500">{log.user_id}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={\`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold w-fit \${
+                        <span className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold w-fit \${
                           isCredit ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
-                        }\`}>
+                        }`}>
                           {isCredit ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                           {isCredit ? 'CREDIT' : 'DEBIT'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <div className={\`font-bold \${isCredit ? 'text-green-500' : 'text-red-500'}\`}>
+                        <div className={`font-bold \${isCredit ? 'text-green-500' : 'text-red-500'}`}>
                           {isCredit ? '+' : '-'} PKR {diff.toLocaleString()}
                         </div>
                         <div className="text-xs text-neutral-500">New Bal: {newBalance}</div>
