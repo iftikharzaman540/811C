@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '@/utils/api';
-import { Search, Plus, ArrowUpRight, ArrowDownRight, History } from 'lucide-react';
+import { Search, Plus, ArrowUpRight, ArrowDownRight, History, X } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 
 export default function WalletAdjustmentsPage() {
