@@ -1,4 +1,4 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Body, Param, Query, UseGuards, Req } from '@nestjs/common';
 import { AdminSupportService } from './admin-support.service';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../auth/guards/roles.guard';
@@ -10,8 +10,24 @@ import { Role } from '@prisma/client';
 @Roles(Role.SUPER_ADMIN, Role.ADMIN)
 export class AdminSupportController {
   constructor(private readonly svc: AdminSupportService) {}
+
   @Get()
   getAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     return this.svc.getTickets(page ? parseInt(page) : 1, limit ? parseInt(limit) : 50);
+  }
+
+  @Get(':id')
+  getOne(@Param('id') id: string) {
+    return this.svc.getTicket(id);
+  }
+
+  @Post(':id/reply')
+  reply(@Param('id') id: string, @Body('message') message: string, @Req() req: any) {
+    return this.svc.replyToTicket(id, req.user.userId, message);
+  }
+
+  @Patch(':id/status')
+  updateStatus(@Param('id') id: string, @Body('status') status: string) {
+    return this.svc.updateTicketStatus(id, status);
   }
 }

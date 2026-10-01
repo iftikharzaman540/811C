@@ -55,16 +55,27 @@ export default function Page() {
                 <tr><td colSpan={5} className="px-6 py-8 text-center text-neutral-500">No records found.</td></tr>
               ) : (
                 data.map((item: any) => (
-                  <tr key={item.id} className="hover:bg-[#1a1a1a] transition-colors">
-                    
-      <td className="px-6 py-4 text-xs font-mono">{item.id}</td>
-      <td className="px-6 py-4 text-white">{item.user?.email || item.user_id}</td>
-      <td className="px-6 py-4 font-medium text-white">{item.subject}</td>
-      <td className="px-6 py-4">
-        <span className="px-2 py-1 rounded-full text-xs font-bold bg-blue-500/10 text-blue-500">{item.status}</span>
-      </td>
-      <td className="px-6 py-4">{new Date(item.created_at).toLocaleDateString()}</td>
-    
+                  <tr 
+                    key={item.id} 
+                    className="hover:bg-[#1a1a1a] transition-colors cursor-pointer"
+                    onClick={() => window.location.href = `/admin/support/tickets/${item.id}`}
+                  >
+                    <td className="px-6 py-4 text-xs font-mono">{item.id.slice(0, 8)}...</td>
+                    <td className="px-6 py-4 text-white">
+                      <div className="font-bold">{item.user?.username || 'Unknown'}</div>
+                      <div className="text-xs text-neutral-500">{item.user?.email || item.user_id}</div>
+                    </td>
+                    <td className="px-6 py-4 font-medium text-white">{item.subject}</td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+                        item.status === 'CLOSED' || item.status === 'RESOLVED' 
+                          ? 'bg-neutral-800 text-neutral-400' 
+                          : 'bg-green-500/10 text-green-500'
+                      }`}>
+                        {item.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">{new Date(item.created_at).toLocaleDateString()}</td>
                   </tr>
                 ))
               )}
