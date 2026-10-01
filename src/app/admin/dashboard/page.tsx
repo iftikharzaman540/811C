@@ -14,20 +14,18 @@ export default function AdminDashboard() {
   // In a real implementation, we would fetch this from a dedicated stats endpoint
   // For now, we will just show a UI skeleton that represents the final scope
   useEffect(() => {
-    // Simulating API load
-    setTimeout(() => {
-      setStats({
-        totalUsers: 12543,
-        activeUsers: 8432,
-        totalDeposits: 45023000,
-        totalWithdrawals: 31050000,
-        pendingWithdrawals: 12,
-        pendingKyc: 45,
-        netRevenue: 13973000,
-        totalBonuses: 2500000,
-      });
-      setLoading(false);
-    }, 1000);
+    const fetchStats = async () => {
+      try {
+        const res = await apiRequest('/admin/dashboard/stats');
+        setStats(res);
+      } catch (error) {
+        console.error('Failed to load dashboard stats', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchStats();
   }, []);
 
   if (loading) {

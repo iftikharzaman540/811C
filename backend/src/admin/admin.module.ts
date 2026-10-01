@@ -6,8 +6,9 @@ import { AdminCmsModule } from './admin-cms/admin-cms.module';
 import { AdminSupportModule } from './admin-support/admin-support.module';
 import { AdminMarketingModule } from './admin-marketing/admin-marketing.module';
 import { AdminKycModule } from './admin-kyc/admin-kyc.module';
+import { AdminDashboardModule } from './admin-dashboard/admin-dashboard.module';
 
 @Module({
-  imports: [AdminUsersModule, AdminFinancesModule, AdminSettingsModule, AdminCmsModule, AdminSupportModule, AdminMarketingModule, AdminKycModule]
+  imports: [AdminUsersModule, AdminFinancesModule, AdminSettingsModule, AdminCmsModule, AdminSupportModule, AdminMarketingModule, AdminKycModule, AdminDashboardModule]
 })
 export class AdminModule {}
