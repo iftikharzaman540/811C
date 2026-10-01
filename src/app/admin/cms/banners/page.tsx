@@ -203,14 +203,53 @@ export default function BannersPage() {
                 <label className="block text-sm font-medium text-neutral-400 mb-1">Banner Title (Internal / Alt text)</label>
                 <input type="text" value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full bg-black border border-neutral-700 rounded-lg px-3 py-2 text-white" placeholder="Summer Promo 2026" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-400 mb-1">Desktop Image URL (Required)</label>
-                <input required type="url" value={form.desktop_image} onChange={e => setForm({...form, desktop_image: e.target.value})} className="w-full bg-black border border-neutral-700 rounded-lg px-3 py-2 text-white" placeholder="https://example.com/images/banner-desktop.jpg" />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-neutral-400 mb-1">Desktop Image (Required)</label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          const data = await res.json();
+                          if (data.url) setForm({...form, desktop_image: data.url});
+                        }
+                      }}
+                      className="block w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-neutral-800 file:text-white hover:file:bg-neutral-700 cursor-pointer"
+                    />
+                  </div>
+                  {form.desktop_image && <div className="mt-2 text-xs text-green-500 truncate">Current: {form.desktop_image}</div>}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-neutral-400 mb-1">Mobile Image (Optional)</label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+                          const data = await res.json();
+                          if (data.url) setForm({...form, mobile_image: data.url});
+                        }
+                      }}
+                      className="block w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-neutral-800 file:text-white hover:file:bg-neutral-700 cursor-pointer"
+                    />
+                  </div>
+                  {form.mobile_image && <div className="mt-2 text-xs text-green-500 truncate">Current: {form.mobile_image}</div>}
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-neutral-400 mb-1">Mobile Image URL (Optional)</label>
-                <input type="url" value={form.mobile_image} onChange={e => setForm({...form, mobile_image: e.target.value})} className="w-full bg-black border border-neutral-700 rounded-lg px-3 py-2 text-white" placeholder="https://example.com/images/banner-mobile.jpg" />
-              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-400 mb-1">Destination Link</label>
