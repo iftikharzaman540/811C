@@ -149,86 +149,38 @@ export default function SupportPage() {
               <div className="flex flex-col bg-[#1c1c1c] mx-2 mt-2 rounded-xl border border-neutral-800 overflow-hidden shadow-lg">
                 
                 {subTab === "Other Support" && (
-                  <>
-                    {/* Line 1 */}
-                    <button onClick={() => setShowLiveChat(true)} className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors block w-full text-left">
-                      <div className="w-10 h-10 rounded-full bg-[#1da1f2] flex items-center justify-center shrink-0 shadow-md">
-                        <HeadsetIcon className="w-5 h-5 text-white" />
+                  <div className="flex flex-col p-2 space-y-3">
+                    {/* Live Chat */}
+                    <button onClick={() => setShowLiveChat(true)} className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col">
+                      <div className="w-full h-auto bg-black flex items-center justify-center p-2">
+                        <img src="/support/livechat.jpg" alt="Live Chat" className="w-full h-auto object-contain rounded-lg max-h-[160px]" />
                       </div>
-                      <div className="flex-1 flex flex-col justify-center">
-                        <span className="text-[11px] text-neutral-400 leading-tight">Nickname: <span className="text-white font-bold text-[13px]">Customer Service Line</span></span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-[13px] font-bold text-white">Customer Service Line</span>
-                          <span className="text-neutral-400 text-[12px]">??</span>
-                        </div>
-                        <span className="text-[10px] text-neutral-500">Online time: 00:00 - 23:59</span>
+                      <div className="w-full bg-[#cc0000] py-2 text-center text-white font-bold text-[14px]">
+                        Contact Live Support
                       </div>
-                      <div className="bg-[#cc0000] text-white font-bold text-[11px] py-1.5 px-3 rounded shadow-md hover:scale-95 transition-transform text-center shrink-0">Contact<br/>Now</div></button>
+                    </button>
 
-                    {/* Line 2 */}
-                    <a href="https://whatsapp.com/channel/0029VbDJdVw7j6gCK3T1YG0i" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors block w-full">
-                      <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center shrink-0 shadow-md">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA" className="w-6 h-6 invert" />
+                    {/* WhatsApp */}
+                    <a href="https://whatsapp.com/channel/0029VbDJdVw7j6gCK3T1YG0i" target="_blank" rel="noopener noreferrer" className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col block">
+                      <div className="w-full h-auto bg-black flex items-center justify-center p-2">
+                        <img src="/support/whatsapp.jpg" alt="WhatsApp" className="w-full h-auto object-contain rounded-lg max-h-[160px]" />
                       </div>
-                      <div className="flex-1 flex flex-col justify-center">
-                        <span className="text-[11px] text-neutral-400 leading-tight">Nickname: <span className="text-white font-bold text-[13px]">WhatsApp</span></span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-[13px] font-bold text-white">WhatsApp |Channel</span>
-                          <span className="text-neutral-400 text-[12px]">??</span>
-                        </div>
-                        <span className="text-[10px] text-neutral-500">Online time: 00:00 - 23:59</span>
+                      <div className="w-full bg-[#25D366] py-2 text-center text-white font-bold text-[14px]">
+                        WhatsApp Channel
                       </div>
-                      <div className="bg-[#cc0000] text-white font-bold text-[11px] py-1.5 px-3 rounded shadow-md hover:scale-95 transition-transform text-center shrink-0">Contact<br/>Now</div>
                     </a>
 
-                    {/* Line 3 */}
-                    <a href="https://www.facebook.com/share/1JzvPey4hQ/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors block w-full">
-                      <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shrink-0 shadow-md">
-                        <span className="text-white font-bold text-xl font-serif">f</span>
+                    {/* Facebook */}
+                    <a href="https://www.facebook.com/share/1JzvPey4hQ/" target="_blank" rel="noopener noreferrer" className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col block">
+                      <div className="w-full h-auto bg-black flex items-center justify-center p-2">
+                        <img src="/support/facebook.jpg" alt="Facebook" className="w-full h-auto object-contain rounded-lg max-h-[160px]" />
                       </div>
-                      <div className="flex-1 flex flex-col justify-center">
-                        <span className="text-[11px] text-neutral-400 leading-tight">Nickname: <span className="text-white font-bold text-[13px]">Facebook</span></span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-[13px] font-bold text-white">Facebook | Channel</span>
-                          <span className="text-neutral-400 text-[12px]">??</span>
-                        </div>
-                        <span className="text-[10px] text-neutral-500">Online time: 00:00 - 23:59</span>
+                      <div className="w-full bg-[#1877F2] py-2 text-center text-white font-bold text-[14px]">
+                        Facebook Channel
                       </div>
-                      <div className="bg-[#cc0000] text-white font-bold text-[11px] py-1.5 px-3 rounded shadow-md hover:scale-95 transition-transform text-center shrink-0">Contact<br/>Now</div>
                     </a>
-
-                    {/* Line 4 */}
-                    <a href="https://t.me/Game8111c" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors block w-full">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 flex items-center justify-center shrink-0 shadow-md">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="IG" className="w-5 h-5 invert" />
-                      </div>
-                      <div className="flex-1 flex flex-col justify-center">
-                        <span className="text-[11px] text-neutral-400 leading-tight">Nickname: <span className="text-white font-bold text-[13px]">Instagram</span></span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-[13px] font-bold text-white">Instagram | Channel</span>
-                          <span className="text-neutral-400 text-[12px]">??</span>
-                        </div>
-                        <span className="text-[10px] text-neutral-500">Online time: 00:00 - 23:59</span>
-                      </div>
-                      <div className="bg-[#cc0000] text-white font-bold text-[11px] py-1.5 px-3 rounded shadow-md hover:scale-95 transition-transform text-center shrink-0">Contact<br/>Now</div></a>
-
-                    {/* Line 5 */}
-                    <a href="https://t.me/Game8111c" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 hover:bg-white/5 transition-colors block w-full">
-                      <div className="w-10 h-10 rounded-full bg-black border border-neutral-700 flex items-center justify-center shrink-0 shadow-md">
-                        <span className="text-white font-bold text-xl">??</span>
-                      </div>
-                      <div className="flex-1 flex flex-col justify-center">
-                        <span className="text-[11px] text-neutral-400 leading-tight">Nickname: <span className="text-white font-bold text-[13px]">Twitter</span></span>
-                        <div className="flex items-center gap-1">
-                          <span className="text-[13px] font-bold text-white">Twitter | Channel</span>
-                          <span className="text-neutral-400 text-[12px]">??</span>
-                        </div>
-                        <span className="text-[10px] text-neutral-500">Online time: 00:00 - 23:59</span>
-                      </div>
-                      <div className="bg-[#cc0000] text-white font-bold text-[11px] py-1.5 px-3 rounded shadow-md hover:scale-95 transition-transform text-center shrink-0">Contact<br/>Now</div></a>
-                  </>
+                  </div>
                 )}
-
                 {subTab === "Telegram Support" && (
                   <>
                     {/* Line 1 */}
