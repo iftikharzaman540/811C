@@ -92,11 +92,6 @@ export default function ProfilePage() {
             <Wallet className="w-9 h-9 text-[#ffdf00]" />
             <span className="text-white font-medium text-[12px]">Deposit</span>
           </div>
-          <div onClick={() => window.location.href = "/deposit"} className="flex flex-col items-center gap-2 relative cursor-pointer hover:scale-105 transition-transform">
-            <div className="absolute -top-3 -right-3 bg-[#cc0000] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border border-[#111] z-10">50%</div>
-            <CreditCard className="w-9 h-9 text-[#ffdf00]" />
-            <span className="text-white font-medium text-[12px]">Fund</span>
-          </div>
         </div>
       </div>
 
@@ -147,4 +142,5 @@ export default function ProfilePage() {
     </main>
   );
 }
+
 
