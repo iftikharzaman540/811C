@@ -1,5 +1,5 @@
-import UserAgreementPopup from '@/components/UserAgreementPopup';
 "use client";
+import UserAgreementPopup from '@/components/UserAgreementPopup';
 
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -311,6 +311,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
     </div>
   );
 }
+
 
 
 
