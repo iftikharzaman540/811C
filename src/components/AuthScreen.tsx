@@ -218,8 +218,8 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
               </div>
 
               {/* Agreement */}
-              <label className="flex items-start gap-1.5 mt-1 cursor-pointer group">
-                <div className="relative flex items-center justify-center mt-0.5 shrink-0">
+              <div className="flex items-start gap-1.5 mt-1 group">
+                <div className="relative flex items-center justify-center mt-0.5 shrink-0 cursor-pointer" onClick={() => setAgreed(!agreed)}>
                   <input 
                     type="checkbox" 
                     checked={agreed}
@@ -229,9 +229,9 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
                   {agreed && <X className="w-2.5 h-2.5 text-black absolute pointer-events-none" style={{ clipPath: 'polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%)' }} />}
                 </div>
                 <span className="text-[10px] text-white/70 leading-tight">
-                  I am over 18 years old and have read and agreed to <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowAgreement(true); }} className="text-[#ffdf00] hover:underline">�User Agreement�</button>
+                  <span className="cursor-pointer" onClick={() => setAgreed(!agreed)}>I am over 18 years old and have read and agreed to </span><button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setShowAgreement(true); }} className="text-[#ffdf00] hover:underline">�User Agreement�</button>
                 </span>
-              </label>
+              </div>
 
               </>)}
               {/* Register Button */}
