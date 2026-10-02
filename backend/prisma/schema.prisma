@@ -72,6 +72,8 @@ model User {
   country       String?
   referral_code String?  @unique
 
+  total_deposited Decimal @default(0.00) @db.Decimal(15, 2)
+
   current_wagering_requirement Decimal @default(0.00) @db.Decimal(15, 2)
   current_wagering_completed   Decimal @default(0.00) @db.Decimal(15, 2)
 
@@ -325,7 +327,8 @@ model Payment {
   currency              String          @default("PKR")
   provider              PaymentProvider
   type                  PaymentType
-  transaction_reference String          @unique
+  transaction_reference String @unique
+  vip_processed         Boolean @default(false)
   status                FinancialStatus @default(PENDING)
   metadata              Json?
 
@@ -531,3 +534,5 @@ model VipHistory {
 
   @@index([user_id])
 }
+
+

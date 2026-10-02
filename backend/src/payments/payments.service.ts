@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException, NotFoundException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { VipService } from '../vip/vip.service';
 import { WalletService } from '../wallet/wallet.service';
 import { XpressPayProvider } from './providers/xpresspay.provider';
 import { v4 as uuidv4 } from 'uuid';
@@ -13,7 +14,6 @@ export class PaymentsService {
     private prisma: PrismaService,
     private walletService: WalletService,
     private xpressPay: XpressPayProvider,
-    private vipService: VipService,
     private vipService: VipService
   ) {}
 
@@ -262,6 +262,8 @@ export class PaymentsService {
     return { payment_id: payment.id, status: 'PENDING_ADMIN_APPROVAL' };
   }
 }
+
+
 
 
 
