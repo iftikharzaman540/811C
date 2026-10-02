@@ -1215,7 +1215,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       {isMenuOpen && (
         <div className="fixed inset-0 z-[100] flex font-sans">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
-          <motion.div initial={{ x: -320 }} animate={{ x: 0 }} exit={{ x: -320 }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="relative w-[300px] h-full bg-[#1a1a1a] shadow-2xl flex flex-col overflow-hidden text-neutral-300">
+          <motion.div initial={{ x: -260 }} animate={{ x: 0 }} exit={{ x: -260 }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="relative w-[260px] h-full bg-[#1a1a1a] shadow-2xl flex flex-col overflow-hidden text-neutral-300">
             
             {/* Header */}
             <div className="px-4 py-3 bg-black flex items-center border-b border-neutral-800">
