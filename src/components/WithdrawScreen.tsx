@@ -20,7 +20,7 @@ export default function WithdrawScreen() {
   const [accountTitle, setAccountTitle] = useState("");
   const [cnic, setCnic] = useState("");
   const [bankName, setBankName] = useState("");
-  const [provider, setProvider] = useState("EASYPAISA");
+  const [provider, setProvider] = useState("JAZZCASH");
   const [withdrawPwd, setWithdrawPwd] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -245,18 +245,18 @@ export default function WithdrawScreen() {
               <label className="text-sm font-medium text-neutral-300 block mb-2">Withdrawal Method</label>
               <div className="grid grid-cols-3 gap-3">
                 <button 
-                  onClick={() => setProvider("EASYPAISA")} 
-                  className={`flex flex-col items-center justify-center py-3 rounded-lg border-2 transition-all ${provider === "EASYPAISA" ? "border-[#ffdf00] bg-[#1a1a1a]" : "border-neutral-700 bg-black"}`}
-                >
-                  <img src="/easypaisa.png" className="h-8 mb-1 object-contain rounded" alt="Easypaisa" />
-                  <span className="text-xs font-medium">Easypaisa</span>
-                </button>
-                <button 
                   onClick={() => setProvider("JAZZCASH")} 
                   className={`flex flex-col items-center justify-center py-3 rounded-lg border-2 transition-all ${provider === "JAZZCASH" ? "border-[#ffdf00] bg-[#1a1a1a]" : "border-neutral-700 bg-black"}`}
                 >
                   <img src="/jazzcash.png" className="h-8 mb-1 object-contain rounded" alt="JazzCash" />
                   <span className="text-xs font-medium">JazzCash</span>
+                </button>
+                <button 
+                  onClick={() => setProvider("EASYPAISA")} 
+                  className={`flex flex-col items-center justify-center py-3 rounded-lg border-2 transition-all ${provider === "EASYPAISA" ? "border-[#ffdf00] bg-[#1a1a1a]" : "border-neutral-700 bg-black"}`}
+                >
+                  <img src="/easypaisa.png" className="h-8 mb-1 object-contain rounded" alt="Easypaisa" />
+                  <span className="text-xs font-medium">Easypaisa</span>
                 </button>
                 <button 
                   onClick={() => setProvider("BANK_TRANSFER")} 
@@ -356,5 +356,6 @@ export default function WithdrawScreen() {
     </div>
   );
 }
+
 
 
