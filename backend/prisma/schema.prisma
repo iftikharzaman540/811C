@@ -59,8 +59,8 @@ enum SessionStatus {
 }
 
 model User {
-  id            String  @id @default(uuid())
-  player_id     Int     @default(autoincrement()) @unique
+  id            String   @id @default(uuid())
+  player_id     Int      @unique @default(autoincrement())
   username      String?  @unique
   email         String?  @unique
   phone         String?  @unique
@@ -116,6 +116,7 @@ model User {
   admin_audit_logs AuditLog[]     @relation("AdminAuditLogs")
   payments         Payment[]
   notifications    Notification[]
+  VipHistory       VipHistory[]
 
   @@index([username])
   @@index([email])
@@ -517,3 +518,16 @@ model SystemSetting {
   updated_at DateTime @updatedAt
 }
 
+model VipHistory {
+  id                  String   @id @default(uuid())
+  user_id             String
+  user                User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  previous_level      Int
+  new_level           Int
+  transaction_id      String?
+  deposit_amount      Decimal  @default(0.00) @db.Decimal(15, 2)
+  total_deposit_after Decimal  @default(0.00) @db.Decimal(15, 2)
+  created_at          DateTime @default(now())
+
+  @@index([user_id])
+}

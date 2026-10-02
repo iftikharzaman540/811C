@@ -12,3 +12,4 @@ import { AdminDashboardModule } from './admin-dashboard/admin-dashboard.module';
   imports: [AdminUsersModule, AdminFinancesModule, AdminSettingsModule, AdminCmsModule, AdminSupportModule, AdminMarketingModule, AdminKycModule, AdminDashboardModule]
 })
 export class AdminModule {}
+

@@ -13,6 +13,10 @@ export default function PromoPage() {
   const [activeRebateTab, setActiveRebateTab] = useState("Mini Games");
   const [activeMissionTab, setActiveMissionTab] = useState("Newplayer");
   const [vip1Expanded, setVip1Expanded] = useState(true);
+  const [vipStatus, setVipStatus] = useState<any>(null);
+  useEffect(() => {
+    apiRequest('/vip/status').then(res => setVipStatus(res)).catch(() => {});
+  }, []);
   
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [showRedeemModal, setShowRedeemModal] = useState(false);
@@ -358,34 +362,38 @@ export default function PromoPage() {
           <div className="flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#111] p-3">
             
             {/* VIP Status Card */}
-            <div className="bg-gradient-to-br from-[#e6f4ff] to-[#ffffff] rounded-xl p-4 relative overflow-hidden shadow-lg border border-neutral-300 mb-6">
-              <div className="absolute right-[-20px] top-[-20px] opacity-10 text-[150px] leading-none pointer-events-none">👑</div>
-              <span className="bg-neutral-200 text-neutral-600 text-[10px] font-bold px-2 py-0.5 rounded-sm">Current Level</span>
-              <div className="flex items-center gap-2 mt-2">
-                <h2 className="text-[#2c3e50] font-black text-[32px] italic tracking-tighter">VIP 0</h2>
-                <button className="flex items-center text-[10px] text-blue-500 border border-blue-200 bg-white rounded-full px-2 py-0.5 shadow-sm font-medium hover:bg-blue-50">Level up now <ChevronRight className="w-3 h-3" /></button>
-              </div>
-              
-              <div className="mt-4 mb-2">
-                <div className="flex justify-between text-[11px] font-bold mb-1">
-                  <span className="text-blue-600">0%</span>
-                  <span className="text-blue-600 italic">VIP 1</span>
+              {vipStatus && (
+              <div className="bg-gradient-to-br from-[#e6f4ff] to-[#ffffff] rounded-xl p-4 relative overflow-hidden shadow-lg border border-neutral-300 mb-6">
+                <span className="bg-neutral-200 text-neutral-600 text-[10px] font-bold px-2 py-0.5 rounded-sm">Current Level</span>
+                <div className="flex items-center gap-2 mt-2">
+                  <h2 className="text-[#2c3e50] font-black text-[32px] italic tracking-tighter">VIP {vipStatus.currentLevel}</h2>
                 </div>
-                <div className="w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden">
-                  <div className="w-0 h-full bg-blue-500"></div>
+                
+                <div className="mt-4 mb-2">
+                  <div className="flex justify-between text-[11px] font-bold mb-1">
+                    <span className="text-blue-600">{(vipStatus.requiredForNext ? (vipStatus.totalDeposited / vipStatus.requiredForNext) * 100 : 100).toFixed(1)}%</span>
+                    <span className="text-blue-600 italic">VIP {vipStatus.nextLevel || 'MAX'}</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-neutral-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-500 transition-all" style={{ width: Math.min(100, (vipStatus.requiredForNext ? (vipStatus.totalDeposited / vipStatus.requiredForNext) * 100 : 100)) + '%' }}></div>
+                  </div>
+                </div>
+                
+                {vipStatus.nextLevel ? (
+                  <p className="text-[12px] text-[#2c3e50]/80 font-medium mt-3">Deposit <span className="font-bold text-[#2c3e50]">{vipStatus.remaining.toLocaleString()} PKR</span> to reach VIP {vipStatus.nextLevel}</p>
+                ) : (
+                  <p className="text-[12px] text-[#2c3e50]/80 font-medium mt-3">You have reached the maximum VIP level!</p>
+                )}
+                
+                {/* Big VIP Crown Logo */}
+                <div className="absolute right-4 bottom-4 flex flex-col items-center">
+                  <Crown className="w-12 h-12 text-[#cc0000] fill-current drop-shadow-md mb-1" />
+                  <div className="bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] text-white font-black italic px-3 py-0.5 rounded-full border-2 border-white shadow-lg text-[16px]">VIP {vipStatus.currentLevel}</div>
                 </div>
               </div>
-              
-              <p className="text-[12px] text-[#2c3e50]/80 font-medium mt-3">Bet <span className="font-bold text-[#2c3e50]">50,000.00</span> to enjoy member benefits</p>
-              
-              {/* Big VIP Crown Logo */}
-              <div className="absolute right-4 bottom-4 flex flex-col items-center">
-                <Crown className="w-12 h-12 text-[#cc0000] fill-current drop-shadow-md mb-1" />
-                <div className="bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] text-white font-black italic px-3 py-0.5 rounded-full border-2 border-white shadow-lg text-[16px]">VIP 0</div>
-              </div>
-            </div>
+              )}
 
-            {/* Title */}
+              {/* Title */}
             <div className="flex items-center justify-center gap-2 mb-4">
               <span className="text-neutral-500">🌿</span>
               <h3 className="text-white font-bold text-[18px]">VIP reward list</h3>
@@ -651,5 +659,6 @@ function Banner({ title, desc, highlight, sub, icon, badge, href }: { title: str
   }
   return content;
 }
+
 
 

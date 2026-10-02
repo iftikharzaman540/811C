@@ -12,7 +12,8 @@ export class PaymentsService {
   constructor(
     private prisma: PrismaService,
     private walletService: WalletService,
-    private xpressPay: XpressPayProvider
+    private xpressPay: XpressPayProvider,
+    private vipService: VipService
   ) {}
 
   private getProvider(provider: PaymentProvider) {
@@ -47,8 +48,10 @@ export class PaymentsService {
           type: 'DEPOSIT',
           description: "Auto-approved deposit via " + providerName + " (TrxID: " + reference + ")",
           referenceId: payment.id,
-        });
+          });
+        }
       }
+      if (autoApprove) await this.vipService.processDepositForVip(userId, amount, reference);
     }
 
     return { payment_id: payment.id, reference, success: true, message: autoApprove ? 'Deposit approved instantly' : 'Deposit recorded manually' };
@@ -159,6 +162,7 @@ export class PaymentsService {
       });
 
       this.logger.log(`Deposit ${reference} COMPLETED successfully!`);
+        await this.vipService.processDepositForVip(payment.user_id, payment.amount.toNumber(), reference);
       return 'SUCCESS';
     } else if (orderStatus === '4' || statusText === 'FAILED') {
       await this.prisma.payment.update({
@@ -258,6 +262,13 @@ export class PaymentsService {
     return { payment_id: payment.id, status: 'PENDING_ADMIN_APPROVAL' };
   }
 }
+
+
+
+
+
+
+
 
 
 

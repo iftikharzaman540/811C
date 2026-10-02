@@ -19,6 +19,7 @@ import { QueuesModule } from './queues/queues.module';
 import { GregmornModule } from './gregmorn/gregmorn.module';
 import { PromoModule } from './promo/promo.module';
 import { AdminModule } from './admin/admin.module';
+import { VipModule } from './vip/vip.module';
 
 @Module({
   imports: [
@@ -41,7 +42,9 @@ import { AdminModule } from './admin/admin.module';
     QueuesModule,
     GregmornModule,
     PromoModule,
-    AdminModule
+    AdminModule,
+    VipModule
   ],
 })
 export class AppModule {}
+

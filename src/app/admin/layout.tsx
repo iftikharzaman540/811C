@@ -49,6 +49,8 @@ const SIDEBAR_NAV = [
     icon: Settings,
     children: [
       { name: "Global Settings", href: "/admin/system/settings" },
+      { name: "VIP Levels", href: "/admin/system/vip-levels" },
+      { name: "VIP History", href: "/admin/system/vip-history" },
       { name: "Provider Status", href: "/admin/system/providers" },
       { name: "Admin Roles", href: "/admin/system/admins" },
       { name: "Audit Logs", href: "/admin/system/audit-logs" },
@@ -161,3 +163,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </div>
   );
 }
+
