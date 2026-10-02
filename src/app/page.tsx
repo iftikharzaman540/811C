@@ -100,12 +100,14 @@ export default function Home() {
                {/* Note: In a real app we'd pass authDefaultMode to AuthScreen, but we don't know if it accepts it. We'll just open AuthScreen. */}
                <AuthScreen onLogin={() => setShowAuth(false)} onClose={() => setShowAuth(false)} />
             </div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </main>
   );
 }
+
+
 
 
 
