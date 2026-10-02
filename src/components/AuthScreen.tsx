@@ -1,3 +1,4 @@
+import UserAgreementPopup from '@/components/UserAgreementPopup';
 "use client";
 
 import { motion } from "framer-motion";
@@ -310,6 +311,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
     </div>
   );
 }
+
 
 
 
