@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 const INITIAL_MAIL = [
-  { id: 'n1', title: "?? 8 great benefits for referring friends", date: "26/09/2026 00:00:00", read: false, content: "Invite friends and get up to 8 amazing benefits! For every friend who signs up and recharges, you get exclusive bonuses and daily rebate boosts." },
-  { id: 'no1', title: "?? New User Recharge bonus", date: "23/09/2026 12:00:00", read: false, content: "New users who recharge for the first time will receive a 100% bonus up to 10,000 RS. Claim it in the Offer Center!" },
-  { id: 'no2', title: "?? New VIP tier system update", date: "22/09/2026 12:00:00", read: false, content: "We've updated our VIP system. You can now level up faster by playing slot games. Enjoy higher withdrawal limits and personal account managers." },
+  { id: 'n1', title: "🚀 8 great benefits for referring friends", date: "26/09/2026 00:00:00", read: false, content: "Invite friends and get up to 8 amazing benefits! For every friend who signs up and recharges, you get exclusive bonuses and daily rebate boosts." },
+  { id: 'no1', title: "🎉 New User Recharge bonus", date: "23/09/2026 12:00:00", read: false, content: "New users who recharge for the first time will receive a 100% bonus up to 10,000 RS. Claim it in the Offer Center!" },
+  { id: 'no2', title: "🎉 New VIP tier system update", date: "22/09/2026 12:00:00", read: false, content: "We've updated our VIP system. You can now level up faster by playing slot games. Enjoy higher withdrawal limits and personal account managers." },
 ];
 
 export default function SupportPage() {
@@ -56,7 +56,7 @@ export default function SupportPage() {
           <button 
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={lex-1 py-3 text-[14px] font-medium relative transition-colors }
+            className={`flex-1 py-3 text-[14px] font-medium relative transition-colors ${activeTab === tab ? 'text-[#00aaff]' : 'text-neutral-400 hover:text-neutral-200'}`}
           >
             {tab}
             {tab === "Mail" && unreadMails > 0 && (
@@ -177,7 +177,7 @@ export default function SupportPage() {
                     </div>
                     <span className="text-[13px] font-medium text-white">Become an Agent & Earn</span>
                   </div>
-                  <ChevronDown className={w-4 h-4 text-neutral-500 transition-transform } />
+                  <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform ${faqExpanded ? 'rotate-180' : ''}`} />
                 </button>
                 <AnimatePresence>
                   {faqExpanded && (
@@ -207,11 +207,11 @@ export default function SupportPage() {
                 {filteredMails.map((item) => (
                   <div key={item.id} onClick={() => handleMessageClick(item)} className="bg-[#1c1c1c] rounded-lg p-3.5 flex items-center gap-3 border border-neutral-800 shadow-md cursor-pointer hover:border-[#00aaff]/50 transition-colors group">
                     <div className="relative shrink-0 w-10 h-10 bg-[#252525] rounded-full flex items-center justify-center">
-                       <Mail className={w-4 h-4 transition-colors } />
+                       <Mail className={`w-4 h-4 transition-colors ${item.read ? 'text-neutral-500' : 'text-[#ffdf00]'}`} />
                        {!item.read && <div className="w-2.5 h-2.5 rounded-full bg-red-500 absolute 0 right-0 border-2 border-[#1c1c1c]"></div>}
                     </div>
                     <div className="flex-1 flex flex-col justify-center overflow-hidden">
-                      <h4 className={	ext-[13px] font-bold truncate }>{item.title}</h4>
+                      <h4 className={`text-[13px] font-bold truncate ${item.read ? 'text-neutral-400' : 'text-white'}`}>{item.title}</h4>
                       <p className="text-[11px] text-neutral-500 truncate mt-0.5">{item.content}</p>
                       <span className="text-[9px] text-neutral-600 mt-1">{item.date}</span>
                     </div>
