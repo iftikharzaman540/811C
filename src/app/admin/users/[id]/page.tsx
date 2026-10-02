@@ -91,10 +91,10 @@ export default function UserProfilePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left Col: Info & Wallet */}
-        <div className="space-y-6">
+        <div className="space-y-6 lg:col-span-1">
           <div className="bg-[#111] border border-neutral-800 rounded-xl p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
               <User className="w-5 h-5 text-[#ffdf00]" /> Personal Info
@@ -162,7 +162,7 @@ export default function UserProfilePage() {
         </div>
 
         {/* Right Col: Restrictions & Notes */}
-        <div className="space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           
           <div className="bg-[#111] border border-neutral-800 rounded-xl p-6">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
@@ -170,7 +170,7 @@ export default function UserProfilePage() {
             </h2>
             <p className="text-sm text-neutral-400 mb-6">Use these toggles to restrict specific functionalities for this user without completely banning their account.</p>
             
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 { key: 'casino_enabled', label: 'Casino Games Access' },
                 { key: 'sportsbook_enabled', label: 'Sportsbook Access' },

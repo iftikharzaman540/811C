@@ -204,7 +204,7 @@ export default function BannersPage() {
                 <input type="text" value={form.title} onChange={e => setForm({...form, title: e.target.value})} className="w-full bg-black border border-neutral-700 rounded-lg px-3 py-2 text-white" placeholder="Summer Promo 2026" />
               </div>
               
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-neutral-400 mb-1">Desktop Image (Required)</label>
                   <div className="flex gap-2">
@@ -276,4 +276,3 @@ export default function BannersPage() {
     </div>
   );
 }
-

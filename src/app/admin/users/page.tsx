@@ -40,10 +40,10 @@ export default function UsersManagementPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col justify-between items-start gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <h1 className="text-2xl font-bold text-white">User Management</h1>
         
-        <form onSubmit={handleSearch} className="relative w-full">
+        <form onSubmit={handleSearch} className="relative w-full md:w-96">
           <input
             type="text"
             placeholder="Search by ID, Username, Email..."
@@ -148,5 +148,4 @@ export default function UsersManagementPage() {
     </div>
   );
 }
-
 

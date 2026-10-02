@@ -32,7 +32,7 @@ export default function AffiliatesPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-[#111] border border-neutral-800 rounded-xl p-5">
           <div className="flex justify-between items-start mb-2">
             <p className="text-sm font-medium text-neutral-400">Total Referrals</p>

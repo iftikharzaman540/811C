@@ -87,26 +87,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col relative">
+    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col md:flex-row">
       
-      {/* Top Bar (Always Visible) */}
-      <div className="flex items-center justify-between p-4 border-b border-neutral-800 bg-[#111] sticky top-0 z-40">
+      {/* Mobile Top Bar */}
+      <div className="md:hidden flex items-center justify-between p-4 border-b border-neutral-800 bg-[#111]">
         <h2 className="text-[#ffdf00] font-bold text-lg leading-tight">Admin Portal</h2>
-        <button onClick={() => setMobileMenuOpen(true)} className="p-2">
-          <Menu className="w-6 h-6" />
+        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
+          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
-      {/* Sidebar Overlay (Always mobile style) */}
-      <aside className={`${mobileMenuOpen ? 'flex' : 'hidden'} w-full max-w-[400px] bg-[#111] border-r border-neutral-800 flex-col shrink-0 fixed inset-y-0 left-1/2 -translate-x-1/2 z-50 overflow-y-auto`}>
-        <div className="flex items-center justify-between p-4 border-b border-neutral-800">
-          <div>
-            <h2 className="text-[#ffdf00] font-bold text-lg leading-tight">Admin Menu</h2>
-            <p className="text-xs text-neutral-400 mt-1">{user.email}</p>
-          </div>
-          <button onClick={() => setMobileMenuOpen(false)} className="p-2 bg-neutral-800 rounded text-white">
-            <X className="w-6 h-6" />
-          </button>
+      {/* Sidebar */}
+      <aside className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:flex w-full md:w-64 bg-[#111] border-b md:border-b-0 md:border-r border-neutral-800 flex-col shrink-0 fixed md:sticky top-0 h-screen z-50 overflow-y-auto`}>
+        <div className="p-4 border-b border-neutral-800 hidden md:block">
+          <h2 className="text-[#ffdf00] font-bold text-lg leading-tight">Admin Portal</h2>
+          <p className="text-xs text-neutral-400 mt-1">{user.email}</p>
         </div>
         
         <nav className="flex-1 py-4 px-3 flex flex-col gap-1.5 overflow-y-auto">
@@ -162,11 +157,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 w-full overflow-x-hidden p-4 pt-6 bg-[#0a0a0a]">
+      <main className="flex-1 w-full overflow-hidden p-4 md:p-8 pt-6 md:pt-8 bg-[#0a0a0a]">
         {children}
       </main>
     </div>
   );
 }
-
 
