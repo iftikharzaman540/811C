@@ -399,11 +399,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 Close Game
               </button>
             </div>
-            <iframe 
-              src={gameUrl} 
-              className="w-full flex-1 border-0"
-              allow="autoplay; fullscreen"
-            />
+            <div className="flex-1 w-full relative overflow-y-auto overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
+              <iframe 
+                src={gameUrl} 
+                className="absolute inset-0 w-full h-full border-0"
+                allow="autoplay; fullscreen"
+                scrolling="yes"
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
