@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 
 export default function UserAgreementPopup({ onClose, onAgree }: { onClose: () => void, onAgree: () => void }) {
   return (
-    <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -40,5 +40,6 @@ export default function UserAgreementPopup({ onClose, onAgree }: { onClose: () =
     </div>
   );
 }
+
 
 

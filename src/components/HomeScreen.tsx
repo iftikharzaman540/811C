@@ -388,7 +388,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[500] bg-black flex flex-col"
+            className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[10000] bg-black flex flex-col"
           >
             <div className="h-12 bg-neutral-900 flex items-center justify-between px-4 border-b border-neutral-800 shrink-0">
               <span className="text-white font-bold text-sm">Playing Game</span>
@@ -1216,7 +1216,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       
       {/* Sidebar Overlay (JJwin Style) */}
       {isMenuOpen && (
-        <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[100] flex font-sans">
+        <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[10000] flex font-sans">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
           <motion.div initial={{ x: -260 }} animate={{ x: 0 }} exit={{ x: -260 }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="relative w-[260px] h-full bg-[#1a1a1a] shadow-2xl flex flex-col overflow-hidden text-neutral-300">
             
@@ -1450,6 +1450,8 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     </>
   );
 }
+
+
 
 
 
