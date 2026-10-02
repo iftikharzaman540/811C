@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "@/context/UserContext";
+import AppLayoutWrapper from "@/components/AppLayoutWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +33,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#000]`}
     >
-      <body className="flex flex-col items-center justify-start w-full bg-[#000]">
-        <div 
-          className="w-full max-w-[400px] min-h-screen bg-[#0a0a0a] relative shadow-[0_0_50px_rgba(255,223,0,0.05)] flex flex-col border-x border-neutral-900"
-        >
-          <UserProvider>{children}</UserProvider>
-          <Toaster position="top-center" toastOptions={{ style: { background: "#111", color: "#fff", border: "1px solid #cc0000" } }} />
-        </div>
+      <body className="w-full bg-[#000]">
+        <UserProvider>
+          <AppLayoutWrapper>
+            {children}
+          </AppLayoutWrapper>
+        </UserProvider>
+        <Toaster position="top-center" toastOptions={{ style: { background: "#111", color: "#fff", border: "1px solid #cc0000" } }} />
       </body>
     </html>
   );
