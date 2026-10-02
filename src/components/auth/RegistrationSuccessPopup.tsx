@@ -3,7 +3,7 @@ import { X, CheckCircle2 } from "lucide-react";
 
 export default function RegistrationSuccessPopup({ onClose, onNext }: { onClose: () => void, onNext: () => void }) {
   return (
-    <div className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <motion.div 
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

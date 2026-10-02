@@ -388,7 +388,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[500] bg-black flex flex-col"
+            className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[500] bg-black flex flex-col"
           >
             <div className="h-12 bg-neutral-900 flex items-center justify-between px-4 border-b border-neutral-800 shrink-0">
               <span className="text-white font-bold text-sm">Playing Game</span>
@@ -488,7 +488,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   </div>
                   {isDepositMenuOpen && (
                     <>
-                      <div className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-40" onClick={() => setIsDepositMenuOpen(false)} />
+                      <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-40" onClick={() => setIsDepositMenuOpen(false)} />
                       <div className="absolute top-full right-0 mt-1.5 w-32 bg-[#1a1a1a] border border-[#ffdf00]/30 rounded-lg shadow-xl overflow-hidden z-50">
                         <button onClick={() => { if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); } else { window.location.href = '/withdraw'; } }} className="w-full text-left px-3 py-2 text-[13px] text-white hover:bg-neutral-800 transition-colors font-medium flex items-center gap-2">
                           <span className="text-xl">💰</span> Withdraw
@@ -1216,7 +1216,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       
       {/* Sidebar Overlay (JJwin Style) */}
       {isMenuOpen && (
-        <div className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[100] flex font-sans">
+        <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[100] flex font-sans">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
           <motion.div initial={{ x: -260 }} animate={{ x: 0 }} exit={{ x: -260 }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="relative w-[260px] h-full bg-[#1a1a1a] shadow-2xl flex flex-col overflow-hidden text-neutral-300">
             

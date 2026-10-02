@@ -93,7 +93,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[150] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+            className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[150] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
           >
             <div className="w-full max-w-[400px] bg-[#111] rounded-2xl overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto border border-neutral-800">
                {/* Close button */}
