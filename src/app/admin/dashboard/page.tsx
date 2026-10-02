@@ -52,7 +52,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Top row: Key Financials */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <div className="bg-[#111] border border-neutral-800 rounded-xl p-5">
           <div className="flex justify-between items-start mb-2">
             <p className="text-sm font-medium text-neutral-400">Total Deposits</p>
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Middle row: Users & Tasks */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6">
         <div className="bg-[#111] border border-neutral-800 rounded-xl p-6">
           <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
             <Users className="w-5 h-5 text-[#ffdf00]" /> User Demographics
@@ -155,3 +155,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

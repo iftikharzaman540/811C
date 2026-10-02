@@ -229,7 +229,7 @@ export default function AdminsPage() {
               {form.role === 'ADMIN' && (
                 <div>
                   <label className="block text-sm font-medium text-neutral-400 mb-3">Specific Module Permissions</label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 gap-3">
                     {AVAILABLE_PERMISSIONS.map(p => {
                       const isActive = form.permissions.includes(p.id);
                       return (

@@ -124,7 +124,7 @@ export default function PaymentMethodsPage() {
                 <div className="p-6">
                   {isEditing ? (
                     <div className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-neutral-400 mb-1">Display Name</label>
                           <input 
@@ -182,7 +182,7 @@ export default function PaymentMethodsPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 gap-6">
                       <div>
                         <div className="flex items-center gap-2 text-neutral-400 mb-1">
                           <Activity className="w-4 h-4" />

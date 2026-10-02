@@ -61,7 +61,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Aggregate Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <div className="bg-[#111] p-5 rounded-xl border border-neutral-800">
           <div className="flex items-center gap-3 text-neutral-400 mb-2">
             <Users className="w-5 h-5 text-blue-500" />
