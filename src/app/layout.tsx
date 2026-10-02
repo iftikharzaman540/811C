@@ -30,9 +30,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-[#000]`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#000]`}
     >
-      <body className="min-h-full flex flex-col items-center justify-start overflow-x-hidden w-full">
+      <body className="flex flex-col items-center justify-start w-full">
         <div 
           className="w-full max-w-[400px] min-h-screen bg-[#0a0a0a] relative shadow-[0_0_50px_rgba(255,223,0,0.05)] overflow-x-hidden flex flex-col border-x border-neutral-900"
           style={{ transform: "translateZ(0)" }}
