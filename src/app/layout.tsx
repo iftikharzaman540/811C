@@ -27,7 +27,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body className="min-h-full flex flex-col items-center justify-start">
         <div 
-          className="w-full max-w-md min-h-screen bg-[#0a0a0a] relative shadow-[0_0_50px_rgba(255,223,0,0.05)] overflow-x-hidden flex flex-col border-x border-neutral-900"
+          className="w-full max-w-[400px] min-h-screen bg-[#0a0a0a] relative shadow-[0_0_50px_rgba(255,223,0,0.05)] overflow-x-hidden flex flex-col border-x border-neutral-900"
           style={{ transform: "translateZ(0)" }}
         >
           <UserProvider>{children}</UserProvider>
@@ -37,3 +37,4 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
+

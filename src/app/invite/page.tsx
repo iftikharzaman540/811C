@@ -54,7 +54,7 @@ export default function InvitePage() {
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 w-full max-w-md mx-auto">
+      <div className="flex-1 w-full max-w-[400px] mx-auto">
         <AnimatePresence mode="wait">
           {activeTab === "Home" && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3">
@@ -620,6 +620,7 @@ export default function InvitePage() {
     </main>
   );
 }
+
 
 
 

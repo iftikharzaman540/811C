@@ -12,7 +12,27 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(dto: RegisterDto) {
+  
+  async resetPassword(identifier: string, newPassword: string) {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { phone: identifier },
+          { email: identifier },
+          { username: identifier }
+        ]
+      }
+    });
+    if (!user) throw new Error('User not found');
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { password_hash: hashedPassword }
+    });
+    return { success: true, message: 'Password updated successfully' };
+  }
+
+async register(dto: RegisterDto) {
     const existing = await this.prisma.user.findFirst({
       where: {
         OR: [

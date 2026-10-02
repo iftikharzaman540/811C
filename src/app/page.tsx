@@ -95,7 +95,7 @@ export default function Home() {
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed inset-0 z-[150] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
           >
-            <div className="w-full max-w-md bg-[#111] rounded-2xl overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto border border-neutral-800">
+            <div className="w-full max-w-[400px] bg-[#111] rounded-2xl overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto border border-neutral-800">
                {/* Close button */}
                <button 
                  onClick={() => setShowAuth(false)}
@@ -112,3 +112,4 @@ export default function Home() {
     </main>
   );
 }
+

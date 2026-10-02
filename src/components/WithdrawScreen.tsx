@@ -172,7 +172,7 @@ export default function WithdrawScreen() {
         <div className="w-8"></div>
       </div>
 
-      <div className="flex-1 px-4 pt-6 max-w-md mx-auto w-full">
+      <div className="flex-1 px-4 pt-6 max-w-[400px] mx-auto w-full">
         {!hasPassword ? (
           <>
             <p className="text-[#1fdf1f] text-center text-sm font-medium mb-8 leading-tight">
@@ -356,3 +356,4 @@ export default function WithdrawScreen() {
     </div>
   );
 }
+

@@ -150,7 +150,7 @@ export default function WalletAdjustmentsPage() {
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-[#111] border border-neutral-800 rounded-xl w-full max-w-md overflow-hidden">
+          <div className="bg-[#111] border border-neutral-800 rounded-xl w-full max-w-[400px] overflow-hidden">
             <div className="p-4 border-b border-neutral-800 flex justify-between items-center bg-[#1a1a1a]">
               <h2 className="font-bold text-white">New Wallet Adjustment</h2>
               <button onClick={() => setShowModal(false)} className="text-neutral-400 hover:text-white"><X className="w-5 h-5" /></button>
@@ -218,3 +218,4 @@ export default function WalletAdjustmentsPage() {
     </div>
   );
 }
+

@@ -1,7 +1,7 @@
 const { Client } = require('ssh2');
 const conn = new Client();
 conn.on('ready', () => {
-  conn.exec('sudo -u postgres psql -d gaming_db -c "SELECT id, email, casino_enabled FROM \\"User\\";"', (err, stream) => {
+  conn.exec('cat /var/www/gaming-app/backend/src/gregmorn/gregmorn.controller.ts', (err, stream) => {
     stream.on('data', d => process.stdout.write(d.toString()));
     stream.stderr.on('data', d => process.stderr.write(d.toString()));
     stream.on('close', () => conn.end());

@@ -411,7 +411,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 <div className="min-h-screen w-full bg-[#111111] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjMTExIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjMTkxOTE5IiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+')] text-white font-sans relative pb-[90px] sm:pb-[100px]">
       
       {/* Premium Top App Banner */}
-      <div className="w-full max-w-md mx-auto bg-[#0a0a0a] flex items-center justify-between px-3 py-2 border-b border-neutral-900 sticky top-0 z-50 h-[50px]">
+      <div className="w-full max-w-[400px] mx-auto bg-[#0a0a0a] flex items-center justify-between px-3 py-2 border-b border-neutral-900 sticky top-0 z-50 h-[50px]">
         
         {/* Left Side: X, Logo, Text */}
         <div className="flex items-center gap-2.5 min-w-0">
@@ -437,7 +437,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       </div>
 
       {/* Main Header (Pixel Perfect & Responsive) */}
-      <div className="w-full max-w-md mx-auto bg-[#0a0a0a] flex items-center justify-between px-3 sticky top-[50px] z-40 border-b border-neutral-900 h-[60px]">
+      <div className="w-full max-w-[400px] mx-auto bg-[#0a0a0a] flex items-center justify-between px-3 sticky top-[50px] z-40 border-b border-neutral-900 h-[60px]">
         
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Custom Arrow Menu Icon */}
@@ -517,7 +517,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
       </div>
 
-      <div className="max-w-md mx-auto relative pt-1">
+      <div className="max-w-[400px] mx-auto relative pt-1">
         
         {/* Quick Links (Pixel Perfect) */}
         <div className="grid grid-cols-6 gap-1.5 px-3 mb-2 mt-0">
@@ -1447,5 +1447,6 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     </>
   );
 }
+
 
 

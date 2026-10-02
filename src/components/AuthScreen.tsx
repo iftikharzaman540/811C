@@ -84,7 +84,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.5 }}
-        className="w-full max-w-md px-4 mt-6 flex-1 flex flex-col"
+        className="w-full max-w-[400px] px-4 mt-6 flex-1 flex flex-col"
       >
         {/* Auth Card */}
         <div className="bg-[#111111] rounded-[24px] border border-neutral-800 shadow-2xl overflow-hidden relative">
@@ -326,6 +326,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
     </div>
   );
 }
+
 
 
 
