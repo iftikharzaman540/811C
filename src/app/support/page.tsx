@@ -161,7 +161,7 @@ export default function SupportPage() {
                     </button>
 
                     {/* WhatsApp */}
-                    <a href="https://whatsapp.com/channel/0029VbDJdVw7j6gCK3T1YG0i" target="_blank" rel="noopener noreferrer" className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col block">
+                    <a href="https://whatsapp.com/channel/0029VbDJdVw7j6gCK3T1YG0i" target="_blank" rel="noopener noreferrer" className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col">
                       <div className="w-full h-auto bg-black flex items-center justify-center p-2">
                         <img src="/support/whatsapp.jpg" alt="WhatsApp" className="w-full h-auto object-contain rounded-lg max-h-[160px]" />
                       </div>
@@ -171,7 +171,7 @@ export default function SupportPage() {
                     </a>
 
                     {/* Facebook */}
-                    <a href="https://www.facebook.com/share/1JzvPey4hQ/" target="_blank" rel="noopener noreferrer" className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col block">
+                    <a href="https://www.facebook.com/share/1JzvPey4hQ/" target="_blank" rel="noopener noreferrer" className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col">
                       <div className="w-full h-auto bg-black flex items-center justify-center p-2">
                         <img src="/support/facebook.jpg" alt="Facebook" className="w-full h-auto object-contain rounded-lg max-h-[160px]" />
                       </div>
@@ -410,4 +410,5 @@ function HeadsetIcon(props: any) {
     </svg>
   );
 }
+
 
