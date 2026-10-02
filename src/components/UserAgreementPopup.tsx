@@ -25,7 +25,7 @@ export default function UserAgreementPopup({ onClose, onAgree }: { onClose: () =
             onClick={() => {
               onAgree();
             }}
-            className="mt-6 w-full bg-[#66cc33] text-black font-bold py-3 rounded-lg hover:brightness-110 transition-all active:scale-95"
+            className="mt-6 w-full bg-[#ffdf00] text-black font-bold py-3 rounded-lg shadow-[0_4px_15px_rgba(255,223,0,0.3)] hover:brightness-110 transition-all active:scale-95"
           >
             I have read
           </button>
@@ -40,3 +40,5 @@ export default function UserAgreementPopup({ onClose, onAgree }: { onClose: () =
     </div>
   );
 }
+
+
