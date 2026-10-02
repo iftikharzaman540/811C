@@ -12,15 +12,17 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
   const [activeTab, setActiveTab] = useState<"register" | "login">("register");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreed, setAgreed] = useState(true);
+  const [agreed, setAgreed] = useState(false);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showLuckyDrawPopup, setShowLuckyDrawPopup] = useState(false);
+  const [showAgreement, setShowAgreement] = useState(false);
 
   const handleSubmit = async () => {
     if (!identifier || !password) return alert("Please enter credentials and password");
+    if (activeTab === "register" && !agreed) return alert("Please check the box to agree to the User Agreement before registering.");
     
     const isEmail = identifier.includes('@');
     if (!isEmail && identifier.length !== 10) {
@@ -294,7 +296,13 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
           onNext={() => { setShowSuccessPopup(false); if (onLogin) onLogin(); }} 
         />
       )}
-      {showLuckyDrawPopup && (
+      {showAgreement && (
+          <UserAgreementPopup 
+            onClose={() => setShowAgreement(false)} 
+            onAgree={() => { setShowAgreement(false); setAgreed(true); }}
+          />
+        )}
+        {showLuckyDrawPopup && (
         <LuckyDrawPopup 
           onClose={() => { setShowLuckyDrawPopup(false); if (onLogin) onLogin(); }} 
         />
@@ -302,5 +310,8 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
     </div>
   );
 }
+
+
+
 
 
