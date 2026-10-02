@@ -64,13 +64,7 @@ export default function Home() {
         )}
         
         {view === "home" && (
-          <motion.div
-            key="home"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full min-h-screen flex flex-col relative"
-          >
+          <div className="w-full min-h-screen flex flex-col relative animate-in fade-in duration-500">
             <HomeScreen 
               onLoginClick={() => {
                 setAuthDefaultMode("login");
@@ -81,7 +75,7 @@ export default function Home() {
                 setShowAuth(true);
               }} 
             />
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
@@ -106,10 +100,14 @@ export default function Home() {
                {/* Note: In a real app we'd pass authDefaultMode to AuthScreen, but we don't know if it accepts it. We'll just open AuthScreen. */}
                <AuthScreen onLogin={() => setShowAuth(false)} onClose={() => setShowAuth(false)} />
             </div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </main>
   );
 }
+
+
+
+
 
