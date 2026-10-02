@@ -13,6 +13,7 @@ export class PaymentsService {
     private prisma: PrismaService,
     private walletService: WalletService,
     private xpressPay: XpressPayProvider,
+    private vipService: VipService,
     private vipService: VipService
   ) {}
 
@@ -21,7 +22,7 @@ export class PaymentsService {
     throw new BadRequestException('Unsupported provider');
   }
 
-    async createDeposit(userId: string, amount: number, providerName: PaymentProvider, transactionId?: string, autoApprove?: boolean) {
+      async createDeposit(userId: string, amount: number, providerName: PaymentProvider, transactionId?: string, autoApprove?: boolean) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
     if (!user.deposits_enabled) throw new BadRequestException('Deposits are currently restricted for your account. Please contact support.');
@@ -48,10 +49,9 @@ export class PaymentsService {
           type: 'DEPOSIT',
           description: "Auto-approved deposit via " + providerName + " (TrxID: " + reference + ")",
           referenceId: payment.id,
-          });
-        }
+        });
       }
-      if (autoApprove) await this.vipService.processDepositForVip(userId, amount, reference);
+      await this.vipService.processDepositForVip(userId, amount, reference);
     }
 
     return { payment_id: payment.id, reference, success: true, message: autoApprove ? 'Deposit approved instantly' : 'Deposit recorded manually' };
@@ -262,6 +262,7 @@ export class PaymentsService {
     return { payment_id: payment.id, status: 'PENDING_ADMIN_APPROVAL' };
   }
 }
+
 
 
 

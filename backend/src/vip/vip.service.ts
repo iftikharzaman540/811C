@@ -40,7 +40,7 @@ export class VipService implements OnModuleInit {
   }
 
   async processDepositForVip(userId: string, amount: number | string, transactionId: string) {
-    this.logger.log(Processing VIP for user  + userId +  on transaction  + transactionId);
+    this.logger.log("Processing VIP for user " + userId + " on transaction " + transactionId);
     
     // We run everything in a transaction to prevent race conditions
     await this.prisma.$transaction(async (tx) => {
@@ -91,7 +91,7 @@ export class VipService implements OnModuleInit {
 
       // 7. Save history if level changed
       if (previousLevel !== newLevel) {
-        this.logger.log(User  + user.id +  upgraded from VIP  + previousLevel +  to VIP  + newLevel);
+        this.logger.log("User " + user.id + " upgraded from VIP " + previousLevel + " to VIP " + newLevel);
         await tx.vipHistory.create({
           data: {
             user_id: user.id,
@@ -124,3 +124,4 @@ export class VipService implements OnModuleInit {
     return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
   }
 }
+

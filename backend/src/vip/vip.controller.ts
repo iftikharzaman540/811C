@@ -1,9 +1,9 @@
 import { Controller, Get, UseGuards, Request } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('vip')
-@UseGuards(JwtAuthGuard)
+@UseGuards(AuthGuard('jwt'))
 export class VipController {
   constructor(private prisma: PrismaService) {}
 
@@ -29,3 +29,4 @@ export class VipController {
     };
   }
 }
+

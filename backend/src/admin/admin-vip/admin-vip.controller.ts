@@ -1,12 +1,12 @@
 import { Controller, Get, Put, Body, UseGuards, Param, Query } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
-import { RolesGuard } from '../../auth/roles.guard';
-import { Roles } from '../../auth/roles.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
 import { PrismaService } from '../../prisma/prisma.service';
 import { VipService } from '../../vip/vip.service';
 
 @Controller('admin/vip')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Roles('ADMIN', 'SUPER_ADMIN')
 export class AdminVipController {
   constructor(private prisma: PrismaService, private vipService: VipService) {}
@@ -29,3 +29,4 @@ export class AdminVipController {
     return this.vipService.getVipHistory(Number(page), Number(limit));
   }
 }
+
