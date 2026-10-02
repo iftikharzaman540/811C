@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
@@ -19,13 +19,20 @@ export const metadata: Metadata = {
   description: "Play games and win real money",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-[#000]`}
+      className={\\ \ h-full antialiased bg-[#000]\}
     >
-      <body className="min-h-full flex flex-col items-center justify-start">
+      <body className="min-h-full flex flex-col items-center justify-start overflow-x-hidden w-full">
         <div 
           className="w-full max-w-[400px] min-h-screen bg-[#0a0a0a] relative shadow-[0_0_50px_rgba(255,223,0,0.05)] overflow-x-hidden flex flex-col border-x border-neutral-900"
           style={{ transform: "translateZ(0)" }}
@@ -37,4 +44,3 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     </html>
   );
 }
-
