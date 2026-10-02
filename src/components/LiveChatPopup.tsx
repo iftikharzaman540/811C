@@ -93,12 +93,12 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[10000] bg-[#0a0a0a] flex flex-col font-sans">
       {/* Header - Blue like reference */}
-      <div className="flex items-center justify-between h-14 px-4 bg-[#4a8af4] shrink-0 shadow-md z-10">
+      <div className="flex items-center justify-between h-14 px-4 bg-[#141414] border-b border-[#cc0000] shrink-0 shadow-md z-10">
         <button onClick={onClose} className="w-8 h-8 flex items-center justify-center -ml-2 rounded-full hover:bg-white/20 transition-colors">
           <ChevronLeft className="w-6 h-6 text-white" />
         </button>
         <div className="flex-1 flex items-center ml-2">
-          <h1 className="text-[18px] font-bold text-white tracking-wide">8111C Support</h1>
+          <h1 className="text-[18px] font-bold text-[#ffdf00] tracking-wide">8111C Support</h1>
         </div>
         <button onClick={() => setShowQuickLinks(!showQuickLinks)} className="w-8 h-8 flex items-center justify-center -mr-2 rounded-full hover:bg-white/20 transition-colors">
           <Menu className="w-6 h-6 text-white" />
@@ -121,7 +121,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
                   <X className="w-4 h-4 text-neutral-500" />
                 </button>
               </div>
-              <div className="w-full h-[3px] bg-gradient-to-r from-green-400 to-green-500 rounded-full mb-4"></div>
+              <div className="w-full h-[3px] bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] rounded-full mb-4"></div>
               <div className="grid grid-cols-2 gap-4">
                 {/* Telegram */}
                 <a href="https://t.me/Game8111c" target="_blank" rel="noopener noreferrer" onClick={() => setShowQuickLinks(false)} className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-neutral-50 transition-colors">
@@ -177,7 +177,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
             className={`flex flex-col max-w-[85%] ${msg.sender === 'user' ? 'self-end items-end' : 'self-start items-start'}`}
           >
             <div className={`flex items-end gap-2 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-md ${msg.sender === 'user' ? 'bg-[#2a2a2a]' : 'bg-[#4a8af4]'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-md ${msg.sender === 'user' ? 'bg-[#2a2a2a]' : 'bg-[#141414]'}`}>
                 {msg.sender === 'user' ? <User className="w-4 h-4 text-white" /> : <Headset className="w-4 h-4 text-white" />}
               </div>
               <div className={`p-3 rounded-2xl text-[13px] leading-relaxed shadow-md whitespace-pre-line ${
@@ -194,7 +194,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
 
         {isTyping && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-end gap-2 self-start">
-            <div className="w-8 h-8 rounded-full bg-[#4a8af4] flex items-center justify-center shrink-0 shadow-md">
+            <div className="w-8 h-8 rounded-full bg-[#141414] flex items-center justify-center shrink-0 shadow-md">
               <Headset className="w-4 h-4 text-white" />
             </div>
             <div className="bg-[#cc0000] p-3 rounded-2xl rounded-bl-sm border border-[#ff0b0b] flex items-center gap-1.5 h-[42px]">
@@ -247,3 +247,5 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
+
+
