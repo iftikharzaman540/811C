@@ -15,6 +15,7 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
 
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
+    cache: 'no-store',
     headers,
   });
 
@@ -32,3 +33,4 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
 
   return data;
 }
+
