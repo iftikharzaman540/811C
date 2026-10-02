@@ -248,14 +248,14 @@ export default function WithdrawScreen() {
                   onClick={() => setProvider("EASYPAISA")} 
                   className={`flex flex-col items-center justify-center py-3 rounded-lg border-2 transition-all ${provider === "EASYPAISA" ? "border-[#ffdf00] bg-[#1a1a1a]" : "border-neutral-700 bg-black"}`}
                 >
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Easypaisa_logo.svg" className="h-6 mb-1 object-contain bg-white px-2 py-1 rounded" alt="Easypaisa" />
+                  <img src="/easypaisa.png" className="h-8 mb-1 object-contain rounded" alt="Easypaisa" />
                   <span className="text-xs font-medium">Easypaisa</span>
                 </button>
                 <button 
                   onClick={() => setProvider("JAZZCASH")} 
                   className={`flex flex-col items-center justify-center py-3 rounded-lg border-2 transition-all ${provider === "JAZZCASH" ? "border-[#ffdf00] bg-[#1a1a1a]" : "border-neutral-700 bg-black"}`}
                 >
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Jazzcash.png/1200px-Jazzcash.png" className="h-6 mb-1 object-contain bg-white px-2 py-1 rounded" alt="JazzCash" />
+                  <img src="/jazzcash.png" className="h-8 mb-1 object-contain rounded" alt="JazzCash" />
                   <span className="text-xs font-medium">JazzCash</span>
                 </button>
                 <button 
@@ -356,4 +356,5 @@ export default function WithdrawScreen() {
     </div>
   );
 }
+
 

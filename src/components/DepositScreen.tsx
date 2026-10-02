@@ -149,11 +149,11 @@ export default function DepositScreen() {
           <div className="mb-6">
             <div className="grid grid-cols-2 gap-3 mb-2">
               <button onClick={() => setMethod("JazzCash")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("JazzCash") ? "border-[#1fdf1f] bg-black/40 text-[#1fdf1f]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
-                <div className="bg-white w-6 h-6 rounded flex items-center justify-center"><span className="text-red-500 font-bold text-xs italic">JC</span></div>
+                <img src="/jazzcash.png" alt="JazzCash" className="w-7 h-7 object-contain rounded" />
                 <span className="text-sm font-medium">JazzCash</span>
               </button>
               <button onClick={() => setMethod("EasyPaisa")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("EasyPaisa") ? "border-[#1fdf1f] bg-black/40 text-[#1fdf1f]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
-                <div className="bg-white w-6 h-6 rounded flex items-center justify-center"><span className="text-green-500 font-bold text-xs italic">EP</span></div>
+                <img src="/easypaisa.png" alt="EasyPaisa" className="w-7 h-7 object-contain rounded bg-white p-0.5" />
                 <span className="text-sm font-medium">EasyPaisa</span>
               </button>
             </div>
@@ -324,6 +324,7 @@ export default function DepositScreen() {
     </div>
   );
 }
+
 
 
 
