@@ -274,7 +274,7 @@ export default function SupportPage() {
                 </div>
                 
                 <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                  <button onClick={() => toast.success('Starting APK download...')} className="shrink-0 flex items-center gap-1.5 bg-[#cc0000] border border-[#ff0b0b] text-white text-[12px] font-bold px-3 py-1.5 rounded shadow-md hover:scale-105 transition-transform"><Download className="w-3.5 h-3.5" /> Download APP</button>
+                  <button onClick={() => window.location.href = '/8111c.apk'} className="shrink-0 flex items-center gap-1.5 bg-[#cc0000] border border-[#ff0b0b] text-white text-[12px] font-bold px-3 py-1.5 rounded shadow-md hover:scale-105 transition-transform"><Download className="w-3.5 h-3.5" /> Download APP</button>
                   <button onClick={() => toast.success('Fetching Proxy FAQ...')} className="shrink-0 flex items-center gap-1.5 bg-[#141414] border border-neutral-700 text-neutral-300 hover:text-white hover:border-[#ffdf00] transition-colors text-[12px] font-medium px-3 py-1.5 rounded">
                     🤝 Proxy Problem
                   </button>
@@ -455,3 +455,4 @@ function HeadsetIcon(props: any) {
     </svg>
   );
 }
+

@@ -429,7 +429,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
         {/* Right: Button */}
-        <button onClick={() => toast.success("Downloading app...")} className="bg-[#cc0000] hover:bg-[#ff0000] text-white rounded-md font-bold text-[11px] leading-tight flex flex-col items-center justify-center h-[38px] px-3 shrink-0 ml-2 transition-colors">
+        <button onClick={() => window.location.href = '/8111c.apk'} className="bg-[#cc0000] hover:bg-[#ff0000] text-white rounded-md font-bold text-[11px] leading-tight flex flex-col items-center justify-center h-[38px] px-3 shrink-0 ml-2 transition-colors">
           <span>Download</span>
           <span>now</span>
         </button>
@@ -1382,7 +1382,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
               {/* Text Links */}
               <div className="flex flex-col gap-1 mt-4">
-                <button onClick={() => { setIsMenuOpen(false); toast.success("Downloading app..."); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); window.location.href = '/8111c.apk'; }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <Download className="w-5 h-5 shrink-0" /> <span className="text-[14px]">APP Download</span>
                 </button>
                 <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
@@ -1447,4 +1447,5 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     </>
   );
 }
+
 
