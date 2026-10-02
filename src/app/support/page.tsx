@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, MessageCircle, Download, HelpCircle, FileText, Search, Settings, X } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
+import LiveChatPopup from "@/components/LiveChatPopup";
 import { motion, AnimatePresence } from "framer-motion";
 
 const INITIAL_NEWS = [
@@ -41,6 +42,7 @@ export default function SupportPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
+  const [showLiveChat, setShowLiveChat] = useState(false);
 
   const unreadNews = news.filter(n => !n.read).length;
   const unreadNotices = notices.filter(n => !n.read).length;
@@ -120,7 +122,7 @@ export default function SupportPage() {
                   Chat with the professional customer service online to solve your problems.
                 </p>
                 <div className="flex gap-3">
-                  <button onClick={() => window.open('https://t.me/Game8111c', '_blank')} className="flex-1 border border-[#ff0b0b] text-[#ffdf00] rounded-lg py-2.5 text-[12px] font-medium hover:bg-[#2e0505] transition-colors shadow-[0_0_10px_rgba(255,11,11,0.2)]">Customer Service</button>
+                  <button onClick={() => setShowLiveChat(true)} className="flex-1 border border-[#ff0b0b] text-[#ffdf00] rounded-lg py-2.5 text-[12px] font-medium hover:bg-[#2e0505] transition-colors shadow-[0_0_10px_rgba(255,11,11,0.2)]">Customer Service</button>
                   <button onClick={() => window.open('https://t.me/Game8111c', '_blank')} className="flex-1 border border-[#ff0b0b] text-[#ffdf00] rounded-lg py-2.5 text-[12px] font-medium hover:bg-[#2e0505] transition-colors shadow-[0_0_10px_rgba(255,11,11,0.2)]">Telegram CS</button>
                 </div>
               </div>
@@ -149,7 +151,7 @@ export default function SupportPage() {
                 {subTab === "Other Support" && (
                   <>
                     {/* Line 1 */}
-                    <a href="https://t.me/Game8111c" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors block w-full">
+                    <button onClick={() => setShowLiveChat(true)} className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors block w-full text-left">
                       <div className="w-10 h-10 rounded-full bg-[#1da1f2] flex items-center justify-center shrink-0 shadow-md">
                         <HeadsetIcon className="w-5 h-5 text-white" />
                       </div>
@@ -161,7 +163,7 @@ export default function SupportPage() {
                         </div>
                         <span className="text-[10px] text-neutral-500">Online time: 00:00 - 23:59</span>
                       </div>
-                      <div className="bg-[#cc0000] text-white font-bold text-[11px] py-1.5 px-3 rounded shadow-md hover:scale-95 transition-transform text-center shrink-0">Contact<br/>Now</div></a>
+                      <div className="bg-[#cc0000] text-white font-bold text-[11px] py-1.5 px-3 rounded shadow-md hover:scale-95 transition-transform text-center shrink-0">Contact<br/>Now</div></button>
 
                     {/* Line 2 */}
                     <a href="https://whatsapp.com/channel/0029VbDJdVw7j6gCK3T1YG0i" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors block w-full">
@@ -442,6 +444,7 @@ export default function SupportPage() {
           </motion.div>
         )}
       </AnimatePresence>
+      {showLiveChat && <LiveChatPopup onClose={() => setShowLiveChat(false)} />}
     </main>
   );
 }
