@@ -82,7 +82,7 @@ export default function ProfilePage() {
         </div>
 
         {/* 3 Action Buttons */}
-        <div className="flex justify-between items-end mt-8 px-4">
+        <div className="flex justify-center items-end mt-8 px-4 gap-16">
           <div onClick={() => window.location.href = "/withdraw"} className="flex flex-col items-center gap-2 relative cursor-pointer hover:scale-105 transition-transform">
             <Banknote className="w-9 h-9 text-[#ffdf00]" />
             <span className="text-white font-medium text-[12px]">Withdraw</span>
@@ -142,5 +142,6 @@ export default function ProfilePage() {
     </main>
   );
 }
+
 
 
