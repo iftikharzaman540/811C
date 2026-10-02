@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { apiRequest } from "@/utils/api";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { ChevronLeft, Grid, Handshake, Megaphone, Flame, UserPlus, Gamepad2, History, RefreshCw, Gift, X, PackageOpen, ChevronRight, Zap, Info, Play, ChevronDown, ChevronUp, Calendar, Trophy, Crown, CheckCircle2, Smartphone } from "lucide-react";
@@ -15,7 +16,7 @@ export default function PromoPage() {
   const [vip1Expanded, setVip1Expanded] = useState(true);
   const [vipStatus, setVipStatus] = useState<any>(null);
   useEffect(() => {
-    apiRequest('/vip/status').then(res => setVipStatus(res)).catch(() => {});
+    apiRequest('/vip/status').then((res: any) => setVipStatus(res)).catch(() => {});
   }, []);
   
   const [showPhoneModal, setShowPhoneModal] = useState(false);
@@ -659,6 +660,7 @@ function Banner({ title, desc, highlight, sub, icon, badge, href }: { title: str
   }
   return content;
 }
+
 
 
 
