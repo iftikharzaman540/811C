@@ -152,8 +152,8 @@ export default function SupportPage() {
                   <div className="flex flex-col p-2 space-y-3">
                     {/* Live Chat */}
                     <button onClick={() => setShowLiveChat(true)} className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col">
-                      <div className="w-full h-auto bg-black flex items-center justify-center p-2">
-                        <img src="/support/livechat.jpg" alt="Live Chat" className="w-full h-auto object-contain rounded-lg max-h-[160px]" />
+                      <div className="w-full bg-black flex items-center justify-center p-2">
+                        <img src="/support/livechat.jpg" alt="Live Chat" className="w-full h-[140px] object-cover rounded-lg" />
                       </div>
                       <div className="w-full bg-[#cc0000] py-2 text-center text-white font-bold text-[14px]">
                         Contact Live Support
@@ -162,8 +162,8 @@ export default function SupportPage() {
 
                     {/* WhatsApp */}
                     <a href="https://whatsapp.com/channel/0029VbDJdVw7j6gCK3T1YG0i" target="_blank" rel="noopener noreferrer" className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col">
-                      <div className="w-full h-auto bg-black flex items-center justify-center p-2">
-                        <img src="/support/whatsapp.jpg" alt="WhatsApp" className="w-full h-auto object-contain rounded-lg max-h-[160px]" />
+                      <div className="w-full bg-black flex items-center justify-center p-2">
+                        <img src="/support/whatsapp.jpg" alt="WhatsApp" className="w-full h-[140px] object-cover rounded-lg" />
                       </div>
                       <div className="w-full bg-[#25D366] py-2 text-center text-white font-bold text-[14px]">
                         WhatsApp Channel
@@ -172,8 +172,8 @@ export default function SupportPage() {
 
                     {/* Facebook */}
                     <a href="https://www.facebook.com/share/1JzvPey4hQ/" target="_blank" rel="noopener noreferrer" className="w-full relative rounded-xl overflow-hidden hover:scale-[1.02] transition-transform active:scale-95 shadow-lg border border-neutral-800 bg-black flex flex-col">
-                      <div className="w-full h-auto bg-black flex items-center justify-center p-2">
-                        <img src="/support/facebook.jpg" alt="Facebook" className="w-full h-auto object-contain rounded-lg max-h-[160px]" />
+                      <div className="w-full bg-black flex items-center justify-center p-2">
+                        <img src="/support/facebook.jpg" alt="Facebook" className="w-full h-[140px] object-cover rounded-lg" />
                       </div>
                       <div className="w-full bg-[#1877F2] py-2 text-center text-white font-bold text-[14px]">
                         Facebook Channel
@@ -184,7 +184,7 @@ export default function SupportPage() {
                 {subTab === "Telegram Support" && (
                   <>
                     {/* Line 1 */}
-                    <a href="https://t.me/Game8111c" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors block w-full">
+                    <a href="https://t.me/Game8111c" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 border-b border-neutral-800 hover:bg-white/5 transition-colors w-full">
                       <div className="w-10 h-10 rounded-full bg-[#0088cc] flex items-center justify-center shrink-0 shadow-md">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG" className="w-10 h-10" />
                       </div>
@@ -199,7 +199,7 @@ export default function SupportPage() {
                       <div className="bg-[#cc0000] text-white font-bold text-[11px] py-1.5 px-3 rounded shadow-md hover:scale-95 transition-transform text-center shrink-0">Contact<br/>Now</div></a>
 
                     {/* Line 2 */}
-                    <a href="https://t.me/Game8111c" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 hover:bg-white/5 transition-colors block w-full">
+                    <a href="https://t.me/Game8111c" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 hover:bg-white/5 transition-colors w-full">
                       <div className="w-10 h-10 rounded-full bg-[#0088cc] flex items-center justify-center shrink-0 shadow-md">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG" className="w-10 h-10" />
                       </div>
@@ -410,5 +410,7 @@ function HeadsetIcon(props: any) {
     </svg>
   );
 }
+
+
 
 
