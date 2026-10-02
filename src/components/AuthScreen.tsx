@@ -1,5 +1,6 @@
 "use client";
 import UserAgreementPopup from '@/components/UserAgreementPopup';
+import ForgotPasswordPopup from '@/components/ForgotPasswordPopup';
 
 import { motion } from "framer-motion";
 import { useState } from "react";
@@ -16,13 +17,16 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
   const [agreed, setAgreed] = useState(false);
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showLuckyDrawPopup, setShowLuckyDrawPopup] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const handleSubmit = async () => {
     if (!identifier || !password) return alert("Please enter credentials and password");
+      if (activeTab === "register" && password !== confirmPassword) return alert("Passwords do not match");
     if (activeTab === "register" && !agreed) return alert("Please check the box to agree to the User Agreement before registering.");
     
     const isEmail = identifier.includes('@');
@@ -161,6 +165,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
                 />
               </div>
 
+              
               {activeTab === "register" && (<>
               {/* Sub-tabs for Registration type */}
               <div className="flex gap-4">
@@ -192,6 +197,13 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
                 </button>
               </div>
 
+              {activeTab === "login" && (
+                <div className="flex justify-end mt-1">
+                  <button type="button" onClick={() => setShowForgotPassword(true)} className="text-[11px] text-[#ffdf00] hover:underline">
+                    Forgot Password?
+                  </button>
+                </div>
+              )}
               {activeTab === "register" && (<>
               {/* Password Strength Indicator */}
               <div className="flex items-center gap-2">
@@ -208,7 +220,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
               <div className="flex items-center bg-[#0f0f0f] rounded-lg border border-neutral-800 transition-all overflow-hidden h-10 px-3">
                 <Lock className="w-3.5 h-3.5 text-neutral-500 mr-2 shrink-0" />
                 <input 
-                  type={showConfirmPassword ? "text" : "password"} 
+                  type={showConfirmPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} 
                   placeholder="*Enter password again" 
                   className="flex-1 bg-transparent border-none outline-none text-[13px] text-white placeholder:text-neutral-600"
                 />
@@ -242,7 +254,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
                   10-666
                 </div>
                 
-                <button onClick={handleSubmit} disabled={isLoading} className="w-full bg-[#ffdf00] disabled:opacity-50 text-black font-bold text-[15px] py-2.5 rounded-lg shadow-[0_4px_15px_rgba(255,223,0,0.3)] transition-all active:scale-[0.98]">
+                <button onClick={handleSubmit} disabled={isLoading || (activeTab === "register" && !agreed)} className="w-full bg-[#ffdf00] disabled:opacity-50 text-black font-bold text-[15px] py-2.5 rounded-lg shadow-[0_4px_15px_rgba(255,223,0,0.3)] transition-all active:scale-[0.98]">
                   {activeTab === "register" ? "Register" : "Login"}
                 </button>
               </div>
@@ -303,6 +315,9 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
             onAgree={() => { setShowAgreement(false); setAgreed(true); }}
           />
         )}
+        {showForgotPassword && (
+          <ForgotPasswordPopup onClose={() => setShowForgotPassword(false)} onLoginClick={() => { setShowForgotPassword(false); setActiveTab("login"); }} />
+        )}
         {showLuckyDrawPopup && (
         <LuckyDrawPopup 
           onClose={() => { setShowLuckyDrawPopup(false); if (onLogin) onLogin(); }} 
@@ -311,6 +326,11 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
     </div>
   );
 }
+
+
+
+
+
 
 
 
