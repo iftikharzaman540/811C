@@ -30,7 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={\\ \ h-full antialiased bg-[#000]\}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-[#000]`}
     >
       <body className="min-h-full flex flex-col items-center justify-start overflow-x-hidden w-full">
         <div 
