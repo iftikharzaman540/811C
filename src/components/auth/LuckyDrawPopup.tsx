@@ -6,7 +6,7 @@ export default function LuckyDrawPopup({ onClose }: { onClose: () => void }) {
   const [step, setStep] = useState<"wheel" | "chests" | "reminder">("wheel");
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
       <AnimatePresence mode="wait">
         {step === "wheel" && (
           <motion.div

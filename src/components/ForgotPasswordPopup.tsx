@@ -34,7 +34,7 @@ export default function ForgotPasswordPopup({ onClose, onLoginClick }: { onClose
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

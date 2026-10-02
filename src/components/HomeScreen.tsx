@@ -388,7 +388,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
-            className="fixed inset-0 z-[500] bg-black flex flex-col"
+            className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[500] bg-black flex flex-col"
           >
             <div className="h-12 bg-neutral-900 flex items-center justify-between px-4 border-b border-neutral-800 shrink-0">
               <span className="text-white font-bold text-sm">Playing Game</span>
@@ -485,7 +485,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   </div>
                   {isDepositMenuOpen && (
                     <>
-                      <div className="fixed inset-0 z-40" onClick={() => setIsDepositMenuOpen(false)} />
+                      <div className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-40" onClick={() => setIsDepositMenuOpen(false)} />
                       <div className="absolute top-full right-0 mt-1.5 w-32 bg-[#1a1a1a] border border-[#ffdf00]/30 rounded-lg shadow-xl overflow-hidden z-50">
                         <button onClick={() => { if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); } else { window.location.href = '/withdraw'; } }} className="w-full text-left px-3 py-2 text-[13px] text-white hover:bg-neutral-800 transition-colors font-medium flex items-center gap-2">
                           <span className="text-xl">💰</span> Withdraw
@@ -1144,7 +1144,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         
 
         {/* Fixed Left Global Popups */}
-        <div className="fixed top-[45%] left-1 -translate-y-1/2 z-50 flex flex-col items-start pointer-events-none">
+        <div className="absolute top-[45%] left-1 -translate-y-1/2 z-50 flex flex-col items-start pointer-events-none">
           
           {/* Top Coin Popup */}
           <div onClick={() => toast.success("Claimed bonus!")} className="relative mb-3 pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:translate-x-1">
@@ -1180,7 +1180,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
 
         {/* Fixed Right Global Popups */}
-        <div className="fixed top-[35%] sm:top-[40%] right-1 -translate-y-1/2 z-50 flex flex-col items-end pointer-events-none">
+        <div className="absolute top-[35%] sm:top-[40%] right-1 -translate-y-1/2 z-50 flex flex-col items-end pointer-events-none">
           
           {/* Deposit Rewards Popup */}
           <div onClick={() => toast.success("Viewing deposit rewards!")} className="relative pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:-translate-x-1">
@@ -1199,7 +1199,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         <Footer />
         
         {/* Floating TOP Button */}
-        <div className="fixed bottom-[85px] right-4 z-50 pointer-events-auto">
+        <div className="absolute bottom-[85px] right-4 z-50 pointer-events-auto">
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
             className="w-11 h-11 bg-black/90 backdrop-blur-md rounded-full border-[1.5px] border-[#ffdf00] flex flex-col items-center justify-center text-[#ffdf00] shadow-[0_0_15px_rgba(255,223,0,0.2)] hover:bg-[#1a1700] transition-transform duration-300 hover:scale-110"
@@ -1213,7 +1213,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       
       {/* Sidebar Overlay (JJwin Style) */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[100] flex font-sans">
+        <div className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[100] flex font-sans">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
           <motion.div initial={{ x: -260 }} animate={{ x: 0 }} exit={{ x: -260 }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="relative w-[260px] h-full bg-[#1a1a1a] shadow-2xl flex flex-col overflow-hidden text-neutral-300">
             

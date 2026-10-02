@@ -315,7 +315,7 @@ export default function DepositScreen() {
       </div>
 
       {/* Bottom Button */}
-      <div className="p-4 bg-[#111] fixed bottom-0 w-full max-w-[400px] mx-auto border-t border-neutral-800 z-50">
+      <div className="p-4 bg-[#111] fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] w-full max-w-[400px] mx-auto border-t border-neutral-800 z-50">
         <button onClick={handleDeposit} disabled={loading} className={`w-full py-3.5 rounded-lg font-bold text-[15px] ${amount ? "bg-[#1fdf1f] text-black shadow-[0_2px_15px_rgba(31,223,31,0.3)]" : "bg-[#444] text-neutral-300"} ${loading ? "opacity-50" : ""}`}>
           {loading ? "Processing..." : "Deposit Now"}
         </button>

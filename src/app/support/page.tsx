@@ -372,7 +372,7 @@ export default function SupportPage() {
             initial={{ opacity: 0, y: 50 }} 
             animate={{ opacity: 1, y: 0 }} 
             exit={{ opacity: 0, y: 50 }} 
-            className="fixed inset-0 z-50 bg-[#0a0a0a] flex flex-col"
+            className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-50 bg-[#0a0a0a] flex flex-col"
           >
             <div className="flex items-center h-14 px-4 bg-[#141414] border-b border-neutral-800">
               <div onClick={() => setSelectedMessage(null)} className="w-8 h-8 flex items-center justify-center -ml-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer">

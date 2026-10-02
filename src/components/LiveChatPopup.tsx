@@ -45,7 +45,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#0a0a0a] flex flex-col font-sans">
+    <div className="fixed inset-y-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[100] bg-[#0a0a0a] flex flex-col font-sans">
       {/* Header */}
       <div className="flex items-center justify-between h-14 px-4 bg-[#141414] border-b border-neutral-800 shrink-0 shadow-md z-10">
         <button onClick={onClose} className="w-8 h-8 flex items-center justify-center -ml-2 rounded-full hover:bg-white/10 transition-colors">
