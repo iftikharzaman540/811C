@@ -53,7 +53,7 @@ export default function VipHistoryAdminPage() {
             {history.map((record) => (
               <tr key={record.id} className="hover:bg-[#1a1a1a] transition-colors">
                 <td className="px-6 py-4">
-                  <Link href={'/admin/users/' + record.user_id}} className="text-[#ffdf00] hover:underline font-bold">
+                  <Link href={'/admin/users/' + record.user_id} className="text-[#ffdf00] hover:underline font-bold">
                     {record.user?.username || "ID: " + record.user?.player_id || 'User'}
                   </Link>
                 </td>
