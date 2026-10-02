@@ -67,7 +67,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4 bg-[#0a0a0a] flex flex-col gap-4">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 bg-[#0a0a0a] flex flex-col gap-4">
         
         <div className="text-center">
           <span className="text-[10px] text-neutral-500 bg-[#1c1c1c] px-3 py-1 rounded-full">Chat started at {new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
@@ -151,4 +151,5 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
     </div>
   );
 }
+
 

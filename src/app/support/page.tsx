@@ -109,7 +109,7 @@ export default function SupportPage() {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto no-scrollbar relative">
+      <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar relative">
         <AnimatePresence mode="wait">
           
           {activeTab === "Support" && (
@@ -381,7 +381,7 @@ export default function SupportPage() {
               <div className="flex-1 text-center font-bold text-[16px] text-white capitalize">{selectedMessage.type} Details</div>
               <div className="w-8 h-8"></div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+            <div className="flex-1 min-h-0 overflow-y-auto p-4 flex flex-col gap-4">
               <h2 className="text-[18px] font-bold text-[#ffdf00] leading-snug">{selectedMessage.title}</h2>
               {selectedMessage.date && <p className="text-[11px] text-neutral-500 border-b border-neutral-800 pb-3">{selectedMessage.date}</p>}
               <div className="text-[14px] text-neutral-200 leading-relaxed whitespace-pre-wrap">
@@ -410,6 +410,7 @@ function HeadsetIcon(props: any) {
     </svg>
   );
 }
+
 
 
 
