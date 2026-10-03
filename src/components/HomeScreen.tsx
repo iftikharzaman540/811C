@@ -339,7 +339,23 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     useEffect(() => {
       fetch('https://8111c.com/api/v1/games/gregmorn/list?t=' + Date.now())
         .then(r => r.json())
-        .then(data => { if(Array.isArray(data)) { setRealGames(data); localStorage.setItem("cachedRealGames", JSON.stringify(data)); } }).finally(() => setIsLoadingGames(false))
+        .then(data => { 
+          if(Array.isArray(data)) { 
+            // Reorder games: 1. Aviator 2. Plinko 3. Chicken Road 4. Chicken Road 2.0
+            const getRank = (game) => {
+              const t = (game.title || game.name || "").toLowerCase();
+              if (t.includes("aviator")) return 1;
+              if (t.includes("plinko")) return 2;
+              if (t.includes("chicken road 2")) return 4;
+              if (t.includes("chicken road")) return 3;
+              return 999;
+            };
+            data.sort((a, b) => getRank(a) - getRank(b));
+            
+            setRealGames(data); 
+            localStorage.setItem("cachedRealGames", JSON.stringify(data)); 
+          } 
+        }).finally(() => setIsLoadingGames(false))
         .catch(e => console.error("Error fetching games", e));
         
       (window as any).handleLaunchGame = async (gameIdOrName: string) => {
