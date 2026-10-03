@@ -363,7 +363,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   if (t.includes("fortune gems")) return 5;
                   return 999;
               };
-            data.sort((a, b) => getRank(a) - getRank(b));
+            data.sort((a: any, b: any) => getRank(a) - getRank(b));
             
             setRealGames(data); 
             localStorage.setItem("cachedRealGames", JSON.stringify(data)); 
