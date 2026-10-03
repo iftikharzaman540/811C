@@ -122,7 +122,7 @@ export default function ProfilePage() {
 
           const menu = item as { icon: React.ReactNode, label: string, subtext: string, highlight: boolean, link?: string, action?: () => void };
           return (
-            <button key={index} onClick={() => handleMenuClick(menu)} className="flex items-center gap-4 px-4 py-4 border-b border-neutral-800/50 hover:bg-[#1a1a1a] transition-colors group cursor-pointer">
+            <button key={index} onClick={() => handleMenuClick(menu)} className="flex items-center gap-4 px-4 py-3 border-b border-neutral-800/50 hover:bg-[#1a1a1a] transition-colors group cursor-pointer">
               <div className="shrink-0 group-hover:scale-110 transition-transform">
                 {menu.icon}
               </div>
@@ -142,7 +142,7 @@ export default function ProfilePage() {
 
       {/* Logout Button */}
       {hasToken && (
-        <div className="px-4 py-8 bg-[#0a0a0a]">
+        <div className="px-4 py-5 bg-[#0a0a0a]">
           <button 
             onClick={() => {
               logout();
@@ -160,6 +160,7 @@ export default function ProfilePage() {
     </main>
   );
 }
+
 
 
 
