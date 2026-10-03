@@ -505,7 +505,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   +3%
                 </div>
                 <div className="relative">
-                  <div className="flex bg-[#66df2f] hover:bg-[#55cc25] text-black rounded-lg shadow-[0_2px_10px_rgba(102,223,47,0.3)] transition-colors h-[32px]">
+                  <div className="flex bg-[#ffdf00] hover:bg-[#e6c800] text-black rounded-lg shadow-[0_2px_10px_rgba(255,223,0,0.3)] transition-colors h-[32px]">
                     <button onClick={() => { if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); } else { window.location.href = '/deposit'; } }} className="px-2.5 text-[13px] font-bold h-full flex items-center justify-center rounded-l-lg border-r border-black/10">
                       Deposit
                     </button>
@@ -1377,7 +1377,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">3</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">🎯</div>
                 </div>
-                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-green-400 to-green-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-[#cc0000] to-[#800000] rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">Mission</span>
                   <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">1</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">📅</div>
@@ -1394,12 +1394,12 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   <span className="text-white font-bold text-[13px] z-10 relative">VIP</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">👑</div>
                 </div>
-                <div onClick={() => { setIsMenuOpen(false); if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); } else { router.push("/deposit"); } }} className="relative bg-gradient-to-br from-pink-400 to-pink-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
-                  <span className="text-white font-bold text-[13px] z-10 relative">Fund</span>
-                  <span className="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-1 rounded-bl-lg z-20">50%</span>
+                <div onClick={() => { setIsMenuOpen(false); if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); } else { router.push("/deposit"); } }} className="relative bg-gradient-to-br from-[#ffdf00] to-[#ccb300] text-black rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                  <span className="text-black font-bold text-[13px] z-10 relative">Fund</span>
+                  <span className="absolute top-0 right-0 bg-[#cc0000] text-white text-[10px] font-bold px-1 rounded-bl-lg z-20">50%</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">👛</div>
                 </div>
-                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-[#2a2a2a] to-[#111111] border border-[#ffdf00]/30 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative leading-tight">Unclaim<br/>ed</span>
                   <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">2</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">🎁</div>

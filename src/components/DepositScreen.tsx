@@ -99,7 +99,7 @@ export default function DepositScreen() {
           <ChevronLeft className="w-6 h-6" />
         </button>
         <h1 className="text-lg font-bold">Deposit</h1>
-        <div className="flex gap-4 text-[#1fdf1f]">
+        <div className="flex gap-4 text-[#ffdf00]">
           <HeadphonesIcon className="w-5 h-5 cursor-pointer" onClick={() => router.push("/support")} />
           <FileText className="w-5 h-5 cursor-pointer" onClick={() => router.push("/deposit-history")} />
         </div>
@@ -112,11 +112,11 @@ export default function DepositScreen() {
         <div className="flex items-center gap-2 mb-6">
           <span className="text-sm font-medium">Balance</span>
           <div className="flex items-center bg-black border border-neutral-800 rounded-full px-2 py-0.5 gap-1.5 shadow-inner">
-             <div className="w-4 h-4 bg-[#0d4026] rounded-full flex items-center justify-center text-[10px] text-[#1fdf1f] border border-[#1fdf1f]/50">
+             <div className="w-4 h-4 bg-[#332a00] rounded-full flex items-center justify-center text-[10px] text-[#ffdf00] border border-[#ffdf00]/50">
                 ☪
              </div>
              <span className="text-[#ffdf00] font-bold text-sm">{(user?.balance || 0).toFixed(2)}</span>
-             <button className="text-[#1fdf1f]">
+             <button className="text-[#ffdf00]">
                 <RefreshCcw className="w-3.5 h-3.5" />
              </button>
           </div>
@@ -126,16 +126,16 @@ export default function DepositScreen() {
         <div className="flex border-b border-neutral-800 mb-4 relative">
           <button 
             onClick={() => setTab("online")}
-            className={`flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-[3px] transition-colors ${tab === "online" ? "border-[#1fdf1f] text-[#1fdf1f]" : "border-transparent text-neutral-400"}`}
+            className={`flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-[3px] transition-colors ${tab === "online" ? "border-[#ffdf00] text-[#ffdf00]" : "border-transparent text-neutral-400"}`}
           >
             <span className="text-xl leading-none -mt-1">📱</span> Online deposit
           </button>
           
           <button 
             onClick={() => setTab("crypto")}
-            className={`flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-[3px] transition-colors relative ${tab === "crypto" ? "border-[#1fdf1f] text-[#1fdf1f]" : "border-transparent text-neutral-400"}`}
+            className={`flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-[3px] transition-colors relative ${tab === "crypto" ? "border-[#ffdf00] text-[#ffdf00]" : "border-transparent text-neutral-400"}`}
           >
-            <span className="text-xl leading-none -mt-1 text-[#1fdf1f]">₿</span> Crypto
+            <span className="text-xl leading-none -mt-1 text-[#ffdf00]">₿</span> Crypto
             <div className="absolute top-1 right-8 bg-[#ff0b0b] text-white text-[9px] px-1 rounded-sm shadow-md flex items-center gap-0.5 rotate-[10deg]">
               <span className="text-[10px]">🎁</span>+3%
             </div>
@@ -148,25 +148,25 @@ export default function DepositScreen() {
         {tab === "online" ? (
           <div className="mb-6">
             <div className="grid grid-cols-2 gap-3 mb-2">
-              <button onClick={() => setMethod("JazzCash")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("JazzCash") ? "border-[#1fdf1f] bg-black/40 text-[#1fdf1f]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
+              <button onClick={() => setMethod("JazzCash")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("JazzCash") ? "border-[#ffdf00] bg-black/40 text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
                 <img src="/jazzcash.png" alt="JazzCash" className="w-7 h-7 object-contain rounded" />
                 <span className="text-sm font-medium">JazzCash</span>
               </button>
-              <button onClick={() => setMethod("EasyPaisa")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("EasyPaisa") ? "border-[#1fdf1f] bg-black/40 text-[#1fdf1f]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
+              <button onClick={() => setMethod("EasyPaisa")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("EasyPaisa") ? "border-[#ffdf00] bg-black/40 text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
                 <img src="/easypaisa.png" alt="EasyPaisa" className="w-7 h-7 object-contain rounded bg-white p-0.5" />
                 <span className="text-sm font-medium">EasyPaisa</span>
               </button>
             </div>
             
             <div className="flex justify-center mb-3">
-              <button className="flex items-center text-[#1fdf1f] text-[13px]">
+              <button className="flex items-center text-[#ffdf00] text-[13px]">
                 Expand <ChevronDown className="w-4 h-4 ml-1" />
               </button>
             </div>
 
             <div className="grid grid-cols-3 gap-2 border-t border-neutral-800 pt-3 relative">
               {["Fast", "Fast", "Fast", "Fast"].map((m, i) => (
-                <button key={i} className={`relative h-[38px] rounded-md border flex items-center justify-center text-[13px] ${i === 0 ? "border-[#1fdf1f] text-[#1fdf1f]" : "border-neutral-700 text-white"}`}>
+                <button key={i} className={`relative h-[38px] rounded-md border flex items-center justify-center text-[13px] ${i === 0 ? "border-[#ffdf00] text-[#ffdf00]" : "border-neutral-700 text-white"}`}>
                   {method}
                   <span className="absolute -top-1.5 -right-1 bg-[#ff0b0b] text-white text-[8px] font-bold px-1 rounded-sm">Fast</span>
                 </button>
@@ -175,8 +175,8 @@ export default function DepositScreen() {
           </div>
         ) : (
           <div className="mb-6">
-            <button className={`h-[46px] w-[48%] rounded-lg border flex items-center justify-center gap-2 border-[#1fdf1f] bg-black/40 text-[#1fdf1f] relative`}>
-              <div className="bg-[#26a17b] w-6 h-6 rounded-full flex items-center justify-center"><span className="text-white font-bold text-xs">₮</span></div>
+            <button className={`h-[46px] w-[48%] rounded-lg border flex items-center justify-center gap-2 border-[#ffdf00] bg-black/40 text-[#ffdf00] relative`}>
+              <div className="bg-[#ffdf00] w-6 h-6 rounded-full flex items-center justify-center"><span className="text-white font-bold text-xs">₮</span></div>
               <span className="text-sm font-medium">Cryptocurrency</span>
               <div className="absolute -top-2 right-4 bg-[#ff0b0b] text-white text-[9px] px-1 rounded-sm shadow-md flex items-center gap-0.5">
                 <span className="text-[10px]">🎁</span>+3%
@@ -193,7 +193,7 @@ export default function DepositScreen() {
                 {tab === "online" && (
           <div className="mb-6">
             <h2 className="text-sm font-bold mb-3">Mobile Number (JazzCash / EasyPaisa)</h2>
-            <div className="flex bg-[#1a1a1a] border border-neutral-700 rounded-md items-center px-3 h-[46px] focus-within:border-[#1fdf1f]">
+            <div className="flex bg-[#1a1a1a] border border-neutral-700 rounded-md items-center px-3 h-[46px] focus-within:border-[#ffdf00]">
               <span className="text-neutral-400 mr-2 text-sm">+92</span>
               <input 
                 type="tel" 
@@ -235,7 +235,7 @@ export default function DepositScreen() {
             />
           </div>
           {tab === "crypto" && (
-            <button className="w-[46px] h-[46px] bg-[#1a1a1a] border border-neutral-700 rounded-md flex items-center justify-center text-[#1fdf1f]">
+            <button className="w-[46px] h-[46px] bg-[#1a1a1a] border border-neutral-700 rounded-md flex items-center justify-center text-[#ffdf00]">
               <RefreshCcw className="w-5 h-5" />
             </button>
           )}
@@ -243,7 +243,7 @@ export default function DepositScreen() {
 
         {tab === "crypto" && (
           <div className="text-neutral-400 text-xs mb-3 flex items-center gap-1">
-            Exchange Rate <span className="text-white font-medium">277.1235664845</span> <RefreshCcw className="w-3 h-3 text-[#1fdf1f]" />
+            Exchange Rate <span className="text-white font-medium">277.1235664845</span> <RefreshCcw className="w-3 h-3 text-[#ffdf00]" />
           </div>
         )}
 
@@ -306,7 +306,7 @@ export default function DepositScreen() {
 
             <button 
               onClick={() => setPromoExpanded(!promoExpanded)} 
-              className="w-full flex items-center justify-center text-[#1fdf1f] text-xs font-bold mt-4"
+              className="w-full flex items-center justify-center text-[#ffdf00] text-xs font-bold mt-4"
             >
               {promoExpanded ? "Fold" : "Expand"} {promoExpanded ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
             </button>
@@ -316,7 +316,7 @@ export default function DepositScreen() {
 
       {/* Bottom Button */}
       <div className="p-4 bg-[#111] fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[400px] w-full max-w-[400px] mx-auto border-t border-neutral-800 z-50">
-        <button onClick={handleDeposit} disabled={loading} className={`w-full py-3.5 rounded-lg font-bold text-[15px] ${amount ? "bg-[#1fdf1f] text-black shadow-[0_2px_15px_rgba(31,223,31,0.3)]" : "bg-[#444] text-neutral-300"} ${loading ? "opacity-50" : ""}`}>
+        <button onClick={handleDeposit} disabled={loading} className={`w-full py-3.5 rounded-lg font-bold text-[15px] ${amount ? "bg-[#ffdf00] text-black shadow-[0_2px_15px_rgba(255,223,0,0.3)]" : "bg-[#444] text-neutral-300"} ${loading ? "opacity-50" : ""}`}>
           {loading ? "Processing..." : "Deposit Now"}
         </button>
       
