@@ -232,7 +232,15 @@ import { useUser } from "@/context/UserContext";
 export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginClick?: () => void, onRegisterClick?: () => void }) {
   const [heroIndex, setHeroIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [realGames, setRealGames] = useState<any[]>([]);
+  const [realGames, setRealGames] = useState<any[]>(() => {
+    if (typeof window !== 'undefined') {
+      const cached = localStorage.getItem('cachedRealGames');
+      if (cached) {
+        try { return JSON.parse(cached); } catch(e){}
+      }
+    }
+    return [];
+  });
   const [dynamicWinners, setDynamicWinners] = useState<any[]>([]);
 
   useEffect(() => {
@@ -331,7 +339,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     useEffect(() => {
       fetch('https://8111c.com/api/v1/games/gregmorn/list?t=' + Date.now())
         .then(r => r.json())
-        .then(data => { if(Array.isArray(data)) setRealGames(data); }).finally(() => setIsLoadingGames(false))
+        .then(data => { if(Array.isArray(data)) { setRealGames(data); localStorage.setItem("cachedRealGames", JSON.stringify(data)); } }).finally(() => setIsLoadingGames(false))
         .catch(e => console.error("Error fetching games", e));
         
       (window as any).handleLaunchGame = async (gameIdOrName: string) => {
