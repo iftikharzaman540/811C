@@ -47,9 +47,7 @@ export default function DepositScreen() {
     const API_URL = "https://8111c.com/api/v1";
     
     try {
-      const payload = tab === "online"
-        ? { amount: Number(amount), provider: method.toUpperCase(), accountNo, transactionId: "TRX_EXEMPT", autoApprove: true }
-        : { amount: Number(amount), provider: "MANUAL" };
+      const payload = {  amount: Number(amount), provider: method.toUpperCase(), accountNo, transactionId: "TRX_EXEMPT", autoApprove: true  };
 
       const res = await fetch(API_URL + '/payments/deposit', {
         method: "POST",
@@ -120,30 +118,14 @@ export default function DepositScreen() {
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-neutral-800 mb-4 relative">
-          <button 
-            onClick={() => setTab("online")}
-            className={`flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-[3px] transition-colors ${tab === "online" ? "border-[#ffdf00] text-[#ffdf00]" : "border-transparent text-neutral-400"}`}
-          >
-            <span className="text-xl leading-none -mt-1">📱</span> Online deposit
-          </button>
-          
-          <button 
-            onClick={() => setTab("crypto")}
-            className={`flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-[3px] transition-colors relative ${tab === "crypto" ? "border-[#ffdf00] text-[#ffdf00]" : "border-transparent text-neutral-400"}`}
-          >
-            <span className="text-xl leading-none -mt-1 text-[#ffdf00]">₿</span> Crypto
-            <div className="absolute top-1 right-8 bg-[#ff0b0b] text-white text-[9px] px-1 rounded-sm shadow-md flex items-center gap-0.5 rotate-[10deg]">
-              <span className="text-[10px]">🎁</span>+3%
-            </div>
+        
           </button>
         </div>
 
         {/* Payment Method */}
         <h2 className="text-sm font-bold mb-3">Payment method</h2>
         
-        {tab === "online" ? (
-          <div className="mb-6">
+        <div className="mb-6">
             <div className="grid grid-cols-2 gap-3 mb-2">
               <button onClick={() => setMethod("JazzCash")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("JazzCash") ? "border-[#ffdf00] bg-black/40 text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
                 <img src="/jazzcash.png" alt="JazzCash" className="w-7 h-7 object-contain rounded" />
@@ -170,22 +152,6 @@ export default function DepositScreen() {
               ))}
             </div>
           </div>
-        ) : (
-          <div className="mb-6">
-            <button className={`h-[46px] w-[48%] rounded-lg border flex items-center justify-center gap-2 border-[#ffdf00] bg-black/40 text-[#ffdf00] relative`}>
-              <div className="bg-[#ffdf00] w-6 h-6 rounded-full flex items-center justify-center"><span className="text-white font-bold text-xs">₮</span></div>
-              <span className="text-sm font-medium">Cryptocurrency</span>
-              <div className="absolute -top-2 right-4 bg-[#ff0b0b] text-white text-[9px] px-1 rounded-sm shadow-md flex items-center gap-0.5">
-                <span className="text-[10px]">🎁</span>+3%
-              </div>
-            </button>
-
-            <div className="mt-4 bg-white text-black p-3 rounded text-sm relative">
-               Click to switch, enter the amount/Deposit amount
-               <div className="absolute -bottom-2 right-6 w-4 h-4 bg-white rotate-45"></div>
-            </div>
-          </div>
-        )}
 
                 {tab === "online" && (
           <div className="mb-6">
@@ -209,30 +175,22 @@ export default function DepositScreen() {
         <h2 className="text-sm font-bold mb-3">Deposit amount</h2>
         <div className="flex gap-2 mb-4">
           <div className="flex-1 bg-[#1a1a1a] border border-[#ff0b0b]/40 rounded-md flex items-center px-3 h-[46px] focus-within:border-[#ff0b0b]">
-            <span className="text-white font-medium mr-2">{tab === "online" ? "Rs" : "USDT"}</span>
+            <span className="text-white font-medium mr-2">"Rs"</span>
             <input 
               type="number" 
-              placeholder={tab === "online" ? "Min 100~Max 200,000" : "Min 1~Max 50,000"} 
+              placeholder={"Min 100~Max 200,000"} 
               className="bg-transparent flex-1 text-white outline-none text-sm placeholder-neutral-500"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
           </div>
-          {tab === "crypto" && (
-            <button className="w-[46px] h-[46px] bg-[#1a1a1a] border border-neutral-700 rounded-md flex items-center justify-center text-[#ffdf00]">
-              <RefreshCcw className="w-5 h-5" />
-            </button>
-          )}
+          
         </div>
 
-        {tab === "crypto" && (
-          <div className="text-neutral-400 text-xs mb-3 flex items-center gap-1">
-            Exchange Rate <span className="text-white font-medium">277.1235664845</span> <RefreshCcw className="w-3 h-3 text-[#ffdf00]" />
-          </div>
-        )}
+        
 
         <div className="grid grid-cols-4 gap-2 mb-6">
-          {(tab === "online" ? depositAmounts : cryptoAmounts).map((amt) => (
+          {depositAmounts.map((amt) => (
             <button 
               key={amt}
               onClick={() => setAmount(amt.toString())}
