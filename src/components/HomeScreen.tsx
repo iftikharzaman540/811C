@@ -348,7 +348,10 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               if (t.includes("plinko")) return 2;
               if (t.includes("chicken road 2")) return 4;
               if (t.includes("chicken road")) return 3;
-              return 999;
+                if (t.includes("fortune gems 3")) return 7;
+                if (t.includes("fortune gems 2")) return 6;
+                if (t.includes("fortune gems")) return 5;
+                return 999;
             };
             data.sort((a, b) => getRank(a) - getRank(b));
             
