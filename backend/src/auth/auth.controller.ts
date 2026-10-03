@@ -27,16 +27,15 @@ export class AuthController {
   @ApiOperation({ summary: 'Login with email/phone/username and get JWT' })
   @ApiResponse({ status: 200, description: 'Login successful, returns JWT.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  
+  async login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
+  }
+
   @HttpCode(HttpStatus.OK)
   @Post('reset-password')
   @ApiOperation({ summary: 'Reset password without OTP (demo)' })
   async resetPassword(@Body() body: any) {
     return this.authService.resetPassword(body.identifier, body.password);
-  }
-
-async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
   }
 
   @HttpCode(HttpStatus.OK)
