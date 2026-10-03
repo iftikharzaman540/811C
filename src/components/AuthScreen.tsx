@@ -262,7 +262,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
 
             {/* Bottom Links */}
             <div className="flex justify-between mt-3 px-1">
-              <button className="text-[11px] text-[#ffdf00]">Customer Service</button>
+              <button onClick={() => window.location.href='/support'} className="text-[11px] text-[#ffdf00] hover:underline">Customer Service</button>
               <button className="text-[11px] text-[#ffdf00]">Demo</button>
             </div>
             
@@ -326,6 +326,7 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
     </div>
   );
 }
+
 
 
 
