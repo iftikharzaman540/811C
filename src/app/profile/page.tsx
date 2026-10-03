@@ -3,7 +3,7 @@
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
-import { ChevronRight, User, Gift, Wallet, CreditCard, Banknote, FileText, Settings, Shield, Search, Globe, HelpCircle, MessageSquare, Smartphone, Moon, Info } from "lucide-react";
+import { ChevronRight, User, Gift, Wallet, CreditCard, Banknote, FileText, Settings, Shield, Search, Globe, HelpCircle, MessageSquare, Smartphone, Moon, Info, Crown } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 
 import { useUser } from '@/context/UserContext';
@@ -45,52 +45,68 @@ export default function ProfilePage() {
     <main className="min-h-screen bg-[#111] text-white flex flex-col pb-20 font-sans overflow-x-hidden">
       
       {/* Top Header Section */}
-      <div className="relative pt-6 px-4 pb-6 bg-gradient-to-b from-[#2e0505] to-[#111]">
-        {/* Background decorative waves could go here */}
-        
-        {/* Gift Box Top Right */}
-        <div className="absolute top-2 right-4 flex items-center bg-[#1a1a1a] rounded-full px-2 py-0.5 border border-neutral-700 shadow-lg cursor-pointer hover:bg-neutral-800" onClick={() => toast("Gift Center coming soon!")}>
-          <Gift className="w-4 h-4 text-[#ffdf00] mr-1" />
-          <span className="text-[#ffdf00] font-bold text-[11px]">10-666</span>
-        </div>
+            {/* Top Header Section (JJWin Style) */}
+      <div className="p-3">
+        <div className="relative p-5 rounded-2xl bg-[#0d0d0d] border border-red-600/30 shadow-[0_0_20px_rgba(255,0,0,0.15)] overflow-hidden">
+          
+          {/* Decorative Corner Flairs */}
+          <div className="absolute top-0 left-0 w-24 h-24 bg-red-600/20 blur-3xl rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-red-600/10 blur-3xl rounded-full translate-x-1/3 translate-y-1/3"></div>
+          
+          {/* Subtle red edge glows */}
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
 
-        <div className="flex items-center gap-3 mt-4">
-          <div className="w-16 h-16 rounded-full bg-neutral-200 flex items-center justify-center shrink-0">
-            <User className="w-8 h-8 text-neutral-400" />
+          {/* Top Right Gift Box */}
+          <div className="absolute top-4 right-4 flex items-center bg-[#111] border border-[#ffdf00] rounded-full px-2.5 py-0.5 z-10 cursor-pointer shadow-[0_0_8px_rgba(255,223,0,0.15)] hover:bg-black transition-colors" onClick={() => toast("Gift Center coming soon!")}>
+            <Gift className="w-3.5 h-3.5 text-[#ffdf00] mr-1" />
+            <span className="text-[#ffdf00] font-bold text-[12px]">10-666</span>
           </div>
-          <div className="flex-1 flex flex-col justify-center">
-            {loading ? (
-              <span className="text-neutral-400 text-[13px] leading-tight">Loading profile...</span>
-            ) : (user || hasToken) ? (
-              <div className="flex flex-col">
-                <span className="text-white font-bold text-[14px]">{user?.phone || user?.email || "User"}</span>
-                {user?.player_id && <span className="text-neutral-400 text-[11px] mb-1">ID: {user.player_id}</span>}
-                <span className="text-[#ffdf00] font-bold text-[16px]">Rs {(user?.balance || 0).toFixed(2)}</span>
+
+          <div className="flex items-center gap-4 mt-8 relative z-10">
+            {/* Avatar with glowing ring */}
+            <div onClick={() => window.location.href = "/profile/details"} className="w-[72px] h-[72px] rounded-full bg-neutral-200 border-[3px] border-[#ff3300] shadow-[0_0_15px_rgba(255,51,0,0.4)] flex items-center justify-center shrink-0 cursor-pointer relative">
+              <div className="absolute -inset-[6px] border-[2px] border-[#ff3300]/40 rounded-full"></div>
+              <User className="w-10 h-10 text-neutral-400" />
+            </div>
+            
+            {/* User Details */}
+            <div className="flex-1 flex flex-col justify-center">
+              {loading ? (
+                <span className="text-neutral-400 text-[13px] leading-tight">Loading profile...</span>
+              ) : (user || hasToken) ? (
+                <div className="flex flex-col">
+                  <span className="text-white font-bold text-[18px] tracking-wide">{user?.phone || user?.username || user?.email || "User"}</span>
+                  {user?.player_id && <span className="text-neutral-400 text-[12px] mt-0.5 mb-1">ID: {user.player_id}</span>}
+                  <span className="text-[#ffdf00] font-black text-[22px] tracking-tight">Rs {(user?.balance || 0).toFixed(2)}</span>
+                </div>
+              ) : (
+                <span className="text-neutral-400 text-[13px] leading-tight">Please first <span className="text-white font-bold">Login</span> Or <span className="text-white font-bold">Register</span></span>
+              )}
+            </div>
+
+            {/* VIP Crown */}
+            {(user || hasToken) && (
+              <div className="shrink-0 flex items-center pr-1 self-center">
+                <Crown className="w-7 h-7 text-[#ff5500]" style={{ filter: "drop-shadow(0 0 5px rgba(255,85,0,0.8))" }} />
               </div>
-            ) : (
-              <span className="text-neutral-400 text-[13px] leading-tight">Please first <span className="text-white font-bold">Login</span> Or <span className="text-white font-bold">Register</span></span>
             )}
           </div>
-          {(!loading && !user && !hasToken) && <div className="flex gap-2 shrink-0">
-            <button onClick={() => window.location.href = "/?login=true"} className="bg-[#cc0000] text-white font-bold text-[12px] px-4 py-1.5 rounded shadow-lg hover:bg-[#ff0b0b] transition-colors">
-              Login
-            </button>
-            <button onClick={() => window.location.href = "/?register=true"} className="bg-transparent border border-[#ff0b0b] text-[#ffdf00] font-bold text-[12px] px-4 py-1.5 rounded hover:bg-[#2e0505] transition-colors">
-              Register
-            </button>
-          </div>}
-        </div>
 
-        {/* 3 Action Buttons */}
-        <div className="flex justify-center items-end mt-8 px-4 gap-16">
-          <div onClick={() => window.location.href = "/withdraw"} className="flex flex-col items-center gap-2 relative cursor-pointer hover:scale-105 transition-transform">
-            <Banknote className="w-9 h-9 text-[#ffdf00]" />
-            <span className="text-white font-medium text-[12px]">Withdraw</span>
-          </div>
-          <div onClick={() => window.location.href = "/deposit"} className="flex flex-col items-center gap-2 relative cursor-pointer hover:scale-105 transition-transform">
-            <div className="absolute -top-3 -right-3 bg-[#cc0000] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border border-[#111] z-10">+3%</div>
-            <Wallet className="w-9 h-9 text-[#ffdf00]" />
-            <span className="text-white font-medium text-[12px]">Deposit</span>
+          {/* Action Buttons (Deposit / Withdraw) */}
+          <div className="grid grid-cols-2 gap-3 mt-7 relative z-10">
+            <button onClick={() => window.location.href = "/withdraw"} className="flex items-center justify-center gap-2 border-[1.5px] border-[#ffdf00]/80 bg-gradient-to-b from-[#1a1700] to-black rounded-2xl py-3 hover:bg-[#221f00] transition-colors shadow-[0_0_10px_rgba(255,223,0,0.1)]">
+              <Banknote className="w-5 h-5 text-[#ffdf00]" />
+              <span className="text-white font-bold text-[15px]">Withdraw</span>
+              <ChevronRight className="w-4 h-4 text-[#ffdf00]" />
+            </button>
+
+            <button onClick={() => window.location.href = "/deposit"} className="flex items-center justify-center gap-2 border-[1.5px] border-[#ff0000]/80 bg-gradient-to-b from-[#1a0000] to-black rounded-2xl py-3 hover:bg-[#220000] relative transition-colors shadow-[0_0_10px_rgba(255,0,0,0.15)]">
+              <div className="absolute -top-2.5 right-4 bg-[#ff0b0b] text-white text-[11px] font-black px-2 py-0.5 rounded-full shadow-lg z-10 tracking-tight">+3%</div>
+              <Wallet className="w-5 h-5 text-[#ffdf00]" />
+              <span className="text-white font-bold text-[15px]">Deposit</span>
+              <ChevronRight className="w-4 h-4 text-[#ff0000]" />
+            </button>
           </div>
         </div>
       </div>
@@ -142,6 +158,8 @@ export default function ProfilePage() {
     </main>
   );
 }
+
+
 
 
 
