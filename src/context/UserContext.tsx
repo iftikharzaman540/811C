@@ -62,34 +62,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     refreshUser();
-
-    // Global fetch interceptor to catch 401 session replaced errors
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-      const response = await originalFetch(...args);
-      if (response.status === 401) {
-        try {
-          const clone = response.clone();
-          const data = await clone.json();
-          if (data?.message === "Your account has been logged in from another device.") {
-            localStorage.removeItem("token");
-            setUser(null);
-            
-            // Only alert and redirect if we haven't already
-            if (window.location.pathname !== "/") {
-               // dynamically import toast if needed, or assume it's available or use alert
-               alert("Your account has been logged in from another device.");
-               window.location.href = "/?login=true";
-            }
-          }
-        } catch(e) {}
-      }
-      return response;
-    };
-
-    return () => {
-      window.fetch = originalFetch;
-    };
   }, []);
 
   const login = (token: string, userData: User) => {
@@ -116,6 +88,4 @@ export const useUser = () => {
   }
   return context;
 };
-
-
 
