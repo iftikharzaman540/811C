@@ -23,8 +23,7 @@ export default function ProfilePage() {
     "divider",
     { icon: <User className="w-5 h-5 text-[#ffdf00]" />, label: "Invite", subtext: "Easy money", highlight: true, link: "/invite" },
     { icon: <User className="w-5 h-5 text-[#ffdf00]" />, label: "Profile Details", subtext: "Edit profile info", highlight: false, link: "/profile/details" },
-    { icon: <Shield className="w-5 h-5 text-[#ffdf00]" />, label: "Security Center", subtext: "", highlight: false, action: () => toast.success("Opening Security Center...") },
-    { icon: <Search className="w-5 h-5 text-[#ffdf00]" />, label: "Find us", subtext: "Prevent it from opening", highlight: false, action: () => toast.success("Opening Find Us...") },
+    { icon: <Shield className="w-5 h-5 text-[#ffdf00]" />, label: "Security Center", subtext: "Change password", highlight: false, link: "/profile/security" },
     { icon: <Globe className="w-5 h-5 text-[#ffdf00]" />, label: "Language", subtext: "English", highlight: false, action: () => toast("Language is already English") },
     { icon: <HelpCircle className="w-5 h-5 text-[#ffdf00]" />, label: "FAQ", subtext: "", highlight: false, link: "/support" },
     { icon: <MessageSquare className="w-5 h-5 text-[#ffdf00]" />, label: "Reward Feedback", subtext: "", highlight: false, link: "/support" },
@@ -163,6 +162,8 @@ export default function ProfilePage() {
     </main>
   );
 }
+
+
 
 
 
