@@ -30,7 +30,6 @@ import { VipModule } from './vip/vip.module';
     GameCategoriesModule,
     GamesModule,
     ProvidersModule,
-    GameSessionsModule,
     GameHistoryModule,
     AuditLogsModule,
     AdminUsersModule,
@@ -43,7 +42,8 @@ import { VipModule } from './vip/vip.module';
     GregmornModule,
     PromoModule,
     AdminModule,
-    VipModule
+    VipModule,
+    GameSessionsModule,
   ],
 })
 export class AppModule {}
