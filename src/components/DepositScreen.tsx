@@ -15,7 +15,8 @@ export default function DepositScreen() {
   const { user, loading: userLoading } = useUser();
   useEffect(() => { if (!userLoading && !user) { toast.error("Please login first"); router.push("/"); } }, [user, userLoading, router]);
   const [tab, setTab] = useState<"online" | "crypto">("online");
-  const [method, setMethod] = useState("JazzCash");
+  const [method, setMethod] = useState("JazzCash_0");
+    const [channelsExpanded, setChannelsExpanded] = useState(false);
   const [amount, setAmount] = useState("");
   const [promoExpanded, setPromoExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,7 +48,7 @@ export default function DepositScreen() {
     const API_URL = "https://8111c.com/api/v1";
     
     try {
-      const payload = {  amount: Number(amount), provider: method.toUpperCase(), accountNo, transactionId: "TRX_EXEMPT", autoApprove: true  };
+      const payload = {  amount: Number(amount), provider: method.split('_')[0].toUpperCase(), accountNo, transactionId: "TRX_EXEMPT", autoApprove: true  };
 
       const res = await fetch(API_URL + '/payments/deposit', {
         method: "POST",
@@ -124,30 +125,42 @@ export default function DepositScreen() {
         
         <div className="mb-6">
             <div className="grid grid-cols-2 gap-3 mb-2">
-              <button onClick={() => setMethod("JazzCash")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("JazzCash") ? "border-[#ffdf00] bg-black/40 text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
+              <button onClick={() => setMethod("JazzCash_0")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("JazzCash") ? "border-[#ffdf00] bg-black/40 text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
                 <img src="/jazzcash.png" alt="JazzCash" className="w-7 h-7 object-contain rounded" />
                 <span className="text-sm font-medium">JazzCash</span>
               </button>
-              <button onClick={() => setMethod("EasyPaisa")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("EasyPaisa") ? "border-[#ffdf00] bg-black/40 text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
+              <button onClick={() => setMethod("EasyPaisa_0")} className={`h-[46px] rounded-lg border flex items-center justify-center gap-2 ${method.includes("EasyPaisa") ? "border-[#ffdf00] bg-black/40 text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-white"}`}>
                 <img src="/easypaisa.png" alt="EasyPaisa" className="w-7 h-7 object-contain rounded bg-white p-0.5" />
                 <span className="text-sm font-medium">EasyPaisa</span>
               </button>
             </div>
             
             <div className="flex justify-center mb-3">
-              <button className="flex items-center text-[#ffdf00] text-[13px]">
-                Expand <ChevronDown className="w-4 h-4 ml-1" />
-              </button>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 border-t border-neutral-800 pt-3 relative">
-              {["Fast", "Fast", "Fast", "Fast"].map((m, i) => (
-                <button key={i} className={`relative h-[38px] rounded-md border flex items-center justify-center text-[13px] ${i === 0 ? "border-[#ffdf00] text-[#ffdf00]" : "border-neutral-700 text-white"}`}>
-                  {method}
-                  <span className="absolute -top-1.5 -right-1 bg-[#ff0b0b] text-white text-[8px] font-bold px-1 rounded-sm">Fast</span>
+                <button 
+                  onClick={() => setChannelsExpanded(!channelsExpanded)}
+                  className="flex items-center text-[#ffdf00] text-[13px]"
+                >
+                  {channelsExpanded ? "Collapse" : "Expand"} {channelsExpanded ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
                 </button>
-              ))}
-            </div>
+              </div>
+
+              {channelsExpanded && (
+                <div className="grid grid-cols-3 gap-2 border-t border-neutral-800 pt-3 relative">
+                  {["Fast", "Fast", "Fast", "Fast"].map((m, i) => {
+                    const baseMethod = method.split('_')[0];
+                    const subMethod = `${baseMethod}_${i}`;
+                    return (
+                    <button 
+                      key={i} 
+                      onClick={() => setMethod(subMethod)}
+                      className={`relative h-[38px] rounded-md border flex items-center justify-center text-[13px] ${method === subMethod || (method === baseMethod && i === 0) ? "border-[#ffdf00] text-[#ffdf00] bg-black/40" : "border-neutral-700 text-white bg-[#1a1a1a]"}`}
+                    >
+                      {baseMethod}
+                      <span className="absolute -top-1.5 -right-1 bg-[#ff0b0b] text-white text-[8px] font-bold px-1 rounded-sm">Fast</span>
+                    </button>
+                  )})}
+                </div>
+              )}
           </div>
 
                 {tab === "online" && (
