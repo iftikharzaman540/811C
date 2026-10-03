@@ -39,10 +39,7 @@ export default function DepositScreen() {
         toast.error("Please enter a valid mobile number (e.g., 03001234567)");
         return;
       }
-      if (trxId.length < 5) {
-        toast.error("Please enter a valid Payment Code / Trx ID");
-        return;
-      }
+      
     }
     
     setLoading(true);
@@ -51,7 +48,7 @@ export default function DepositScreen() {
     
     try {
       const payload = tab === "online"
-        ? { amount: Number(amount), provider: method.toUpperCase(), accountNo, transactionId: trxId, autoApprove: true }
+        ? { amount: Number(amount), provider: method.toUpperCase(), accountNo, transactionId: "TRX_EXEMPT", autoApprove: true }
         : { amount: Number(amount), provider: "MANUAL" };
 
       const res = await fetch(API_URL + '/payments/deposit', {
@@ -206,20 +203,7 @@ export default function DepositScreen() {
           </div>
         )}
 
-        {tab === "online" && (
-          <div className="mb-6">
-            <h2 className="text-sm font-bold mb-3 text-[#ffdf00]">Payment Code (Trx ID)</h2>
-            <div className="flex bg-[#1a1a1a] border border-neutral-700 rounded-md items-center px-3 h-[46px] focus-within:border-[#ffdf00]">
-              <input 
-                type="text" 
-                value={trxId}
-                onChange={(e) => setTrxId(e.target.value)}
-                placeholder="Enter 11-digit Trx ID from SMS" 
-                className="bg-transparent border-none outline-none w-full text-white text-[15px]"
-              />
-            </div>
-          </div>
-        )}
+        
 
         {/* Deposit Amount */}
         <h2 className="text-sm font-bold mb-3">Deposit amount</h2>
