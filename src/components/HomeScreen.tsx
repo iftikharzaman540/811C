@@ -342,7 +342,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         .then(data => { 
           if(Array.isArray(data)) { 
             // Reorder games: 1. Aviator 2. Plinko 3. Chicken Road 4. Chicken Road 2.0
-            const getRank = (game) => {
+            const getRank = (game: any) => {
               const t = (game.title || game.name || "").toLowerCase();
               if (t.includes("aviator")) return 1;
               if (t.includes("plinko")) return 2;
