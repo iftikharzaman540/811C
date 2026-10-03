@@ -1196,59 +1196,6 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         </div>
         
 
-        {/* Fixed Left Global Popups */}
-        <div className="absolute top-[45%] left-1 -translate-y-1/2 z-50 flex flex-col items-start pointer-events-none">
-          
-          {/* Top Coin Popup */}
-          <div onClick={() => toast.success("Claimed bonus!")} className="relative mb-3 pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:translate-x-1">
-            {/* Green arrow indicator */}
-            <div className="absolute -left-1 z-20 w-4 h-4 bg-[#ffdf00] rounded-full flex items-center justify-center shadow-md">
-               <svg className="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" strokeWidth="4" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-            </div>
-            
-            <div className="w-[42px] h-[42px] bg-gradient-to-br from-[#ff0b0b] to-[#cc0000] rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(255,200,0,0.5)] border-2 border-[#ffdf00] relative z-10 ml-1.5">
-               <span className="text-[9px] font-black text-white italic drop-shadow-sm">Rs600</span>
-               <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-black rounded-full flex items-center justify-center shadow-lg border border-neutral-700 group-hover:bg-neutral-800 transition-colors">
-                 <span className="text-white text-[7px] font-bold">x</span>
-               </div>
-            </div>
-          </div>
-          
-          {/* Bottom Wheel Popup */}
-          <div onClick={() => toast.success("Opening lucky wheel!")} className="relative pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:translate-x-1">
-            <div className="w-[48px] h-[48px] bg-white rounded-full flex items-center justify-center shadow-xl border-[2.5px] border-[#ffdf00] relative z-10">
-               <div className="absolute -top-1.5 right-0 w-3.5 h-3.5 bg-black rounded-full flex items-center justify-center shadow-lg border border-neutral-700 group-hover:bg-neutral-800 transition-colors z-30">
-                 <span className="text-white text-[7px] font-bold">x</span>
-               </div>
-               {/* Inner wheel mockup */}
-               <div className="w-7 h-7 rounded-full border border-pink-400 flex items-center justify-center overflow-hidden shadow-inner">
-                 <div className="w-3 h-3 bg-[#ffdf00] rounded-full absolute shadow-inner"></div>
-               </div>
-               <div className="absolute -bottom-1 w-[110%] bg-[#ffdf00] text-white text-[8px] font-black text-center rounded px-0.5 shadow-md">Rs 500</div>
-               
-               <div className="absolute -top-2 -left-1 text-[13px] drop-shadow-md z-20 pointer-events-none">🐔</div>
-               <div className="absolute top-1 -right-3 text-[18px] drop-shadow-md z-0 pointer-events-none">💃</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Fixed Right Global Popups */}
-        <div className="absolute top-[35%] sm:top-[40%] right-1 -translate-y-1/2 z-50 flex flex-col items-end pointer-events-none">
-          
-          {/* Deposit Rewards Popup */}
-          <div onClick={() => toast.success("Viewing deposit rewards!")} className="relative pointer-events-auto cursor-pointer group flex items-center transition-transform duration-300 ease-out hover:scale-110 hover:-translate-x-1">
-            <div className="flex flex-col items-center bg-black/95 p-1.5 rounded-xl border border-yellow-400/80 shadow-[0_0_12px_rgba(255,200,0,0.2)] relative z-10 w-[50px]">
-              <div className="absolute top-0 right-1 w-3.5 h-3.5 bg-neutral-900 rounded-full flex items-center justify-center shadow-lg z-30 border border-neutral-700 group-hover:bg-neutral-800 transition-colors">
-                 <span className="text-white text-[7px] font-bold">x</span>
-              </div>
-              <span className="text-[14px] drop-shadow-xl absolute top-1.5 left-0 z-10">🪙</span>
-              <span className="text-[28px] drop-shadow-xl text-yellow-300 font-black italic z-0 leading-none mt-1" style={{textShadow: "0 2px 6px rgba(0,0,0,0.8)"}}>15<span className="text-[12px]">%</span></span>
-              <div className="text-white text-[6px] font-black leading-none drop-shadow-md z-20 mt-1 text-center">Deposit rewards</div>
-              <div className="text-yellow-400 text-[7px] font-black leading-none drop-shadow-md z-20 mt-0.5 mb-0.5">15 days</div>
-            </div>
-          </div>
-        </div>
-
         <Footer />
         
         {/* Floating TOP Button */}
