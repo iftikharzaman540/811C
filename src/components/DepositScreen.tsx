@@ -118,9 +118,6 @@ export default function DepositScreen() {
         </div>
 
         {/* Tabs */}
-        
-          </button>
-        </div>
 
         {/* Payment Method */}
         <h2 className="text-sm font-bold mb-3">Payment method</h2>
