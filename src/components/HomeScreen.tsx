@@ -340,19 +340,28 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       fetch('https://8111c.com/api/v1/games/gregmorn/list?t=' + Date.now())
         .then(r => r.json())
         .then(data => { 
-          if(Array.isArray(data)) { 
-            // Reorder games: 1. Aviator 2. Plinko 3. Chicken Road 4. Chicken Road 2.0
-            const getRank = (game: any) => {
-                const t = (game.title || game.name || "").toLowerCase();
-                if (t.includes("aviator")) return 1;
-                if (t.includes("plinko")) return 2;
-                if (t.includes("chicken road 2")) return 4;
-                if (t.includes("chicken road")) return 3;
-                if (t.includes("money coming")) return 6;
-                if (t.includes("fortune gems 3")) return 9;
-                if (t.includes("fortune gems 2")) return 8;
-                if (t.includes("fortune gems")) return 5;
-                return 999;
+                      if(Array.isArray(data)) { 
+              // Deduplicate by name to prevent multiple Fortune Gems
+              const seen = new Set();
+              data = data.filter(g => {
+                 const name = (g.title || g.name || "").toLowerCase().trim();
+                 if (seen.has(name)) return false;
+                 seen.add(name);
+                 return true;
+              });
+
+              // Reorder games: Plinko replaced by Dragon Tiger Luck
+              const getRank = (game: any) => {
+                  const t = (game.title || game.name || "").toLowerCase();
+                  if (t.includes("aviator")) return 1;
+                  if (t.includes("dragon tiger luck") || t.includes("dragon tiger (pg soft)")) return 2;
+                  if (t.includes("chicken road 2")) return 4;
+                  if (t.includes("chicken road")) return 3;
+                  if (t.includes("money coming")) return 6;
+                  if (t.includes("fortune gems 3")) return 9;
+                  if (t.includes("fortune gems 2")) return 8;
+                  if (t.includes("fortune gems")) return 5;
+                  return 999;
               };
             data.sort((a, b) => getRank(a) - getRank(b));
             
