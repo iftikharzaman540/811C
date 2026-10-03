@@ -19,7 +19,7 @@ export default function ProfilePage() {
 
   const menuItems = [
     { icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "My Records", subtext: "Details, records, reports, recover balance", highlight: true, link: "/records" },
-    { icon: <Settings className="w-5 h-5 text-[#ff0b0b]" />, label: "Manage withdrawal", subtext: "", highlight: false, link: "/withdraw" },`n    { icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "Deposit History", subtext: "View all your deposits", highlight: false, link: "/deposit-history" },`n    { icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "Withdrawal History", subtext: "View all your withdrawals", highlight: false, link: "/withdrawal-history" },
+    { icon: <Settings className="w-5 h-5 text-[#ff0b0b]" />, label: "Manage withdrawal", subtext: "", highlight: false, link: "/withdraw" },{ icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "Deposit History", subtext: "View all your deposits", highlight: false, link: "/deposit-history" },{ icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "Withdrawal History", subtext: "View all your withdrawals", highlight: false, link: "/withdrawal-history" },
     "divider",
     { icon: <User className="w-5 h-5 text-[#ffdf00]" />, label: "Invite", subtext: "Easy money", highlight: true, link: "/invite" },
     { icon: <User className="w-5 h-5 text-[#ffdf00]" />, label: "Profile", subtext: "", highlight: false, link: "/profile" },
@@ -142,6 +142,7 @@ export default function ProfilePage() {
     </main>
   );
 }
+
 
 
 
