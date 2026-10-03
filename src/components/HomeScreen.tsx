@@ -679,7 +679,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
-                className={`aspect-square bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl relative overflow-hidden flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.5)] group cursor-pointer border border-neutral-800 hover:border-[#ffdf00] transition-colors`}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
               >
                 {/* Top Bar */}
                 <div className="w-full flex justify-between items-start p-1.5 z-10 relative">
@@ -696,7 +696,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
                 {/* Main graphic placeholder */}
                 <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl">
-                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-contain p-1 drop-shadow-xl absolute inset-0 z-0" /> : game.graphic}
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
                 </div>
                 
 
@@ -745,11 +745,11 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
-                className={`aspect-square bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl relative overflow-hidden flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.5)] group cursor-pointer border border-neutral-800 hover:border-[#ffdf00] transition-colors`}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
               >
                 {/* Main graphic placeholder */}
                 <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl -translate-y-4">
-                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-contain p-1 drop-shadow-xl absolute inset-0 z-0" /> : game.graphic}
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
                 </div>
                 
                 {/* Fake popups for specific games */}
@@ -800,7 +800,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`aspect-square bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl relative overflow-hidden flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.5)] group cursor-pointer border border-neutral-800 hover:border-[#ffdf00] transition-colors`}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
               >
                 
                 {game.collage ? (
@@ -816,7 +816,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   </div>
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center text-[45px] drop-shadow-2xl -translate-y-4">
-                    {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-contain p-1 drop-shadow-xl absolute inset-0 z-0" /> : game.graphic}
+                    {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
                   </div>
                 )}
                 
@@ -884,11 +884,11 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
-                className={`aspect-square bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl relative overflow-hidden flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.5)] group cursor-pointer border border-neutral-800 hover:border-[#ffdf00] transition-colors`}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
               >
                 {/* Main graphic placeholder */}
                 <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
-                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-contain p-1 drop-shadow-xl absolute inset-0 z-0" /> : game.graphic}
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
                 </div>
                 
                 {/* Bottom Name Plate */}
@@ -933,11 +933,11 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
-                className={`aspect-square bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl relative overflow-hidden flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.5)] group cursor-pointer border border-neutral-800 hover:border-[#ffdf00] transition-colors`}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
               >
                 {/* Main graphic placeholder */}
                 <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
-                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-contain p-1 drop-shadow-xl absolute inset-0 z-0" /> : game.graphic}
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
                 </div>
                 
                 {/* Fake popups for specific games */}
@@ -1002,7 +1002,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
-                className={`aspect-square bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl relative overflow-hidden flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.5)] group cursor-pointer border border-neutral-800 hover:border-[#ffdf00] transition-colors`}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
               >
                 {/* Optional Star in Top Right */}
                 {game.star && (
@@ -1013,7 +1013,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               
                 {/* Main graphic placeholder */}
                 <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
-                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-contain p-1 drop-shadow-xl absolute inset-0 z-0" /> : game.graphic}
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
                 </div>
                 
                 {/* Bottom Name Plate */}
@@ -1058,7 +1058,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
-                className={`aspect-square bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] rounded-xl relative overflow-hidden flex flex-col shadow-[0_4px_12px_rgba(0,0,0,0.5)] group cursor-pointer border border-neutral-800 hover:border-[#ffdf00] transition-colors`}
+                className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
               >
                 {/* Optional Star in Top Right */}
                 {game.star && (
@@ -1069,7 +1069,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               
                 {/* Main graphic placeholder */}
                 <div className="absolute inset-0 flex items-center justify-center text-[55px] drop-shadow-2xl -translate-y-4">
-                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-contain p-1 drop-shadow-xl absolute inset-0 z-0" /> : game.graphic}
+                  {game.imageUrl ? <img src={game.imageUrl} className="w-full h-full object-cover rounded-xl absolute inset-0 z-0" /> : game.graphic}
                 </div>
 
                 {/* Fake popups for specific games */}
