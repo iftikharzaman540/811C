@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ArrowUpRight, ArrowDownRight, Clock, CheckCircle, XCircle } from "lucide-react";
+import { ChevronLeft, ArrowUpRight, ArrowDownRight, Clock, CheckCircle, XCircle, FileText } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { apiRequest } from "@/utils/api";
 
@@ -148,3 +148,4 @@ export default function RecordsPage() {
     </div>
   );
 }
+
