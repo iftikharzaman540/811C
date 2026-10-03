@@ -9,7 +9,7 @@ import BottomNav from "@/components/BottomNav";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function PromoPage() {
-  const [activeTopTab, setActiveTopTab] = useState("Mission");
+  const [activeTopTab, setActiveTopTab] = useState("Event");
   const [activeSideTab, setActiveSideTab] = useState("All");
   const [activeRebateTab, setActiveRebateTab] = useState("Mini Games");
   const [activeMissionTab, setActiveMissionTab] = useState("Newplayer");
@@ -660,6 +660,7 @@ function Banner({ title, desc, highlight, sub, icon, badge, href }: { title: str
   }
   return content;
 }
+
 
 
 
