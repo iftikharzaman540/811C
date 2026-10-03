@@ -1394,7 +1394,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <HelpCircle className="w-5 h-5 shrink-0" /> <span className="text-[14px]">FAQ</span>
                 </button>
-                <button onClick={() => { setIsMenuOpen(false); toast.success("About 8111c.com V1.0"); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
+                <button onClick={() => { setIsMenuOpen(false); window.location.href = "/about"; }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
                   <Info className="w-5 h-5 shrink-0" /> <span className="text-[14px]">About 8111c.com</span>
                 </button>
                 <button onClick={() => { setIsMenuOpen(false); router.push('/support'); }} className="p-2 flex items-center gap-3 text-neutral-400 hover:text-white transition-colors text-left w-full">
@@ -1450,6 +1450,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     </>
   );
 }
+
 
 
 

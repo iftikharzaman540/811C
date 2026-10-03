@@ -30,7 +30,7 @@ export default function ProfilePage() {
     { icon: <MessageSquare className="w-5 h-5 text-[#ffdf00]" />, label: "Reward Feedback", subtext: "", highlight: false, link: "/support" },
     { icon: <Smartphone className="w-5 h-5 text-[#ffdf00]" />, label: "Login device", subtext: "", highlight: false, action: () => toast.success("Current Device: Web/Mobile") },
     { icon: <Moon className="w-5 h-5 text-[#ffdf00]" />, label: "Night mode", subtext: "", highlight: false, action: () => toast("Night mode is active!") },
-    { icon: <Info className="w-5 h-5 text-[#ffdf00]" />, label: "About 8111C.com", subtext: "", highlight: false, action: () => toast.success("8111C.com Version 1.0.0") },
+    { icon: <Info className="w-5 h-5 text-[#ffdf00]" />, label: "About 8111C.com", subtext: "", highlight: false, link: "/about" },
   ];
 
   const handleMenuClick = (item: any) => {
@@ -142,6 +142,7 @@ export default function ProfilePage() {
     </main>
   );
 }
+
 
 
 
