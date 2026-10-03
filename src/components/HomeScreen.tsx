@@ -308,7 +308,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     }
     try {
       toast.loading("Launching game...", { id: 'launch' });
-      const res = await fetch(`https://8111c.com/api/v1/games/launch/${gameId}`, {
+      const res = await fetch('https://8111c.com/api/v1/games/gregmorn/launch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -374,7 +374,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         try {
           toast.loading("Launching game...", { id: 'launch' });
           const API_URL = "https://8111c.com/api/v1";
-          const res = await fetch(`${API_URL}/games/launch/${gameIdOrName}`, {
+          const res = await fetch(`${API_URL}/games/gregmorn/launch`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
