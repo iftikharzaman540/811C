@@ -3,7 +3,7 @@
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
-import { ChevronRight, User, Gift, Wallet, CreditCard, Banknote, FileText, Settings, Shield, Search, Globe, HelpCircle, MessageSquare, Smartphone, Moon, Info, Crown } from "lucide-react";
+import { ChevronRight, User, Gift, Wallet, CreditCard, Banknote, FileText, Settings, Shield, Search, Globe, HelpCircle, MessageSquare, Smartphone, Moon, Info, Crown, Pencil } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 
 import { useUser } from '@/context/UserContext';
@@ -22,7 +22,7 @@ export default function ProfilePage() {
     { icon: <Settings className="w-5 h-5 text-[#ff0b0b]" />, label: "Manage withdrawal", subtext: "", highlight: false, link: "/withdraw" },{ icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "Deposit History", subtext: "View all your deposits", highlight: false, link: "/deposit-history" },{ icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "Withdrawal History", subtext: "View all your withdrawals", highlight: false, link: "/withdrawal-history" },
     "divider",
     { icon: <User className="w-5 h-5 text-[#ffdf00]" />, label: "Invite", subtext: "Easy money", highlight: true, link: "/invite" },
-    { icon: <User className="w-5 h-5 text-[#ffdf00]" />, label: "Profile", subtext: "", highlight: false, link: "/profile" },
+    { icon: <User className="w-5 h-5 text-[#ffdf00]" />, label: "Profile Details", subtext: "Edit profile info", highlight: false, link: "/profile/details" },
     { icon: <Shield className="w-5 h-5 text-[#ffdf00]" />, label: "Security Center", subtext: "", highlight: false, action: () => toast.success("Opening Security Center...") },
     { icon: <Search className="w-5 h-5 text-[#ffdf00]" />, label: "Find us", subtext: "Prevent it from opening", highlight: false, action: () => toast.success("Opening Find Us...") },
     { icon: <Globe className="w-5 h-5 text-[#ffdf00]" />, label: "Language", subtext: "English", highlight: false, action: () => toast("Language is already English") },
@@ -65,9 +65,14 @@ export default function ProfilePage() {
 
           <div className="flex items-center gap-4 mt-8 relative z-10">
             {/* Avatar with glowing ring */}
-            <div onClick={() => window.location.href = "/profile/details"} className="w-[72px] h-[72px] rounded-full bg-neutral-200 border-[3px] border-[#ff3300] shadow-[0_0_15px_rgba(255,51,0,0.4)] flex items-center justify-center shrink-0 cursor-pointer relative">
-              <div className="absolute -inset-[6px] border-[2px] border-[#ff3300]/40 rounded-full"></div>
+            <div onClick={() => window.location.href = "/profile/details"} className="w-[72px] h-[72px] rounded-full bg-neutral-200 border-[3px] border-[#ff3300] shadow-[0_0_15px_rgba(255,51,0,0.4)] flex items-center justify-center shrink-0 cursor-pointer relative group">
+              <div className="absolute -inset-[6px] border-[2px] border-[#ff3300]/40 rounded-full group-hover:border-[#ff3300]/60 transition-colors"></div>
               <User className="w-10 h-10 text-neutral-400" />
+              
+              {/* Edit Pencil Badge */}
+              <div className="absolute -bottom-1 -right-1 bg-[#ff3300] border-2 border-[#0d0d0d] p-1.5 rounded-full shadow-lg z-20 group-hover:scale-110 transition-transform">
+                <Pencil className="w-3.5 h-3.5 text-white" />
+              </div>
             </div>
             
             {/* User Details */}
@@ -158,6 +163,7 @@ export default function ProfilePage() {
     </main>
   );
 }
+
 
 
 
