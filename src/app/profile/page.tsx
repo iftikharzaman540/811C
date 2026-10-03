@@ -27,7 +27,6 @@ export default function ProfilePage() {
     { icon: <Globe className="w-5 h-5 text-[#ffdf00]" />, label: "Language", subtext: "English", highlight: false, action: () => toast("Language is already English") },
     { icon: <HelpCircle className="w-5 h-5 text-[#ffdf00]" />, label: "FAQ", subtext: "", highlight: false, link: "/support" },
     { icon: <MessageSquare className="w-5 h-5 text-[#ffdf00]" />, label: "Reward Feedback", subtext: "", highlight: false, link: "/support" },
-    { icon: <Moon className="w-5 h-5 text-[#ffdf00]" />, label: "Night mode", subtext: "", highlight: false, action: () => toast("Night mode is active!") },
     { icon: <Info className="w-5 h-5 text-[#ffdf00]" />, label: "About 8111C.com", subtext: "", highlight: false, link: "/about" },
   ];
 
@@ -161,6 +160,7 @@ export default function ProfilePage() {
     </main>
   );
 }
+
 
 
 
