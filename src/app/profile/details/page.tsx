@@ -69,6 +69,30 @@ export default function ProfileDetailsPage() {
     }
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Upload failed");
+      const data = await res.json();
+      
+      // Update local state temporarily, backend will be updated on Save
+      setUser((prev: any) => ({ ...prev, avatar: data.url }));
+      alert("Avatar uploaded! Click Save to apply changes.");
+    } catch (e: any) {
+      alert("Error uploading image");
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -268,3 +292,4 @@ export default function ProfileDetailsPage() {
     </div>
   );
 }
+
