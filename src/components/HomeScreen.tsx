@@ -340,7 +340,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       fetch('https://8111c.com/api/v1/games/gregmorn/list?t=' + Date.now())
         .then(r => r.json())
         .then(data => { 
-                                                                      if(Array.isArray(data)) { 
+                                                                                              if(Array.isArray(data)) { 
               // Deduplicate by name to prevent multiple Fortune Gems
               const seen = new Set();
               data = data.filter(g => {
@@ -350,22 +350,30 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                  return true;
               });
 
-              // Reorder games
+              // Reorder games: Explicit 15 game sequence
               const getRank = (game: any) => {
                   const t = (game.title || game.name || "").toLowerCase();
                   if (t === "aviator" || t.includes("aviator")) return 1;
                   if (t === "plinko" || t.includes("plinko")) return 2;
-                  if (t.includes("chicken road 2")) return 4;
-                  if (t.includes("chicken road")) return 3;
+                  if (t.includes("chicken road")) {
+                      if (t.includes("2")) return 4;
+                      return 3;
+                  }
                   if (t.includes("dragon tiger luck") || t.includes("dragon tiger (pg soft)")) return 5;
                   if (t.includes("money coming")) return 6;
+                  if (t.includes("fortune gems")) {
+                      if (t.includes("3")) return 999; // We skip 3 if they only wanted 15
+                      if (t.includes("2")) return 11;
+                      return 7;
+                  }
+                  if (t.includes("super ace joker")) return 8;
                   if (t.includes("super dragon tiger")) return 9;
                   if (t.includes("dragon tiger fortune")) return 10;
                   if (t === "mines" || t.includes("mines")) return 12;
-                  if (t.includes("fortune gems 3")) return 13;
-                  if (t.includes("fortune gems 2")) return 11;
-                  if (t.includes("super ace joker")) return 8;
-                  if (t === "fortune gems" || t.includes("fortune gems")) return 7;
+                  if (t.replace(/\s/g, "") === "blackjack") return 13;
+                  if (t.replace(/\s/g, "") === "roulette") return 14;
+                  if (t === "ocean monster 3" || t.includes("ocean monster 3")) return 15;
+
                   return 999;
               };
             data.sort((a: any, b: any) => getRank(a) - getRank(b));
