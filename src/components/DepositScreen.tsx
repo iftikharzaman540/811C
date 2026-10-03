@@ -100,8 +100,8 @@ export default function DepositScreen() {
         </button>
         <h1 className="text-lg font-bold">Deposit</h1>
         <div className="flex gap-4 text-[#1fdf1f]">
-          <HeadphonesIcon className="w-5 h-5" />
-          <FileText className="w-5 h-5" />
+          <HeadphonesIcon className="w-5 h-5 cursor-pointer" onClick={() => router.push("/support")} />
+          <FileText className="w-5 h-5 cursor-pointer" onClick={() => router.push("/deposit-history")} />
         </div>
       </div>
 
@@ -324,6 +324,7 @@ export default function DepositScreen() {
     </div>
   );
 }
+
 
 
 
