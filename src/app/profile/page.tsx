@@ -18,7 +18,7 @@ export default function ProfilePage() {
   }, []);
 
   const menuItems = [
-    { icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "My Records", subtext: "Details, records, reports, recover balance", highlight: true, link: "/admin/financials" },
+    { icon: <FileText className="w-5 h-5 text-[#ffdf00]" />, label: "My Records", subtext: "Details, records, reports, recover balance", highlight: true, link: "/records" },
     { icon: <Settings className="w-5 h-5 text-[#ff0b0b]" />, label: "Manage withdrawal", subtext: "", highlight: false, link: "/withdraw" },
     "divider",
     { icon: <User className="w-5 h-5 text-[#ffdf00]" />, label: "Invite", subtext: "Easy money", highlight: true, link: "/invite" },
@@ -142,6 +142,7 @@ export default function ProfilePage() {
     </main>
   );
 }
+
 
 
 
