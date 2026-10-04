@@ -7,9 +7,10 @@ import { AdminSupportModule } from './admin-support/admin-support.module';
 import { AdminMarketingModule } from './admin-marketing/admin-marketing.module';
 import { AdminKycModule } from './admin-kyc/admin-kyc.module';
 import { AdminDashboardModule } from './admin-dashboard/admin-dashboard.module';
+import { AdminVipModule } from './admin-vip/admin-vip.module';
 
 @Module({
-  imports: [AdminUsersModule, AdminFinancesModule, AdminSettingsModule, AdminCmsModule, AdminSupportModule, AdminMarketingModule, AdminKycModule, AdminDashboardModule]
+  imports: [AdminUsersModule, AdminFinancesModule, AdminSettingsModule, AdminCmsModule, AdminSupportModule, AdminMarketingModule, AdminKycModule, AdminDashboardModule, AdminVipModule]
 })
 export class AdminModule {}
 
