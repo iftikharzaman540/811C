@@ -1,4 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+const fs = require('fs');
+let code = fs.readFileSync('src/components/LiveChatPopup.tsx', 'utf8');
+
+// Replace everything inside the component with the new real API logic
+const newComponent = `import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, Send, User, Headset, Menu, X, Paperclip, Image as ImageIcon, Gift } from 'lucide-react';
 
@@ -45,7 +49,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
            msgs.push({
              id: 'welcome',
              sender: 'agent',
-             text: "Welcome to 8111C.COM Official Support\n\nHello! You are now connected to 8111C.COM live support.\nStart your earning journey with us!\n\nIf you have any issues related to your account, deposit, or withdrawal don't worry, we're here to help!\n\nSend your message and our team will assist you, Thank you",
+             text: "Welcome to 8111C.COM Official Support\\n\\nHello! You are now connected to 8111C.COM live support.\\nStart your earning journey with us!\\n\\nIf you have any issues related to your account, deposit, or withdrawal don't worry, we're here to help!\\n\\nSend your message and our team will assist you, Thank you",
              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
            });
         }
@@ -163,14 +167,14 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
         </div>
         
         {messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+          <div key={msg.id} className={\`flex \${msg.sender === 'user' ? 'justify-end' : 'justify-start'}\`}>
             {msg.sender === 'agent' && (
               <div className="w-8 h-8 rounded-full bg-[#cc0000] flex items-center justify-center text-white mr-2 shrink-0 shadow-md">
                 <Headset className="w-5 h-5" />
               </div>
             )}
             
-            <div className={`max-w-[75%] rounded-2xl p-3 shadow-sm ${msg.sender === 'user' ? 'bg-[#ffdf00] text-black rounded-tr-sm' : 'bg-white text-neutral-800 rounded-tl-sm border border-neutral-100'}`}>
+            <div className={\`max-w-[75%] rounded-2xl p-3 shadow-sm \${msg.sender === 'user' ? 'bg-[#ffdf00] text-black rounded-tr-sm' : 'bg-white text-neutral-800 rounded-tl-sm border border-neutral-100'}\`}>
               {msg.image ? (
                 <div className="flex flex-col gap-2">
                   <img src={msg.image} alt="attachment" className="rounded-lg max-w-full" />
@@ -179,7 +183,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
               ) : (
                 <p className="text-[14px] leading-relaxed whitespace-pre-wrap">{msg.text}</p>
               )}
-              <div className={`text-[10px] mt-1.5 flex items-center gap-1 ${msg.sender === 'user' ? 'text-black/50 justify-end' : 'text-neutral-400'}`}>
+              <div className={\`text-[10px] mt-1.5 flex items-center gap-1 \${msg.sender === 'user' ? 'text-black/50 justify-end' : 'text-neutral-400'}\`}>
                 {msg.time}
               </div>
             </div>
@@ -226,7 +230,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
         <button 
           onClick={handleSend}
           disabled={!inputValue.trim()}
-          className={`p-2.5 rounded-full flex items-center justify-center transition-all ${inputValue.trim() ? 'bg-[#ffdf00] text-black shadow-md hover:scale-105' : 'bg-neutral-100 text-neutral-400'}`}
+          className={\`p-2.5 rounded-full flex items-center justify-center transition-all \${inputValue.trim() ? 'bg-[#ffdf00] text-black shadow-md hover:scale-105' : 'bg-neutral-100 text-neutral-400'}\`}
         >
           <Send className="w-5 h-5" />
         </button>
@@ -234,3 +238,7 @@ export default function LiveChatPopup({ onClose }: { onClose: () => void }) {
     </motion.div>
   );
 }
+`;
+
+fs.writeFileSync('src/components/LiveChatPopup.tsx', newComponent);
+console.log("Patched LiveChatPopup.tsx to use real Support API");
