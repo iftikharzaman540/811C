@@ -47,7 +47,7 @@ export class AdminUsersService {
       select: {
         id: true, player_id: true, username: true, email: true, phone: true,
         role: true, status: true, created_at: true, country: true, avatar: true,
-        total_deposited: true,
+        total_deposited: true, current_wagering_requirement: true, current_wagering_completed: true,
         wallet: true,
         game_history: { take: 10, orderBy: { created_at: 'desc' } },
       },

@@ -19,13 +19,19 @@ export class WalletService {
   
   async updateWageringCompleted(userId: string, betAmount: number) {
     if (betAmount <= 0) return;
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { current_wagering_completed: true, current_wagering_requirement: true } });
+    if (!user) return;
     
-    // We update current_wagering_completed for this user.
-    await this.prisma.$executeRaw`
-       UPDATE "User" 
-       SET current_wagering_completed = LEAST(current_wagering_completed + ${betAmount}, current_wagering_requirement)
-       WHERE id = '${userId}'
-    `;
+    const currentReq = Number(user.current_wagering_requirement || 0);
+    const currentComp = Number(user.current_wagering_completed || 0);
+    
+    if (currentComp < currentReq) {
+      const newComp = Math.min(currentComp + betAmount, currentReq);
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: { current_wagering_completed: newComp }
+      });
+    }
   }
 
   async processTransaction(data: {
@@ -44,7 +50,7 @@ export class WalletService {
         if (!wallet) throw new BadRequestException('Wallet not found');
 
         // WAGERING REQUIREMENT UPDATE
-        if (data.type === 'DEPOSIT' && data.amount > 0) {
+        if ((data.type === 'DEPOSIT' || data.type === 'BONUS') && data.amount > 0) {
            const currentReq = Number(wallet.user.current_wagering_requirement || 0);
            const currentComp = Number(wallet.user.current_wagering_completed || 0);
            

@@ -93,6 +93,11 @@ export class GregmornWebhookController {
           // Process transaction (deduct bet, add win)
           const netAmount = winAmount - betAmount;
           
+          // Track wagering requirement
+          if (betAmount > 0) {
+            await this.walletService.updateWageringCompleted(effectiveUserId, betAmount).catch(e => this.logger.error('Wagering update error:', e));
+          }
+          
           if (netAmount !== 0) {
             const existingTx = await this.walletService.getTransactionByReference(transactionId);
             if (existingTx) {

@@ -54,6 +54,11 @@ export class GamesCallbackController {
           referenceId: transaction_id,
           description: `Bet on game`,
         });
+        
+        // Track wagering requirement
+        if (parseFloat(amount) > 0) {
+          await this.walletService.updateWageringCompleted(player_id, parseFloat(amount)).catch(e => console.error('Wagering error:', e));
+        }
 
         // Trigger affiliate commission asynchronously (fire & forget)
         this.referralsService.processBetCommission(player_id, parseFloat(amount)).catch(err => {

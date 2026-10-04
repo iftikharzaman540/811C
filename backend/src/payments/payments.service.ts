@@ -201,6 +201,14 @@ export class PaymentsService {
       throw new BadRequestException('Withdrawals are currently restricted for your account. Please contact support.');
     }
     
+    // WAGERING REQUIREMENT CHECK
+    const req = Number(user.current_wagering_requirement || 0);
+    const comp = Number(user.current_wagering_completed || 0);
+    if (req > 0 && comp < req) {
+      const remaining = req - comp;
+      throw new BadRequestException(`You need to complete ${remaining} PKR more in valid bets before you can withdraw.`);
+    }
+    
     const wallet = user.wallet;
 
     // Check 1: Minimum amount

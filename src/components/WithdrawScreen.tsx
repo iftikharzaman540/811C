@@ -165,7 +165,35 @@ export default function WithdrawScreen() {
     <div className="min-h-screen bg-[#111] text-white flex flex-col font-sans pb-24">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-[#1a1a1a] sticky top-0 z-50 border-b border-neutral-800">
-        <button onClick={() => router.back()} className="text-neutral-400 hover:text-white p-1 -ml-1">
+        
+            <div className="mb-5 text-[13px] space-y-1.5 font-medium">
+              {req > 0 && !isEligible && (
+                <div className="text-[#4a90e2] flex items-start gap-1.5">
+                  <span className="mt-1.5 w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
+                  You still need {remaining.toLocaleString()} valid bets to withdraw money!
+                </div>
+              )}
+              {req > 0 && isEligible && (
+                <div className="text-green-500 flex items-start gap-1.5">
+                  <span className="mt-1.5 w-1 h-1 bg-green-500 rounded-full shrink-0"></span>
+                  You have completed the required valid bets.
+                </div>
+              )}
+              <div className="text-[#4a90e2] flex items-center gap-1.5">
+                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
+                Withdraw time 00:00-23:59
+              </div>
+              <div className="text-[#4a90e2] flex items-center gap-1.5">
+                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
+                Inday Remaining Withdrawal Times: {remainingDaily}
+              </div>
+              <div className="text-[#4a90e2] flex items-center gap-1.5">
+                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
+                Withdrawal amount range: 500-50,000
+              </div>
+            </div>
+
+            <button onClick={() => router.back()} className="text-neutral-400 hover:text-white p-1 -ml-1">
           <ChevronLeft className="w-6 h-6" />
         </button>
         <h1 className="text-lg font-bold">{!hasPassword ? "Withdrawal Password" : "Withdraw Funds"}</h1>
@@ -345,8 +373,8 @@ export default function WithdrawScreen() {
 
             <button 
               onClick={handleWithdraw}
-              disabled={isSubmitting || withdrawPwd.length !== 6 || !amount || !accountNo || !accountTitle || cnic.length !== 13 || (provider === "BANK_TRANSFER" && !bankName)}
-              className={`w-full py-4 rounded-lg font-bold text-[16px] text-black ${!isSubmitting && withdrawPwd.length === 6 && amount && accountNo && accountTitle && cnic.length === 13 && (provider !== "BANK_TRANSFER" || bankName) ? "bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] shadow-[0_4px_15px_rgba(255,223,0,0.3)] hover:scale-[0.98]" : "bg-[#807000] text-neutral-400 cursor-not-allowed"} transition-all`}
+              disabled={isSubmitting || withdrawPwd.length !== 6 || !amount || !accountNo || !accountTitle || cnic.length !== 13 || (provider === "BANK_TRANSFER" && !bankName) || !isEligible}
+              className={`w-full py-4 rounded-lg font-bold text-[16px] text-black ${!isSubmitting && isEligible && withdrawPwd.length === 6 && amount && accountNo && accountTitle && cnic.length === 13 && (provider !== "BANK_TRANSFER" || bankName) ? "bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] shadow-[0_4px_15px_rgba(255,223,0,0.3)] hover:scale-[0.98]" : "bg-[#807000] text-neutral-400 cursor-not-allowed"} transition-all`}
             >
               {isSubmitting ? "Processing..." : "Submit Withdrawal"}
             </button>
