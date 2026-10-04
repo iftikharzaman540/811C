@@ -43,7 +43,7 @@ export class XpressPayProvider {
       const payload: Record<string, any> = {
         appId: this.appId,
         merOrderNo: reference,
-        amount: Number(amount).toFixed(2),
+        amount: Number(amount),
         channel: channel.toUpperCase(), // EASYPAISA or JAZZCASH
         customerMobile: mobile || '03001234567',
         customerName: customerName || 'Player',

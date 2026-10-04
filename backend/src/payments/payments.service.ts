@@ -94,7 +94,14 @@ export class PaymentsService {
       channel: providerName
     };
 
-    const providerResponse = await this.xpressPay.initiateDeposit(amount, reference, metadata);
+    let providerResponse;
+    try {
+      providerResponse = await this.xpressPay.initiateDeposit(amount, reference, metadata);
+    } catch (error: any) {
+      await this.prisma.payment.update({ where: { id: payment.id }, data: { status: 'REJECTED' } });
+      await this.prisma.deposit.updateMany({ where: { transaction_ref: reference }, data: { status: 'REJECTED' } });
+      throw new BadRequestException(error.message || 'Payment gateway rejected the request');
+    }
     
     // Save gateway order number
     await this.prisma.payment.update({
