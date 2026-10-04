@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
@@ -118,7 +119,7 @@ async register(dto: RegisterDto) {
   async refreshToken(refreshToken: string) {
     try {
       const payload = this.jwtService.verify(refreshToken);
-      return this.generateTokens(payload.sub, payload.role);
+      return this.generateTokens(payload.sub, payload.role, payload.session_id);
     } catch (e) {
       throw new UnauthorizedException('Invalid refresh token');
     }
@@ -168,8 +169,16 @@ async register(dto: RegisterDto) {
     };
   }
 
-  private async generateTokens(userId: string, role: string) {
-    const payload = { sub: userId, role };
+  private async generateTokens(userId: string, role: string, providedSessionId?: string) {
+    const sessionId = providedSessionId || crypto.randomUUID();
+    
+    // Save to DB
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { active_session_id: sessionId }
+    });
+
+    const payload = { sub: userId, role, session_id: sessionId };
     return {
       access_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
       refresh_token: this.jwtService.sign(payload, { expiresIn: '30d' }),

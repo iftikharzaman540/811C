@@ -1,3 +1,7 @@
+const fs = require('fs');
+let code = fs.readFileSync('backend/src/auth/jwt.strategy.ts', 'utf8');
+
+const replacement = `
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -27,3 +31,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return { userId: payload.sub, role: payload.role, session_id: payload.session_id };
   }
 }
+`;
+
+fs.writeFileSync('backend/src/auth/jwt.strategy.ts', replacement.trim());
+console.log("Updated JWT strategy!");
