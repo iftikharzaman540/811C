@@ -332,6 +332,18 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [isDepositMenuOpen, setIsDepositMenuOpen] = useState(false);
   const [gameUrl, setGameUrl] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    if (gameUrl) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [gameUrl]);
+
   
   const { user, logout } = useUser();
   const [notifications, setNotifications] = useState<any[]>([]);
