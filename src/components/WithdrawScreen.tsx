@@ -10,45 +10,13 @@ export default function WithdrawScreen() {
   const router = useRouter();
   const { user, loading: userLoading, refreshUser } = useUser();
   useEffect(() => { if (!userLoading && !user) { toast.error("Please login first"); router.push("/"); } }, [user, userLoading, router]);
-  const [hasPassword, setHasPassword] = useState<boolean | null>(null);
-  
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
   const [amount, setAmount] = useState("");
   const [accountNo, setAccountNo] = useState("");
   const [accountTitle, setAccountTitle] = useState("");
   const [cnic, setCnic] = useState("");
   const [bankName, setBankName] = useState("");
   const [provider, setProvider] = useState("JAZZCASH");
-  const [withdrawPwd, setWithdrawPwd] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("withdraw_pwd");
-      setHasPassword(!!stored);
-    }
-  }, []);
-
-  const handleInput = (val: string, setter: (v: string) => void) => {
-    const clean = val.replace(/\D/g, "").slice(0, 6);
-    setter(clean);
-  };
-
-  const handleSetPassword = () => {
-    if (password.length !== 6 || confirmPassword.length !== 6) {
-      toast.error("Password must be 6 digits");
-      return;
-    }
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-    localStorage.setItem("withdraw_pwd", password);
-    toast.success("Withdrawal password set successfully!");
-    setHasPassword(true);
-  };
 
   const handleWithdraw = async () => {
     if (!amount || isNaN(Number(amount)) || Number(amount) < 500) {
@@ -78,11 +46,6 @@ export default function WithdrawScreen() {
         return;
       }
     }
-    if (withdrawPwd !== localStorage.getItem("withdraw_pwd")) {
-      toast.error("Incorrect withdrawal password");
-      return;
-    }
-
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Please login first");
@@ -122,7 +85,6 @@ export default function WithdrawScreen() {
         toast.success("Withdrawal request submitted!");
         setAmount("");
         setAccountNo("");
-        setWithdrawPwd("");
         if (refreshUser) refreshUser(); // Refresh balance
         router.push("/profile");
       } else {
@@ -136,21 +98,6 @@ export default function WithdrawScreen() {
     }
   };
 
-  const renderBoxes = (value: string) => {
-    return (
-      <div className="flex w-full border border-neutral-700 rounded-md overflow-hidden bg-[#151515]">
-        {[...Array(6)].map((_, i) => (
-          <div 
-            key={i} 
-            className={`flex-1 h-[46px] flex items-center justify-center text-xl font-bold border-r border-neutral-700 last:border-r-0 ${value[i] ? "text-white" : "text-transparent"}`}
-          >
-            {value[i] ? "●" : ""}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   const req = Number(user?.current_wagering_requirement || 0);
   const comp = Number(user?.current_wagering_completed || 0);
   const remaining = Math.max(0, req - comp);
@@ -159,110 +106,27 @@ export default function WithdrawScreen() {
   const todayCount = Number(user?.today_withdrawals_count || 0);
   const remainingDaily = Math.max(0, 15 - todayCount);
 
-  if (hasPassword === null) return <div className="min-h-screen bg-[#111]"></div>;
+  
+  const req = Number(user?.current_wagering_requirement || 0);
+  const comp = Number(user?.current_wagering_completed || 0);
+  const remaining = Math.max(0, req - comp);
+  const isEligible = comp >= req;
+  const todayCount = Number(user?.today_withdrawals_count || 0);
+  const remainingDaily = Math.max(0, 15 - todayCount);
 
   return (
     <div className="min-h-screen bg-[#111] text-white flex flex-col font-sans pb-24">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-[#1a1a1a] sticky top-0 z-50 border-b border-neutral-800">
-        
-            <div className="mb-5 text-[13px] space-y-1.5 font-medium">
-              {req > 0 && !isEligible && (
-                <div className="text-[#4a90e2] flex items-start gap-1.5">
-                  <span className="mt-1.5 w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
-                  You still need {remaining.toLocaleString()} valid bets to withdraw money!
-                </div>
-              )}
-              {req > 0 && isEligible && (
-                <div className="text-green-500 flex items-start gap-1.5">
-                  <span className="mt-1.5 w-1 h-1 bg-green-500 rounded-full shrink-0"></span>
-                  You have completed the required valid bets.
-                </div>
-              )}
-              <div className="text-[#4a90e2] flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
-                Withdraw time 00:00-23:59
-              </div>
-              <div className="text-[#4a90e2] flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
-                Inday Remaining Withdrawal Times: {remainingDaily}
-              </div>
-              <div className="text-[#4a90e2] flex items-center gap-1.5">
-                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
-                Withdrawal amount range: 500-50,000
-              </div>
-            </div>
-
-            <button onClick={() => router.back()} className="text-neutral-400 hover:text-white p-1 -ml-1">
+        <button onClick={() => router.back()} className="text-neutral-400 hover:text-white p-1 -ml-1">
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="text-lg font-bold">{!hasPassword ? "Withdrawal Password" : "Withdraw Funds"}</h1>
+        <h1 className="text-lg font-bold">Withdraw Funds</h1>
         <div className="w-8"></div>
       </div>
 
       <div className="flex-1 px-4 pt-6 max-w-[400px] mx-auto w-full">
-        {!hasPassword ? (
-          <>
-            <p className="text-[#1fdf1f] text-center text-sm font-medium mb-8 leading-tight">
-              For the safety of your funds, you need to set a withdrawal password first!
-            </p>
-
-            <div className="mb-6 relative">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-[15px] font-medium">Set up Withdrawal Password</span>
-                <EyeOff className="w-4 h-4 text-neutral-600" />
-              </div>
-              <div className="relative">
-                {renderBoxes(password)}
-                <input 
-                  type="text" 
-                  inputMode="numeric" 
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-text"
-                  value={password}
-                  onChange={(e) => handleInput(e.target.value, setPassword)}
-                />
-              </div>
-            </div>
-
-            <div className="mb-6 relative">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-[15px] font-medium">Confirm new Withdrawal Password</span>
-                <EyeOff className="w-4 h-4 text-neutral-600" />
-              </div>
-              <div className="relative">
-                {renderBoxes(confirmPassword)}
-                <input 
-                  type="text" 
-                  inputMode="numeric" 
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-text"
-                  value={confirmPassword}
-                  onChange={(e) => handleInput(e.target.value, setConfirmPassword)}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-start gap-1.5 text-[#ff5555] text-xs leading-tight">
-              <div className="bg-[#ff5555] text-white rounded-full w-3.5 h-3.5 flex items-center justify-center shrink-0 mt-0.5">
-                <span className="text-[10px] font-bold">!</span>
-              </div>
-              <p>
-                Attention: The withdrawal password protects your funds and is extremely important. Keep it to yourself to prevent any financial loss
-              </p>
-            </div>
-
-            <div className="mt-8">
-              <button 
-                onClick={handleSetPassword}
-                className={`w-full py-3.5 rounded-lg font-bold text-[15px] text-black ${password.length === 6 && confirmPassword.length === 6 ? "bg-[#66df2f] hover:bg-[#55cc25] shadow-[0_2px_15px_rgba(31,223,31,0.3)]" : "bg-[#80e550] opacity-80"}`}
-              >
-                Confirm
-              </button>
-            </div>
-          </>
-        ) : (
-          <>
-            
-            {/* Real Withdraw UI */}
+        {/* Real Withdraw UI */}
             
             <div className="bg-gradient-to-r from-neutral-800 to-neutral-900 rounded-xl p-4 mb-6 border border-neutral-700 shadow-lg">
               <p className="text-neutral-400 text-sm mb-1">Available Balance</p>
@@ -357,29 +221,43 @@ export default function WithdrawScreen() {
               />
             </div>
 
-            <div className="mb-8 relative">
-              <label className="text-sm font-medium text-neutral-300 block mb-2">Withdrawal Password</label>
-              <div className="relative">
-                {renderBoxes(withdrawPwd)}
-                <input 
-                  type="text" 
-                  inputMode="numeric" 
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-text"
-                  value={withdrawPwd}
-                  onChange={(e) => handleInput(e.target.value, setWithdrawPwd)}
-                />
+            
+
+            
+            <div className="mb-5 text-[13px] space-y-1.5 font-medium">
+              {req > 0 && !isEligible && (
+                <div className="text-[#4a90e2] flex items-start gap-1.5">
+                  <span className="mt-1.5 w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
+                  You still need {remaining.toLocaleString()} valid bets to withdraw money!
+                </div>
+              )}
+              {req > 0 && isEligible && (
+                <div className="text-green-500 flex items-start gap-1.5">
+                  <span className="mt-1.5 w-1 h-1 bg-green-500 rounded-full shrink-0"></span>
+                  You have completed the required valid bets.
+                </div>
+              )}
+              <div className="text-[#4a90e2] flex items-center gap-1.5">
+                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
+                Withdraw time 00:00-23:59
+              </div>
+              <div className="text-[#4a90e2] flex items-center gap-1.5">
+                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
+                Inday Remaining Withdrawal Times: {remainingDaily}
+              </div>
+              <div className="text-[#4a90e2] flex items-center gap-1.5">
+                <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
+                Withdrawal amount range: 500-50,000
               </div>
             </div>
 
             <button 
               onClick={handleWithdraw}
-              disabled={isSubmitting || withdrawPwd.length !== 6 || !amount || !accountNo || !accountTitle || cnic.length !== 13 || (provider === "BANK_TRANSFER" && !bankName) || !isEligible}
-              className={`w-full py-4 rounded-lg font-bold text-[16px] text-black ${!isSubmitting && isEligible && withdrawPwd.length === 6 && amount && accountNo && accountTitle && cnic.length === 13 && (provider !== "BANK_TRANSFER" || bankName) ? "bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] shadow-[0_4px_15px_rgba(255,223,0,0.3)] hover:scale-[0.98]" : "bg-[#807000] text-neutral-400 cursor-not-allowed"} transition-all`}
+              disabled={isSubmitting || !isEligible || !amount || !accountNo || !accountTitle || cnic.length !== 13 || (provider === "BANK_TRANSFER" && !bankName)}
+              className={`w-full py-4 rounded-lg font-bold text-[16px] text-black ${!isSubmitting && isEligible && amount && accountNo && accountTitle && cnic.length === 13 && (provider !== "BANK_TRANSFER" || bankName) ? "bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] shadow-[0_4px_15px_rgba(255,223,0,0.3)] hover:scale-[0.98]" : "bg-[#807000] text-neutral-400 cursor-not-allowed"} transition-all`}
             >
               {isSubmitting ? "Processing..." : "Submit Withdrawal"}
             </button>
-          </>
-        )}
       </div>
     </div>
   );
