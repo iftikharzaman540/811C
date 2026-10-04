@@ -1,4 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+const fs = require('fs');
+
+const code = `import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditLogsService } from '../audit-logs/audit-logs.service';
 
@@ -110,3 +112,11 @@ export class AdminUsersService {
     return updated;
   }
 }
+`;
+
+fs.writeFileSync('backend/src/admin-users/admin-users.service.ts', code);
+// also save it in the other admin folder just in case
+if(fs.existsSync('backend/src/admin/admin-users')) {
+  fs.writeFileSync('backend/src/admin/admin-users/admin-users.service.ts', code);
+}
+console.log("Updated admin-users.service.ts locally");

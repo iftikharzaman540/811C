@@ -1,148 +1,112 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { AuditLogsService } from '../audit-logs/audit-logs.service';
 
 @Injectable()
 export class AdminUsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private auditLogs: AuditLogsService
+  ) {}
 
-  async findAll(page: number = 1, limit: number = 20, search?: string) {
+  async getUsers(page = 1, limit = 20, search?: string, status?: any) {
     const skip = (page - 1) * limit;
-    
-        const numericSearch = parseInt(search);
-    const where: Prisma.UserWhereInput = search
-      ? {
-          OR: [
-            { username: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } },
-            { id: { contains: search } },
-            ...(isNaN(numericSearch) ? [] : [{ player_id: numericSearch }])
-          ],
-        }
-      : {};
+    const where: any = {};
+    if (status) where.status = status;
+    if (search) {
+      where.OR = [
+        { username: { contains: search, mode: 'insensitive' } },
+        { email: { contains: search, mode: 'insensitive' } },
+      ];
+    }
 
-    const [users, total] = await Promise.all([
+    const [data, total] = await Promise.all([
       this.prisma.user.findMany({
         where,
         skip,
         take: limit,
+        select: {
+          id: true, player_id: true, username: true, email: true, phone: true,
+          role: true, status: true, created_at: true,
+          wallet: { select: { balance: true, currency: true } }
+        },
         orderBy: { created_at: 'desc' },
-        include: {
-          wallet: { select: { balance: true, bonus_balance: true } }
-        }
       }),
-      this.prisma.user.count({ where })
+      this.prisma.user.count({ where }),
     ]);
 
     return {
-      data: users,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit)
-      }
+      data,
+      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
     };
   }
 
-  async findOne(id: string) {
+  async getUserDetails(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true, player_id: true, username: true, email: true, phone: true,
+        role: true, status: true, created_at: true, country: true, avatar: true,
+        total_deposited: true,
         wallet: true,
-        kyc_documents: true,
-        vip_level: true,
-      }
+        game_history: { take: 10, orderBy: { created_at: 'desc' } },
+      },
     });
-
     if (!user) throw new NotFoundException('User not found');
-    return user;
-  }
+    
+    // Also get wallet transactions
+    let walletTransactions = [];
+    if (user.wallet) {
+      walletTransactions = await this.prisma.walletTransaction.findMany({
+        where: { wallet_id: user.wallet.id },
+        take: 10,
+        orderBy: { created_at: 'desc' }
+      });
+    }
 
-  async updateUser(id: string, updateData: any, adminId: string) {
-    // 1. Get old user data for audit log
-    const oldUser = await this.prisma.user.findUnique({ where: { id } });
-    if (!oldUser) throw new NotFoundException('User not found');
-
-    // 2. Update user
-    const newUser = await this.prisma.user.update({
-      where: { id },
-      data: updateData
-    });
-
-    // 3. Log action
-    await this.prisma.auditLog.create({
-      data: {
-        admin_id: adminId,
-        user_id: id,
-        action: 'UPDATE_USER_PROFILE',
-        entity: 'User',
-        entity_id: id,
-        old_value: oldUser as any,
-        new_value: newUser as any,
-      }
-    });
-
-    return newUser;
-  }
-
-  // --- ADMIN MANAGEMENT ---
-  async getAdmins() {
-    return this.prisma.user.findMany({
-      where: { role: { in: ['ADMIN', 'SUPER_ADMIN'] } },
+    // Get all deposits and withdrawals for the history tables
+    const allPayments = await this.prisma.payment.findMany({
+      where: { user_id: id },
       orderBy: { created_at: 'desc' }
     });
+
+    const deposits = allPayments.filter(p => p.type === 'DEPOSIT');
+    const withdrawals = allPayments.filter(p => p.type === 'WITHDRAWAL');
+
+    // Calculate total withdrawn
+    const totalWithdrawn = withdrawals
+      .filter(p => p.status === 'COMPLETED')
+      .reduce((sum, p) => sum + Number(p.amount), 0);
+
+    return { 
+      ...user, 
+      recent_transactions: walletTransactions,
+      deposits,
+      withdrawals,
+      total_withdrawn: totalWithdrawn
+    };
   }
 
-  async createAdmin(data: any, creatorAdminId: string) {
-    const { email, username, password, permissions, role } = data;
-    
-    // In a real app we should hash the password using bcrypt. 
-    // Assuming password_hash field:
-    const crypto = require('crypto');
-    const password_hash = crypto.createHash('sha256').update(password || '123456').digest('hex');
+  async updateStatus(adminId: string, userId: string, status: any) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new NotFoundException('User not found');
 
-    const admin = await this.prisma.user.create({
-      data: {
-        email,
-        username,
-        password_hash,
-        role: role || 'ADMIN',
-        permissions: permissions || [],
-      }
+    const updated = await this.prisma.user.update({
+      where: { id: userId },
+      data: { status },
+      select: { id: true, status: true, email: true, username: true }
     });
 
-    await this.prisma.auditLog.create({
-      data: {
-        admin_id: creatorAdminId,
-        action: 'CREATE_ADMIN',
-        entity: 'User',
-        entity_id: admin.id,
-        new_value: admin as any,
-      }
+    await this.auditLogs.logAction({
+      admin_id: adminId,
+      user_id: userId,
+      action: 'UPDATE_USER_STATUS',
+      entity: 'USER',
+      entity_id: userId,
+      old_value: { status: user.status },
+      new_value: { status: updated.status },
     });
 
-    return admin;
-  }
-
-  async updateAdminPermissions(id: string, permissions: string[], role: any, updaterId: string) {
-    const admin = await this.prisma.user.update({
-      where: { id },
-      data: { permissions, role }
-    });
-
-    await this.prisma.auditLog.create({
-      data: {
-        admin_id: updaterId,
-        user_id: id,
-        action: 'UPDATE_ADMIN_PERMISSIONS',
-        entity: 'User',
-        entity_id: admin.id,
-        new_value: { permissions, role } as any,
-      }
-    });
-
-    return admin;
+    return updated;
   }
 }
-

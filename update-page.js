@@ -1,4 +1,6 @@
-"use client";
+const fs = require('fs');
+
+const code = `"use client";
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
@@ -33,7 +35,7 @@ export default function UserProfilePage() {
 
   const fetchUser = async () => {
     try {
-      const res = await apiRequest(`/admin/users/${id}`);
+      const res = await apiRequest(\`/admin/users/\${id}\`);
       setUser(res);
       setFormData({
         status: res.status || 'ACTIVE',
@@ -56,7 +58,7 @@ export default function UserProfilePage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      await apiRequest(`/admin/users/${id}`, {
+      await apiRequest(\`/admin/users/\${id}\`, {
         method: 'PATCH',
         body: JSON.stringify(formData)
       });
@@ -194,7 +196,7 @@ export default function UserProfilePage() {
               </div>
               
               <Link 
-                href={`/admin/finances/wallet-adjustments?userId=${user.id}`}
+                href={\`/admin/finances/wallet-adjustments?userId=\${user.id}\`}
                 className="mt-2 w-full py-2 bg-neutral-800 hover:bg-neutral-700 text-white rounded-lg text-center text-sm font-medium transition-colors"
               >
                 Manual Adjustment
@@ -255,14 +257,14 @@ export default function UserProfilePage() {
         <div className="flex border-b border-neutral-800">
           <button 
             onClick={() => setActiveTab('deposits')}
-            className={`flex-1 py-4 text-sm font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'deposits' ? 'text-[#ffdf00] border-b-2 border-[#ffdf00]' : 'text-neutral-400 hover:text-white'}`}
+            className={\`flex-1 py-4 text-sm font-bold flex items-center justify-center gap-2 transition-colors \${activeTab === 'deposits' ? 'text-[#ffdf00] border-b-2 border-[#ffdf00]' : 'text-neutral-400 hover:text-white'}\`}
           >
             <ArrowDownToLine className="w-4 h-4" />
             Deposit History
           </button>
           <button 
             onClick={() => setActiveTab('withdrawals')}
-            className={`flex-1 py-4 text-sm font-bold flex items-center justify-center gap-2 transition-colors ${activeTab === 'withdrawals' ? 'text-[#ffdf00] border-b-2 border-[#ffdf00]' : 'text-neutral-400 hover:text-white'}`}
+            className={\`flex-1 py-4 text-sm font-bold flex items-center justify-center gap-2 transition-colors \${activeTab === 'withdrawals' ? 'text-[#ffdf00] border-b-2 border-[#ffdf00]' : 'text-neutral-400 hover:text-white'}\`}
           >
             <ArrowUpFromLine className="w-4 h-4" />
             Withdrawal History
@@ -277,7 +279,7 @@ export default function UserProfilePage() {
                   <button 
                     key={f}
                     onClick={() => setDepositFilter(f)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${depositFilter === f ? 'bg-[#ffdf00] text-black' : 'bg-neutral-800 text-white hover:bg-neutral-700'}`}
+                    className={\`px-3 py-1.5 rounded-full text-xs font-bold transition-colors \${depositFilter === f ? 'bg-[#ffdf00] text-black' : 'bg-neutral-800 text-white hover:bg-neutral-700'}\`}
                   >
                     {f}
                   </button>
@@ -309,7 +311,7 @@ export default function UserProfilePage() {
                           <td className="px-4 py-3 text-white">{tx.provider}</td>
                           <td className="px-4 py-3 text-xs">{tx.transaction_reference || 'N/A'}</td>
                           <td className="px-4 py-3">
-                            <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${getStatusColor(tx.status)}`}>
+                            <span className={\`px-2 py-1 rounded text-[10px] font-bold uppercase \${getStatusColor(tx.status)}\`}>
                               {tx.status === 'COMPLETED' ? 'APPROVED' : tx.status === 'FAILED' ? 'REJECTED' : tx.status}
                             </span>
                           </td>
@@ -330,7 +332,7 @@ export default function UserProfilePage() {
                   <button 
                     key={f}
                     onClick={() => setWithdrawalFilter(f)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${withdrawalFilter === f ? 'bg-[#ffdf00] text-black' : 'bg-neutral-800 text-white hover:bg-neutral-700'}`}
+                    className={\`px-3 py-1.5 rounded-full text-xs font-bold transition-colors \${withdrawalFilter === f ? 'bg-[#ffdf00] text-black' : 'bg-neutral-800 text-white hover:bg-neutral-700'}\`}
                   >
                     {f}
                   </button>
@@ -363,7 +365,7 @@ export default function UserProfilePage() {
                             <div className="text-xs text-neutral-500">{(tx.metadata as any)?.accountNumber || (tx.metadata as any)?.accountTitle || 'N/A'}</div>
                           </td>
                           <td className="px-4 py-3">
-                            <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${getStatusColor(tx.status)}`}>
+                            <span className={\`px-2 py-1 rounded text-[10px] font-bold uppercase \${getStatusColor(tx.status)}\`}>
                               {tx.status === 'COMPLETED' ? 'APPROVED' : tx.status === 'FAILED' ? 'REJECTED' : tx.status}
                             </span>
                           </td>
@@ -382,3 +384,7 @@ export default function UserProfilePage() {
     </div>
   );
 }
+`;
+
+fs.writeFileSync('src/app/admin/users/[id]/page.tsx', code);
+console.log("Updated page.tsx successfully");
