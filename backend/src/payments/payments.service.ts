@@ -135,6 +135,15 @@ export class PaymentsService {
         });
       }
       await this.vipService.processDepositForVip(userId, amount, reference);
+      // Auto-Deposit Notification
+      await this.prisma.notification.create({
+        data: {
+          user_id: userId,
+          title: 'Deposit Approved',
+          message: `Your deposit of RS ${amount} has been successfully processed.`,
+          type: 'Deposit'
+        }
+      });
     }
 
     return { payment_id: payment.id, reference, success: true, message: autoApprove ? 'Deposit approved instantly' : 'Deposit recorded manually' };
@@ -254,6 +263,15 @@ export class PaymentsService {
 
       this.logger.log(`Deposit ${reference} COMPLETED successfully!`);
         await this.vipService.processDepositForVip(payment.user_id, payment.amount.toNumber(), reference);
+      // Webhook Deposit Success Notification
+      await this.prisma.notification.create({
+        data: {
+          user_id: payment.user_id,
+          title: 'Deposit Approved',
+          message: `Your deposit of RS ${payment.amount.toNumber()} has been successfully processed.`,
+          type: 'Deposit'
+        }
+      });
       return 'SUCCESS';
     } else if (orderStatus === '4' || statusText === 'FAILED') {
       await this.prisma.payment.update({
@@ -265,7 +283,15 @@ export class PaymentsService {
         where: { transaction_ref: reference },
         data: { status: 'REJECTED' }
       });
-
+      // Webhook Deposit Rejected Notification
+      await this.prisma.notification.create({
+        data: {
+          user_id: payment.user_id,
+          title: 'Deposit Rejected',
+          message: `Your deposit of RS ${payment.amount.toNumber()} has failed or was rejected.`,
+          type: 'Deposit'
+        }
+      });
       return 'SUCCESS';
     }
 
