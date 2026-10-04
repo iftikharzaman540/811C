@@ -480,6 +480,23 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[10000] bg-black flex flex-col"
           >
             
+            
+            <div className="h-10 bg-black flex items-center justify-between px-3 border-b border-[#333] shrink-0 shadow-md relative z-[10001]">
+              <span className="text-[#ffdf00] font-bold text-xs uppercase tracking-wider">Playing Game</span>
+              <button 
+                onClick={() => {
+                  if (window.location.hash === '#game') {
+                    window.history.back();
+                  } else {
+                    setGameUrl(null);
+                  }
+                }}
+                className="bg-[#ff0b0b] hover:bg-red-600 active:scale-95 text-white px-3 py-1 rounded-sm text-[11px] font-bold transition-all shadow-[0_0_8px_rgba(255,11,11,0.5)]"
+              >
+                Close Game
+              </button>
+            </div>
+
             <div className="flex-1 w-full relative bg-black" style={{ overscrollBehavior: 'none', touchAction: 'none' }}>
               <iframe 
                 src={gameUrl} 
