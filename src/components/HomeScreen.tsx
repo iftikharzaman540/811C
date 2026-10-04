@@ -333,6 +333,42 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [gameUrl, setGameUrl] = useState<string | null>(null);
   const router = useRouter();
 
+  useEffect(() => {
+    if (gameUrl) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${window.scrollY}px`; // Prevent jumping
+
+      if (window.location.hash !== '#game') {
+        window.history.pushState(null, '', '#game');
+      }
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+      
+      if (window.location.hash === '#game') {
+        window.history.back();
+      }
+    }
+
+    const handleHashChange = () => {
+      if (window.location.hash !== '#game' && gameUrl) {
+        setGameUrl(null);
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [gameUrl]);
+
+
   
   
 
@@ -444,7 +480,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-[10000] bg-black flex flex-col"
           >
             
-            <div className="flex-1 w-full relative overflow-y-auto overflow-x-hidden" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <div className="flex-1 w-full relative bg-black" style={{ overscrollBehavior: 'none', touchAction: 'none' }}>
               <iframe 
                 src={gameUrl} 
                 className="absolute inset-0 w-full h-full border-0"
