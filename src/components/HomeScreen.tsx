@@ -335,6 +335,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
   
   
+
+
+  
+  const { user, logout } = useUser();
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showNotifModal, setShowNotifModal] = useState(false);
+
   useEffect(() => {
     if (gameUrl || showNotifModal) {
       document.body.style.overflow = 'hidden';
@@ -359,12 +366,6 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     };
   }, [gameUrl, showNotifModal]);
 
-
-
-  
-  const { user, logout } = useUser();
-  const [notifications, setNotifications] = useState<any[]>([]);
-  const [showNotifModal, setShowNotifModal] = useState(false);
 
   useEffect(() => {
     if (!user) return;
