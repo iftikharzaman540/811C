@@ -131,6 +131,12 @@ export default function TicketDetailsPage({ params }: { params: { id: string } }
                     : 'bg-neutral-800 text-white rounded-tl-sm'
                 }`}>
                   <p className="whitespace-pre-wrap text-sm">{msg.message}</p>
+                  {msg.attachment && (
+                    <div className="mt-2 rounded-lg overflow-hidden border border-black/10">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={msg.attachment} alt="Attachment" className="max-w-full max-h-[300px] object-contain bg-neutral-900/50" />
+                    </div>
+                  )}
                 </div>
               </div>
             );
