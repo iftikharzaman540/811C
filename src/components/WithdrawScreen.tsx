@@ -19,8 +19,8 @@ export default function WithdrawScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleWithdraw = async () => {
-    if (!amount || isNaN(Number(amount)) || Number(amount) < 500) {
-      toast.error("Minimum withdrawal is 500");
+    if (!amount || isNaN(Number(amount)) || Number(amount) < 100) {
+      toast.error("Minimum withdrawal is 100");
       return;
     }
     if (!accountTitle || accountTitle.trim().length < 3) {
@@ -161,7 +161,7 @@ export default function WithdrawScreen() {
                   type="number" 
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="Minimum 500"
+                  placeholder="Minimum 100"
                   className="w-full bg-black border border-neutral-700 rounded-lg py-3 px-4 text-white font-bold text-lg focus:outline-none focus:border-[#ffdf00] placeholder:text-neutral-600 placeholder:font-normal"
                 />
               </div>
@@ -241,7 +241,7 @@ export default function WithdrawScreen() {
               </div>
               <div className="text-[#4a90e2] flex items-center gap-1.5">
                 <span className="w-1 h-1 bg-[#4a90e2] rounded-full shrink-0"></span>
-                Withdrawal amount range: 500-50,000
+                Withdrawal amount range: 100-50,000
               </div>
             </div>
 
