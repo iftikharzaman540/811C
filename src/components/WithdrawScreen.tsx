@@ -107,12 +107,6 @@ export default function WithdrawScreen() {
   const remainingDaily = Math.max(0, 15 - todayCount);
 
   
-  const req = Number(user?.current_wagering_requirement || 0);
-  const comp = Number(user?.current_wagering_completed || 0);
-  const remaining = Math.max(0, req - comp);
-  const isEligible = comp >= req;
-  const todayCount = Number(user?.today_withdrawals_count || 0);
-  const remainingDaily = Math.max(0, 15 - todayCount);
 
   return (
     <div className="min-h-screen bg-[#111] text-white flex flex-col font-sans pb-24">
