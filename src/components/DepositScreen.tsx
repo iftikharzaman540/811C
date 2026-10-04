@@ -299,59 +299,6 @@ useEffect(() => {
           {loading ? "Processing..." : "Deposit Now"}
         </button>
 
-        {/* Deposit Promotion */}
-        <div className="border border-neutral-700 rounded-lg bg-[#151515] overflow-hidden mb-6">
-          <div className="flex items-center justify-between p-3 border-b border-neutral-800 bg-[#1a1a1a]">
-            <div className="flex items-center gap-2">
-              <span className="text-xl leading-none">??</span>
-              <span className="text-white font-bold text-sm">Deposit promotion</span>
-            </div>
-            <div className="flex items-center bg-[#2a1010] text-[#ff0b0b] text-[10px] px-1.5 py-0.5 rounded border border-[#ff0b0b]/30 gap-1 font-mono">
-              <span className="text-[#ffdf00] font-bold">?LT</span> 07:43:11.6
-            </div>
-          </div>
-          
-          <div className="p-3">
-            <div className="text-center text-[10px] text-neutral-500 mb-3">
-               ----- Automatically participated in the following activities -----
-            </div>
-
-            <div className="flex flex-col gap-2">
-              {[
-                { bonus: "7.00", tag: "Deposit again 100 to receive", condition: "Total deposit >= 100" },
-                { bonus: "20.00", condition: "First Deposit >= 300" },
-                { bonus: "17.00", tag: "Deposit again 500 to receive", condition: "Total deposit >= 500" },
-                { bonus: "30.00", condition: "First Deposit >= 600", hidden: true },
-                { bonus: "50.00", condition: "First Deposit >= 1,000", hidden: true },
-              ].map((item, i) => (
-                (!item.hidden || promoExpanded) && (
-                  <div key={i} className="flex items-center justify-between bg-[#1f1f1f] rounded-lg p-2.5 relative">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 opacity-70 flex items-center justify-center text-xl">??</div>
-                      <span className="text-neutral-400 text-xs font-medium">Bonus {item.bonus}</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      {item.tag && (
-                         <div className="absolute -top-2 right-2 bg-[#ff5555] text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md z-10">
-                           {item.tag}
-                         </div>
-                      )}
-                      <span className="text-neutral-500 text-[10px] mt-1">{item.condition}</span>
-                    </div>
-                  </div>
-                )
-              ))}
-            </div>
-
-            <button 
-              onClick={() => setPromoExpanded(!promoExpanded)} 
-              className="w-full flex items-center justify-center text-[#ffdf00] text-xs font-bold mt-4"
-            >
-              {promoExpanded ? "Fold" : "Expand"} {promoExpanded ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
-            </button>
-          </div>
-        </div>
-
         {/* INSTRUCTIONS ADDED AT THE BOTTOM */}
         <div className="bg-[#1a1a1a] rounded-lg p-4 border border-neutral-800 mb-8">
            <h3 className="text-[#ffdf00] font-bold text-sm mb-2">Recharge Instructions</h3>
