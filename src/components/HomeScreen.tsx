@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Gamepad2, ArrowRight, User, Rocket, Plane, Target, Layers, Gem, Gift, RefreshCcw, CircleDollarSign, Aperture, Volume2, Mail, ChevronLeft, ChevronRight, ArrowLeft, Globe, Search, FileText, Share2, Users, Download, Headset, HelpCircle, Info, MapPin, Moon, MessageCircle, Globe as Web, Camera, Send, MessageSquare } from "lucide-react";
+import { Gamepad2, ArrowRight, User, Rocket, Plane, Target, Layers, Gem, Gift, RefreshCcw, CircleDollarSign, Aperture, Volume2, Mail, ChevronLeft, ChevronRight, ArrowLeft, Globe, Search, FileText, Share2, Users, Download, Headset, HelpCircle, Info, MapPin, Moon, MessageCircle, Globe as Web, Camera, Send, MessageSquare, Bell } from "lucide-react";
 import Footer from "./Footer";
 import BottomNav from "./BottomNav";
 import { useRouter } from "next/navigation";
@@ -332,7 +332,44 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [isDepositMenuOpen, setIsDepositMenuOpen] = useState(false);
   const [gameUrl, setGameUrl] = useState<string | null>(null);
   const router = useRouter();
+  
   const { user, logout } = useUser();
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [showNotifModal, setShowNotifModal] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchNotifs = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        const res = await fetch('https://8111c.com/api/v1/notifications', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setNotifications(data);
+        }
+      } catch (e) {}
+    };
+    fetchNotifs();
+    const intv = setInterval(fetchNotifs, 15000);
+    return () => clearInterval(intv);
+  }, [user]);
+
+  const unreadCount = notifications.filter(n => !n.is_read).length;
+
+  const markNotifRead = async (id: string) => {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch(`https://8111c.com/api/v1/notifications/${id}/read`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: true } : n));
+    } catch (e) {}
+  };
+
 
 
   
@@ -511,7 +548,18 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 <div className="flex items-center gap-2 ml-auto shrink-0">
           {user ? (
             <>
-              {/* Balance Pill */}
+              
+                {/* Bell Icon */}
+                <button onClick={() => setShowNotifModal(true)} className="relative p-1.5 flex items-center justify-center text-neutral-400 hover:text-white transition-colors">
+                  <Bell className="w-5 h-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-[#ff0b0b] text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-md">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+                {/* Balance Pill */}
+
               <div className="flex items-center bg-black border border-[#1fdf1f]/30 rounded-[10px] px-1.5 py-1 h-[32px] gap-1.5 shrink-0 shadow-sm">
                 <div className="w-[18px] h-[18px] bg-[#0d4026] rounded-full flex items-center justify-center text-[10px] text-[#1fdf1f] border border-[#1fdf1f]/50">
                   ☪

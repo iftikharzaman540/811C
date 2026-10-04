@@ -357,6 +357,17 @@ model Notification {
 }
 
 // ====================
+
+model AdminBroadcast {
+  id         String   @id @default(uuid())
+  title      String
+  message    String
+  type       String
+  sent_to    Int
+  target     String   @default("ALL") // "ALL" or specific user_id
+  created_at DateTime @default(now())
+}
+
 // PHASE 5 - ADMIN PANEL MODELS
 // ====================
 

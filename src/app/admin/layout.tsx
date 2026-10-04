@@ -44,9 +44,19 @@ const SIDEBAR_NAV = [
       { name: "Sportsbook Settings", href: "/admin/cms/sportsbook" },
     ]
   },
+  
   { name: "Support Tickets", href: "/admin/support/tickets", icon: MessageSquare },
   {
+    name: "Notifications",
+    icon: Activity,
+    children: [
+      { name: "Send Notification", href: "/admin/notifications" },
+      { name: "History", href: "/admin/notifications/history" }
+    ]
+  },
+  {
     name: "System Settings",
+
     icon: Settings,
     children: [
       { name: "Global Settings", href: "/admin/system/settings" },

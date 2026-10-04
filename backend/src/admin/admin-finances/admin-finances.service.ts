@@ -153,9 +153,19 @@ export class AdminFinancesService {
     if (payment.status !== 'PENDING') throw new Error('Withdrawal is not pending');
 
     await this.prisma.payment.update({
-      where: { id },
-      data: { status: 'COMPLETED' }
-    });
+        where: { id },
+        data: { status: 'COMPLETED' }
+      });
+
+      // Notify User
+      await this.prisma.notification.create({
+        data: {
+          user_id: payment.user_id,
+          title: 'Withdrawal Approved',
+          message: `Your withdrawal of RS ${payment.amount.toNumber()} has been successfully processed.`,
+          type: 'Withdrawal'
+        }
+      });
 
     return { success: true, message: 'Withdrawal approved' };
   }
@@ -177,9 +187,19 @@ export class AdminFinancesService {
     });
 
     await this.prisma.payment.update({
-      where: { id },
-      data: { status: 'REJECTED' }
-    });
+        where: { id },
+        data: { status: 'REJECTED' }
+      });
+
+      // Notify User
+      await this.prisma.notification.create({
+        data: {
+          user_id: payment.user_id,
+          title: 'Withdrawal Rejected',
+          message: `Your withdrawal of RS ${payment.amount.toNumber()} was rejected and the amount has been refunded to your wallet.`,
+          type: 'Withdrawal'
+        }
+      });
 
     return { success: true, message: 'Withdrawal rejected and refunded' };
   }
