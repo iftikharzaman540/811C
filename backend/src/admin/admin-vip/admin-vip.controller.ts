@@ -5,7 +5,7 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 import { PrismaService } from '../../prisma/prisma.service';
 import { VipService } from '../../vip/vip.service';
 
-@Controller('admin/vip')
+@Controller('api/v1/admin/vip')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Roles('ADMIN', 'SUPER_ADMIN')
 export class AdminVipController {
