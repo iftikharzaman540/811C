@@ -16,6 +16,72 @@ export class PaymentsService {
     private xpressPay: XpressPayProvider,
     private vipService: VipService
   ) {}
+  async getDepositHistory(userId: string, range: string) {
+    let dateFilter = new Date();
+    if (range === '1d') dateFilter.setDate(dateFilter.getDate() - 1);
+    else if (range === '7d') dateFilter.setDate(dateFilter.getDate() - 7);
+    else if (range === '30d') dateFilter.setDate(dateFilter.getDate() - 30);
+    else dateFilter.setDate(dateFilter.getDate() - 1);
+
+    const records = await this.prisma.payment.findMany({
+      where: {
+        user_id: userId,
+        type: 'DEPOSIT',
+        created_at: { gte: dateFilter }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+
+    const total = records.filter(r => r.status === 'COMPLETED').reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+    return {
+      range_start: dateFilter.toISOString(),
+      range_end: new Date().toISOString(),
+      total,
+      records: records.map(r => ({
+        id: r.id,
+        amount: r.amount,
+        status: r.status,
+        created_at: r.created_at.toISOString(),
+        provider: r.provider,
+        transaction_id: r.transaction_reference
+      }))
+    };
+  }
+
+  async getWithdrawalHistory(userId: string, range: string) {
+    let dateFilter = new Date();
+    if (range === '1d') dateFilter.setDate(dateFilter.getDate() - 1);
+    else if (range === '7d') dateFilter.setDate(dateFilter.getDate() - 7);
+    else if (range === '30d') dateFilter.setDate(dateFilter.getDate() - 30);
+    else dateFilter.setDate(dateFilter.getDate() - 1);
+
+    const records = await this.prisma.payment.findMany({
+      where: {
+        user_id: userId,
+        type: 'WITHDRAWAL',
+        created_at: { gte: dateFilter }
+      },
+      orderBy: { created_at: 'desc' }
+    });
+
+    const total = records.filter(r => r.status === 'COMPLETED').reduce((acc, curr) => acc + Number(curr.amount), 0);
+
+    return {
+      range_start: dateFilter.toISOString(),
+      range_end: new Date().toISOString(),
+      total,
+      records: records.map(r => ({
+        id: r.id,
+        amount: r.amount,
+        status: r.status,
+        created_at: r.created_at.toISOString(),
+        provider: r.provider,
+        transaction_id: r.transaction_reference
+      }))
+    };
+  }
+
   async getPaymentMethods() {
     const defaultMethods = [
       { id: 'easypaisa', name: 'EasyPaisa', enabled: true, min_deposit: 100, max_deposit: 50000, fee_percentage: 0 },

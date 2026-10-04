@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, UseGuards, Res } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, UseGuards, Res, Query } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
@@ -10,6 +10,22 @@ import { Response } from 'express';
 @Controller('api/v1/payments')
 export class PaymentsController {
   constructor(private readonly service: PaymentsService) {}
+  @Get('deposit-history')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Get deposit history' })
+  async getDepositHistory(@CurrentUser() user: any, @Query('range') range: string) {
+    return this.service.getDepositHistory(user.userId, range);
+  }
+
+  @Get('withdrawal-history')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Get withdrawal history' })
+  async getWithdrawalHistory(@CurrentUser() user: any, @Query('range') range: string) {
+    return this.service.getWithdrawalHistory(user.userId, range);
+  }
+
   @Get('methods')
   @ApiOperation({ summary: 'Get available payment methods' })
   async getMethods() {

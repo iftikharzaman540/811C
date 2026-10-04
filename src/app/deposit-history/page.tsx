@@ -93,48 +93,45 @@ export default function DepositHistoryPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen text-white font-sans relative overflow-x-hidden bg-[#1a103c]">
+    <div className="flex flex-col min-h-screen text-white font-sans relative overflow-x-hidden bg-[#111]">
       {/* Background Image / Overlay mimicking purple casino theme */}
-      <div 
-        className="absolute inset-0 z-0 opacity-40 mix-blend-overlay bg-cover bg-center pointer-events-none"
-        style={{ backgroundImage: "url('/casino-bg-placeholder.jpg')" }}
-      ></div>
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#2a1b54] via-[#1a103c] to-[#0a0518] opacity-90 pointer-events-none"></div>
+      
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-neutral-900 via-[#111] to-black opacity-90 pointer-events-none"></div>
 
       <div className="relative z-10 flex flex-col h-full min-h-screen">
         {/* Header */}
-        <header className="flex items-center justify-between px-4 py-3 bg-[#241744] border-b border-[#3d2773] shadow-md">
+        <header className="flex items-center justify-between px-4 py-3 bg-[#1a1a1a] border-b border-neutral-800 shadow-md">
           <Link href="/profile" className="p-1 -ml-1 flex items-center justify-center">
-            <ChevronLeft className="w-7 h-7 text-[#4a90e2]" />
+            <ChevronLeft className="w-7 h-7 text-[#ffdf00]" />
           </Link>
           <h1 className="text-lg text-white font-normal absolute left-1/2 -translate-x-1/2">Deposit history</h1>
           <div className="w-8"></div>
         </header>
 
         {/* Tabs */}
-        <div className="flex bg-[#190f33] border-b border-[#2d1b54]">
+        <div className="flex bg-[#1a1a1a] border-b border-neutral-800">
           <button 
             onClick={() => setRange("1d")}
-            className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${range === "1d" ? "text-[#4a90e2] border-[#4a90e2]" : "text-neutral-400 border-transparent"}`}
+            className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${range === "1d" ? "text-[#ffdf00] border-[#ffdf00]" : "text-neutral-400 border-transparent"}`}
           >
             1 Days
           </button>
           <button 
             onClick={() => setRange("7d")}
-            className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${range === "7d" ? "text-[#4a90e2] border-[#4a90e2]" : "text-neutral-400 border-transparent"}`}
+            className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${range === "7d" ? "text-[#ffdf00] border-[#ffdf00]" : "text-neutral-400 border-transparent"}`}
           >
             7 Days
           </button>
           <button 
             onClick={() => setRange("30d")}
-            className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${range === "30d" ? "text-[#4a90e2] border-[#4a90e2]" : "text-neutral-400 border-transparent"}`}
+            className={`flex-1 py-3 text-sm font-medium transition-colors border-b-2 ${range === "30d" ? "text-[#ffdf00] border-[#ffdf00]" : "text-neutral-400 border-transparent"}`}
           >
             30 Days
           </button>
         </div>
 
         {/* Info Bar */}
-        <div className="flex justify-between items-center px-4 py-2 bg-[#190f33] border-b border-[#2d1b54] text-xs">
+        <div className="flex justify-between items-center px-4 py-2 bg-[#1a1a1a] border-b border-neutral-800 text-xs">
           <span className="text-white">{displayRangeStart} to {displayRangeEnd}</span>
           <span className="text-[#a084e8]">Total: {data ? data.total.toLocaleString() : 0} PKR</span>
         </div>
@@ -143,7 +140,7 @@ export default function DepositHistoryPage() {
         <div className="flex-1 p-4 overflow-y-auto">
           {loading ? (
             <div className="flex justify-center items-center h-32">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4a90e2]"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ffdf00]"></div>
             </div>
           ) : !data || data.records.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-[50vh] text-neutral-400">
@@ -153,8 +150,8 @@ export default function DepositHistoryPage() {
           ) : (
             <div className="flex flex-col gap-3">
               {data.records.map((record) => (
-                <div key={record.id} className="bg-[#241744]/80 backdrop-blur-sm rounded-lg p-4 border border-[#3d2773] shadow-lg">
-                  <div className="flex justify-between items-start mb-2 border-b border-[#3d2773]/50 pb-2">
+                <div key={record.id} className="bg-[#1a1a1a]/80 backdrop-blur-sm rounded-lg p-4 border border-neutral-800 shadow-lg">
+                  <div className="flex justify-between items-start mb-2 border-b border-neutral-800/50 pb-2">
                     <div>
                       <h3 className="font-bold text-[#ffdf00] text-lg">{Number(record.amount).toLocaleString()} PKR</h3>
                       <p className="text-xs text-neutral-400 mt-1 uppercase tracking-wider">{record.provider}</p>
