@@ -877,6 +877,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 key={gIdx}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                  onClick={() => { if (typeof window !== 'undefined' && (window as any).handleLaunchGame) { (window as any).handleLaunchGame(game.id || game.name); } }}
                 className={`aspect-[3/4] ${game.img || 'bg-neutral-900'} rounded-xl relative overflow-hidden flex flex-col shadow-[0_0_10px_rgba(255,11,11,0.4)] group cursor-pointer border border-[#ff0b0b]`}
               >
                 
