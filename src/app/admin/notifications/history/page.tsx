@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { History, Search } from 'lucide-react';
 import { apiRequest } from '@/utils/api';
 import toast from 'react-hot-toast';
-import { format } from 'date-fns';
+
 
 export default function NotificationHistoryPage() {
   const [history, setHistory] = useState<any[]>([]);
@@ -77,7 +77,7 @@ export default function NotificationHistoryPage() {
                     <span className="text-green-500 font-bold">Sent</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {format(new Date(item.created_at), 'dd MMM yyyy, HH:mm')}
+                    {new Date(item.created_at).toLocaleString()}
                   </td>
                 </tr>
               ))}
