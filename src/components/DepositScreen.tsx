@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 
 export default function DepositScreen() {
   const router = useRouter();
-  const { user, loading: userLoading } = useUser();
+  const { user, loading: userLoading, refreshUser } = useUser();
   useEffect(() => { if (!userLoading && !user) { toast.error("Please login first"); router.push("/"); } }, [user, userLoading, router]);
   const [tab, setTab] = useState<"online" | "crypto">("online");
   const [method, setMethod] = useState("JazzCash_0");
