@@ -23,8 +23,8 @@ export default function DepositScreen() {
   const [accountNo, setAccountNo] = useState("");
     const [trxId, setTrxId] = useState("");
   const [pollingRef, setPollingRef] = useState<string | null>(null);
-
-  useEffect(() => {
+  const [iframeUrl, setIframeUrl] = useState<string | null>(null);
+useEffect(() => {
     if (!pollingRef) return;
     const token = localStorage.getItem("token");
     let interval: any;
@@ -40,6 +40,7 @@ export default function DepositScreen() {
         if (data.status === 'COMPLETED' || data.status === 'PAID') {
           toast.success("Deposit Successful! Balance updated instantly.");
           setPollingRef(null);
+          setIframeUrl(null);
           setAmount("");
           if (refreshUser) refreshUser();
           clearInterval(interval);
@@ -47,6 +48,7 @@ export default function DepositScreen() {
         } else if (data.status === 'REJECTED' || data.status === 'FAILED' || data.status === 'CANCELLED') {
           toast.error("Deposit failed or was rejected.");
           setPollingRef(null);
+          setIframeUrl(null);
           setLoading(false);
           clearInterval(interval);
         }
@@ -115,6 +117,7 @@ export default function DepositScreen() {
       if (tab === "online") {
         if (resData.reference) {
           setPollingRef(resData.reference);
+          setIframeUrl(resData.payment_url || null);
           toast.success("Deposit initiated!");
         } else {
           toast.error("Invalid response from server");
@@ -323,21 +326,34 @@ export default function DepositScreen() {
       </div>
 
       
+      
       {pollingRef && (
-        <div className="fixed inset-0 z-[9999] bg-black/90 flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
-          <div className="w-16 h-16 border-4 border-[#ffdf00] border-t-transparent rounded-full animate-spin mb-6"></div>
-          <h2 className="text-[#ffdf00] text-2xl font-black mb-3">Waiting for Payment</h2>
-          <p className="text-neutral-300 text-[15px] mb-8 max-w-[280px]">
-            Please check your mobile phone and enter your MPIN to authorize the deposit. Do not close this screen.
-          </p>
+        <div className="fixed inset-0 z-[9999] bg-black/90 flex flex-col items-center justify-center p-4 text-center backdrop-blur-md">
+          {iframeUrl ? (
+             <div className="w-full max-w-[400px] h-[500px] bg-white rounded-xl overflow-hidden relative shadow-2xl">
+               <div className="absolute inset-0 flex items-center justify-center bg-white z-0">
+                  <div className="w-10 h-10 border-4 border-[#ffdf00] border-t-transparent rounded-full animate-spin"></div>
+               </div>
+               <iframe src={iframeUrl} className="w-full h-full relative z-10 border-none" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" />
+             </div>
+          ) : (
+            <>
+              <div className="w-16 h-16 border-4 border-[#ffdf00] border-t-transparent rounded-full animate-spin mb-6"></div>
+              <h2 className="text-[#ffdf00] text-2xl font-black mb-3">Waiting for Payment</h2>
+              <p className="text-neutral-300 text-[15px] mb-8 max-w-[280px]">
+                Please check your mobile phone and enter your MPIN to authorize the deposit. Do not close this screen.
+              </p>
+            </>
+          )}
           <button 
-            onClick={() => { setPollingRef(null); setLoading(false); }}
-            className="text-neutral-400 text-sm hover:text-white underline"
+            onClick={() => { setPollingRef(null); setIframeUrl(null); setLoading(false); }}
+            className="text-neutral-400 text-sm hover:text-white underline mt-6"
           >
             Cancel
           </button>
         </div>
       )}
+
       
       {/* Bottom Button */}
 
