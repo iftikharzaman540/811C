@@ -1,31 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+const fs = require('fs');
+let code = fs.readFileSync('backend/src/support/support.service.ts', 'utf8');
 
-@Injectable()
-export class SupportService {
-  constructor(private readonly prisma: PrismaService) {}
-
-  async getOrCreateActiveChat(userId: string) {
-    let ticket = await this.prisma.ticket.findFirst({
-      where: { user_id: userId, status: { in: ['OPEN', 'IN_PROGRESS'] } },
-      orderBy: { created_at: 'desc' },
-      include: { messages: { orderBy: { created_at: 'asc' } } }
-    });
-
-    if (!ticket) {
-      ticket = await this.prisma.ticket.create({
-        data: {
-          user_id: userId,
-          subject: 'Live Chat',
-          category: 'OTHER',
-          status: 'OPEN',
-        },
-        include: { messages: true }
-      });
-    }
-    return ticket;
-  }
-
+const replacement = `
   async sendMessage(userId: string, message: string, attachment?: string) {
     const ticket = await this.getOrCreateActiveChat(userId);
     
@@ -46,7 +22,7 @@ export class SupportService {
       setTimeout(async () => {
         try {
           await this.prisma.ticketMessage.create({
-            data: { ticket_id: ticket.id, admin_id: 'system_bot', message: "Please wait 3 to 4 mintues... \nhumara numianda aap say jald raabta ker lay ga shukria.." }
+            data: { ticket_id: ticket.id, admin_id: 'system_bot', message: "Please wait 3 to 4 mintues... \\nhumara numianda aap say jald raabta ker lay ga shukria.." }
           });
         } catch(e){}
       }, 3500);
@@ -70,8 +46,10 @@ export class SupportService {
 
     return { success: true, message: msg };
   }
+`;
 
-  async getChatHistory(userId: string) {
-    return this.getOrCreateActiveChat(userId);
-  }
-}
+// Replace from `async sendMessage(` up to `return { success: true, message: msg };\n\n  }`
+code = code.replace(/async sendMessage\([\s\S]*?return \{ success: true, message: msg \};\s*\}/, replacement.trim());
+
+fs.writeFileSync('backend/src/support/support.service.ts', code);
+console.log("Replaced sendMessage method successfully!");
