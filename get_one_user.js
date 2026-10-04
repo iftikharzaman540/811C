@@ -1,0 +1,9 @@
+const { Client } = require('ssh2');
+const conn = new Client();
+conn.on('ready', () => {
+  conn.exec('sudo -u postgres psql -d gaming_db -c "SELECT id, casino_enabled FROM \\"User\\" WHERE id = \\'8067fc6d-790b-4127-ae2a-bf444042cb40\\';"', (err, stream) => {
+    stream.on('data', d => process.stdout.write(d.toString()));
+    stream.stderr.on('data', d => process.stderr.write(d.toString()));
+    stream.on('close', () => conn.end());
+  });
+}).connect({host:'169.58.50.184',port:22,username:'root',password:'Iftkharzaman'});

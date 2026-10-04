@@ -47,7 +47,7 @@ export class AdminFinancesService {
         data: {
           admin_id: adminId,
           user_id: userId,
-          action: `MANUAL_WALLET_\${type}`,
+          action: `MANUAL_WALLET_${type}`,
           entity: 'Wallet',
           entity_id: wallet.id,
           old_value: { balance: balanceBefore },

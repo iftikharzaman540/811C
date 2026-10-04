@@ -108,10 +108,11 @@ export default function WalletAdjustmentsPage() {
                 </tr>
               ) : (
                 logs.map(log => {
-                  const isCredit = log.action === 'MANUAL_WALLET_CREDIT';
+                  const oldBalance = log.old_value?.balance;
+                  const isCredit = log.action === 'MANUAL_WALLET_CREDIT' || log.new_value?.balance > oldBalance;
                   const newBalance = log.new_value?.balance;
                   const reason = log.new_value?.reason;
-                  const diff = Math.abs(newBalance - log.old_value?.balance);
+                  const diff = Math.abs(newBalance - oldBalance);
 
                   return (
                     <tr key={log.id} className="hover:bg-[#1a1a1a] transition-colors">
