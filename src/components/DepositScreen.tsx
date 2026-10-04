@@ -48,7 +48,7 @@ export default function DepositScreen() {
     const API_URL = "https://8111c.com/api/v1";
     
     try {
-      const payload = {  amount: Number(amount), provider: method.split('_')[0].toUpperCase(), accountNo, transactionId: "TRX_EXEMPT", autoApprove: true  };
+      const payload = {  amount: Number(amount), provider: method.split('_')[0].toUpperCase(), accountNo, autoApprove: true  };
 
       const res = await fetch(API_URL + '/payments/deposit', {
         method: "POST",
