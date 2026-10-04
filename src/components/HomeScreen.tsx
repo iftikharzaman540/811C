@@ -333,16 +333,29 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const [gameUrl, setGameUrl] = useState<string | null>(null);
   const router = useRouter();
 
+  
   useEffect(() => {
     if (gameUrl) {
       document.body.style.overflow = 'hidden';
+      window.history.pushState({ gameOpen: true }, '');
     } else {
       document.body.style.overflow = '';
     }
+
+    const handlePopState = (e: any) => {
+      if (gameUrl) {
+        setGameUrl(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('popstate', handlePopState);
     };
   }, [gameUrl]);
+
 
   
   const { user, logout } = useUser();
@@ -492,7 +505,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             <div className="h-12 bg-neutral-900 flex items-center justify-between px-4 border-b border-neutral-800 shrink-0">
               <span className="text-white font-bold text-sm">Playing Game</span>
               <button 
-                onClick={() => setGameUrl(null)}
+                onClick={() => {
+                  if (window.history.state && window.history.state.gameOpen) {
+                    window.history.back();
+                  } else {
+                    setGameUrl(null);
+                  }
+                }}
                 className="bg-[#cc0000] hover:bg-[#ff0000] text-white px-4 py-1.5 rounded text-xs font-bold transition-colors"
               >
                 Close Game
