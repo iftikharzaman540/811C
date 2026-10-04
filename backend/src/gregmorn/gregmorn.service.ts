@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, HttpException } from '@nestjs/common';
 import * as crypto from 'crypto';
 
 @Injectable()
@@ -118,7 +118,7 @@ export class GregmornService {
       return data.content.game.url;
     } catch (error) {
       this.logger.error(`Gregmorn openGame error: ${error.message}`);
-      throw new require('@nestjs/common').HttpException(error.message || 'Failed to launch game', 400);
+      throw new HttpException(error.message || 'Failed to launch game', 400);
     }
   }
 }
