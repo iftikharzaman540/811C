@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { ChevronLeft, HeadphonesIcon, FileText, ChevronDown, ChevronUp, RefreshCcw, Copy } from "lucide-react";
+import { ChevronLeft, HeadphonesIcon, FileText, ChevronDown, ChevronUp, RefreshCcw, Copy, CreditCard } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 
@@ -15,7 +15,24 @@ export default function DepositScreen() {
   const { user, loading: userLoading, refreshUser } = useUser();
   useEffect(() => { if (!userLoading && !user) { toast.error("Please login first"); router.push("/"); } }, [user, userLoading, router]);
   const [tab, setTab] = useState<"online" | "crypto">("online");
-  const [method, setMethod] = useState("JazzCash_0");
+  const [method, setMethod] = useState("");
+  const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
+  const [fetchingMethods, setFetchingMethods] = useState(true);
+
+  useEffect(() => {
+    fetch('https://8111c.com/api/v1/payments/methods')
+      .then(res => res.json())
+      .then(data => {
+        setPaymentMethods(data);
+        if (data.length > 0) {
+          // Find first active method to set as default
+          let defaultMethod = data[0].id === 'easypaisa' ? 'EasyPaisa_0' : data[0].id === 'jazzcash' ? 'JazzCash_0' : 'Bank_0';
+          setMethod(defaultMethod);
+        }
+        setFetchingMethods(false);
+      })
+      .catch(() => setFetchingMethods(false));
+  }, []);
     const [channelsExpanded, setChannelsExpanded] = useState(false);
   const [amount, setAmount] = useState("");
   const [promoExpanded, setPromoExpanded] = useState(false);
@@ -89,7 +106,8 @@ useEffect(() => {
     
     try {
       
-      const providerStr = method.split('_')[0].toUpperCase();
+      let providerStr = method.split('_')[0].toUpperCase();
+      if (providerStr === 'BANK') providerStr = 'BANK_TRANSFER';
       let res;
       
       if (tab === "online") {
@@ -185,14 +203,27 @@ useEffect(() => {
         {/* Payment Method */}
         <h2 className="text-sm font-bold text-neutral-200 mb-2">Payment method</h2>
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <button onClick={() => setMethod("JazzCash_0")} className={`h-12 rounded-lg border flex items-center justify-center gap-2 transition-all ${method.includes("JazzCash") ? "border-[#ffdf00] bg-black text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-neutral-400"}`}>
-            <img src="/jazzcash.png" alt="JazzCash" className="w-6 h-6 object-contain rounded" />
-            <span className="text-sm font-medium">JazzCash</span>
-          </button>
-          <button onClick={() => setMethod("EasyPaisa_0")} className={`h-12 rounded-lg border flex items-center justify-center gap-2 transition-all ${method.includes("EasyPaisa") ? "border-[#ffdf00] bg-black text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-neutral-400"}`}>
-            <img src="/easypaisa.png" alt="EasyPaisa" className="w-6 h-6 object-contain rounded bg-white p-0.5" />
-            <span className="text-sm font-medium">EasyPaisa</span>
-          </button>
+          {fetchingMethods ? (
+             <div className="col-span-2 text-center text-xs text-neutral-500 py-4">Loading payment methods...</div>
+          ) : paymentMethods.length === 0 ? (
+             <div className="col-span-2 text-center text-xs text-[#ff4747] py-4">No payment methods available right now.</div>
+          ) : (
+            paymentMethods.map(pm => {
+              const methodKey = pm.id === 'easypaisa' ? 'EasyPaisa' : pm.id === 'jazzcash' ? 'JazzCash' : 'Bank';
+              return (
+                <button 
+                  key={pm.id}
+                  onClick={() => setMethod(methodKey + "_0")} 
+                  className={`h-12 rounded-lg border flex items-center justify-center gap-2 transition-all ${method.includes(methodKey) ? "border-[#ffdf00] bg-black text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-neutral-400"}`}
+                >
+                  {pm.id === 'easypaisa' && <img src="/easypaisa.png" alt="EasyPaisa" className="w-6 h-6 object-contain rounded bg-white p-0.5" />}
+                  {pm.id === 'jazzcash' && <img src="/jazzcash.png" alt="JazzCash" className="w-6 h-6 object-contain rounded" />}
+                  {pm.id === 'bank_transfer' && <div className="w-6 h-6 bg-neutral-800 rounded flex items-center justify-center"><CreditCard className="w-4 h-4" /></div>}
+                  <span className="text-sm font-medium">{pm.name}</span>
+                </button>
+              )
+            })
+          )}
         </div>
 
         <div className="flex justify-center mb-4">
@@ -220,14 +251,14 @@ useEffect(() => {
         )}
 
         {/* Mobile Number */}
-        <h2 className="text-sm font-bold text-neutral-200 mb-2">Mobile Number (JazzCash / EasyPaisa)</h2>
+        <h2 className="text-sm font-bold text-neutral-200 mb-2">Account / Mobile Number</h2>
         <div className="flex bg-[#1a1a1a] border border-neutral-700 rounded-md items-center px-3 h-12 focus-within:border-[#ffdf00] mb-4">
           <span className="text-neutral-400 mr-2 text-sm">+92</span>
           <input 
             type="tel" 
             value={accountNo}
             onChange={(e) => setAccountNo(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
-            placeholder="3001234567" 
+            placeholder="e.g. 03001234567" 
             className="bg-transparent border-none outline-none w-full text-white text-sm"
           />
         </div>

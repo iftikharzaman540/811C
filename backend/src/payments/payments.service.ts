@@ -16,6 +16,23 @@ export class PaymentsService {
     private xpressPay: XpressPayProvider,
     private vipService: VipService
   ) {}
+  async getPaymentMethods() {
+    const defaultMethods = [
+      { id: 'easypaisa', name: 'EasyPaisa', enabled: true, min_deposit: 100, max_deposit: 50000, fee_percentage: 0 },
+      { id: 'jazzcash', name: 'JazzCash', enabled: true, min_deposit: 100, max_deposit: 50000, fee_percentage: 0 },
+      { id: 'bank_transfer', name: 'Bank Transfer', enabled: true, min_deposit: 500, max_deposit: 1000000, fee_percentage: 0 }
+    ];
+
+    const setting = await this.prisma.systemSetting.findUnique({
+      where: { key: 'payment_methods_config' }
+    });
+
+    if (setting) {
+      return JSON.parse(setting.value).filter(m => m.enabled === true);
+    }
+    return defaultMethods.filter(m => m.enabled === true);
+  }
+
 
   private getProvider(provider: PaymentProvider) {
     if (provider === 'JAZZCASH' || provider === 'EASYPAISA') return this.xpressPay;

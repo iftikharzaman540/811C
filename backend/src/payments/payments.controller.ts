@@ -10,6 +10,12 @@ import { Response } from 'express';
 @Controller('api/v1/payments')
 export class PaymentsController {
   constructor(private readonly service: PaymentsService) {}
+  @Get('methods')
+  @ApiOperation({ summary: 'Get available payment methods' })
+  async getMethods() {
+    return this.service.getPaymentMethods();
+  }
+
 
   @Post('deposit')
   @ApiBearerAuth()
