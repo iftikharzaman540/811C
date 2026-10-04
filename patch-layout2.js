@@ -1,156 +1,7 @@
-"use client";
+const fs = require('fs');
+let code = fs.readFileSync('src/components/DepositScreen.tsx', 'utf8');
 
-import { useState, useEffect, useRef } from "react";
-import { ChevronLeft, HeadphonesIcon, FileText, ChevronDown, ChevronUp, RefreshCcw, Copy } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useUser } from "@/context/UserContext";
-
-const depositAmounts = [100, 500, 1000, 5000, 10000, 20000, 30000, 50000];
-const cryptoAmounts = [1, 5, 10, 30, 50, 100, 500, 1000];
-
-import toast from "react-hot-toast";
-
-export default function DepositScreen() {
-  const router = useRouter();
-  const { user, loading: userLoading, refreshUser } = useUser();
-  useEffect(() => { if (!userLoading && !user) { toast.error("Please login first"); router.push("/"); } }, [user, userLoading, router]);
-  const [tab, setTab] = useState<"online" | "crypto">("online");
-  const [method, setMethod] = useState("JazzCash_0");
-    const [channelsExpanded, setChannelsExpanded] = useState(false);
-  const [amount, setAmount] = useState("");
-  const [promoExpanded, setPromoExpanded] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [accountNo, setAccountNo] = useState("");
-    const [trxId, setTrxId] = useState("");
-  const [pollingRef, setPollingRef] = useState<string | null>(null);
-  const popupWindowRef = useRef<Window | null>(null);
-useEffect(() => {
-    if (!pollingRef) return;
-    const token = localStorage.getItem("token");
-    let interval: any;
-    
-    const checkStatus = async () => {
-      try {
-        const API_URL = "https://8111c.com/api/v1";
-        const res = await fetch(API_URL + "/payments/status/" + pollingRef, {
-          headers: { "Authorization": "Bearer " + token }
-        });
-        const data = await res.json();
-        
-        if (data.status === 'COMPLETED' || data.status === 'PAID') {
-          toast.success("Deposit Successful! Balance updated instantly.");
-          setPollingRef(null);
-          if (popupWindowRef.current) popupWindowRef.current.close();
-          popupWindowRef.current = null;
-          setAmount("");
-          if (refreshUser) refreshUser();
-          clearInterval(interval);
-          router.push("/profile");
-        } else if (data.status === 'REJECTED' || data.status === 'FAILED' || data.status === 'CANCELLED') {
-          toast.error("Deposit failed or was rejected.");
-          if (popupWindowRef.current) popupWindowRef.current.close();
-          popupWindowRef.current = null;
-          setPollingRef(null);
-          setLoading(false);
-          clearInterval(interval);
-        }
-      } catch (e) {
-        // silently fail and retry
-      }
-    };
-    
-    interval = setInterval(checkStatus, 3000);
-    return () => clearInterval(interval);
-  }, [pollingRef, refreshUser, router]);
-
-  const handleDeposit = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("Please login first to make a deposit");
-      router.push("/");
-      return;
-    }
-
-    if (!amount || Number(amount) <= 0) {
-      toast.error("Please enter a valid amount");
-      return;
-    }
-    if (tab === "online") {
-      if (accountNo.length < 10) {
-        toast.error("Please enter a valid mobile number (e.g., 03001234567)");
-        return;
-      }
-      
-    }
-    
-    setLoading(true);
-    
-    const API_URL = "https://8111c.com/api/v1";
-    
-    try {
-      
-      const providerStr = method.split('_')[0].toUpperCase();
-      let res;
-      
-      if (tab === "online") {
-        const payload = { amount: Number(amount), provider: providerStr, accountNo };
-        res = await fetch(API_URL + '/payments/auto-deposit', {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-          body: JSON.stringify(payload),
-        });
-      } else {
-        const payload = { amount: Number(amount), provider: providerStr, accountNo, transactionId: trxId, autoApprove: false };
-        res = await fetch(API_URL + '/payments/deposit', {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-          body: JSON.stringify(payload),
-        });
-      }
-
-      
-      const resData = await res.json();
-      if (!res.ok) {
-        toast.error(resData.message || "Deposit failed");
-        setLoading(false);
-        return;
-      }
-
-      if (tab === "online") {
-        if (resData.reference) {
-          setPollingRef(resData.reference);
-          if (resData.payment_url) {
-            const popup = window.open(resData.payment_url, 'XpressPay', 'width=500,height=700,left=200,top=100');
-            popupWindowRef.current = popup;
-          }
-          toast.success("Deposit initiated! Please check the popup window.");
-        } else {
-          toast.error("Invalid response from server");
-          setLoading(false);
-        }
-        return; // wait for polling
-      } else {
-        toast.success("Deposit request sent!");
-      }
-
-      setAmount("");
-      setTrxId("");
-      router.push("/profile");
-      
-    } catch (e) {
-      toast.error("Deposit request failed");
-    } finally {
-      setLoading(false);
-    }
-  };  // Computed bonuses
-  const getBonus = (amt: number) => {
-    if (tab === "crypto") {
-      return (amt * 0.06).toFixed(2);
-    }
-    return (amt * 0.07).toFixed(2);
-  };
-
-  return (
+const newJSX = `return (
     <div className="min-h-screen bg-[#111] text-white flex flex-col font-sans pb-8">
       
       {/* Header */}
@@ -185,11 +36,11 @@ useEffect(() => {
         {/* Payment Method */}
         <h2 className="text-sm font-bold text-neutral-200 mb-2">Payment method</h2>
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <button onClick={() => setMethod("JazzCash_0")} className={`h-12 rounded-lg border flex items-center justify-center gap-2 transition-all ${method.includes("JazzCash") ? "border-[#ffdf00] bg-black text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-neutral-400"}`}>
+          <button onClick={() => setMethod("JazzCash_0")} className={\`h-12 rounded-lg border flex items-center justify-center gap-2 transition-all \${method.includes("JazzCash") ? "border-[#ffdf00] bg-black text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-neutral-400"}\`}>
             <img src="/jazzcash.png" alt="JazzCash" className="w-6 h-6 object-contain rounded" />
             <span className="text-sm font-medium">JazzCash</span>
           </button>
-          <button onClick={() => setMethod("EasyPaisa_0")} className={`h-12 rounded-lg border flex items-center justify-center gap-2 transition-all ${method.includes("EasyPaisa") ? "border-[#ffdf00] bg-black text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-neutral-400"}`}>
+          <button onClick={() => setMethod("EasyPaisa_0")} className={\`h-12 rounded-lg border flex items-center justify-center gap-2 transition-all \${method.includes("EasyPaisa") ? "border-[#ffdf00] bg-black text-[#ffdf00]" : "border-neutral-700 bg-[#1a1a1a] text-neutral-400"}\`}>
             <img src="/easypaisa.png" alt="EasyPaisa" className="w-6 h-6 object-contain rounded bg-white p-0.5" />
             <span className="text-sm font-medium">EasyPaisa</span>
           </button>
@@ -205,12 +56,12 @@ useEffect(() => {
           <div className="grid grid-cols-3 gap-2 border-t border-neutral-800 pt-3 relative mb-4">
             {["Fast", "Fast", "Fast", "Fast"].map((m, i) => {
               const baseMethod = method.split('_')[0];
-              const subMethod = `${baseMethod}_${i}`;
+              const subMethod = \`\${baseMethod}_\${i}\`;
               return (
               <button 
                 key={i} 
                 onClick={() => setMethod(subMethod)}
-                className={`relative h-10 rounded-md border flex items-center justify-center text-xs ${method === subMethod || (method === baseMethod && i === 0) ? "border-[#ffdf00] text-[#ffdf00] bg-black/40" : "border-neutral-700 text-neutral-400 bg-[#1a1a1a]"}`}
+                className={\`relative h-10 rounded-md border flex items-center justify-center text-xs \${method === subMethod || (method === baseMethod && i === 0) ? "border-[#ffdf00] text-[#ffdf00] bg-black/40" : "border-neutral-700 text-neutral-400 bg-[#1a1a1a]"}\`}
               >
                 {baseMethod}
                 <span className="absolute -top-1.5 -right-1 bg-[#ff0b0b] text-white text-[8px] font-bold px-1 rounded-sm">Fast</span>
@@ -251,7 +102,7 @@ useEffect(() => {
             <button 
               key={amt}
               onClick={() => setAmount(amt.toString())}
-              className={`h-12 rounded-md flex flex-col items-center justify-center border transition-all ${amount === amt.toString() ? "border-[#ffdf00] bg-black" : "border-neutral-800 bg-[#1a1a1a]"}`}
+              className={\`h-12 rounded-md flex flex-col items-center justify-center border transition-all \${amount === amt.toString() ? "border-[#ffdf00] bg-black" : "border-neutral-800 bg-[#1a1a1a]"}\`}
             >
               <span className="text-white font-bold text-xs">{amt.toLocaleString()}</span>
               <span className="text-[#ffdf00] font-bold text-[9px]">+{getBonus(amt)}</span>
@@ -263,7 +114,7 @@ useEffect(() => {
         <button 
           onClick={handleDeposit} 
           disabled={loading} 
-          className={`w-full h-12 rounded-lg font-bold text-[15px] mb-6 transition-all ${amount ? "bg-[#ffdf00] text-black shadow-[0_2px_15px_rgba(255,223,0,0.3)]" : "bg-[#444] text-neutral-300"} ${loading ? "opacity-50" : ""}`}
+          className={\`w-full h-12 rounded-lg font-bold text-[15px] mb-6 transition-all \${amount ? "bg-[#ffdf00] text-black shadow-[0_2px_15px_rgba(255,223,0,0.3)]" : "bg-[#444] text-neutral-300"} \${loading ? "opacity-50" : ""}\`}
         >
           {loading ? "Processing..." : "Deposit Now"}
         </button>
@@ -355,4 +206,8 @@ useEffect(() => {
       )}
     </div>
   );
-}
+}`;
+
+code = code.replace(/return \(\s*<div className="min-h-screen[\s\S]*/, newJSX);
+fs.writeFileSync('src/components/DepositScreen.tsx', code);
+console.log("Properly patched DepositScreen layout!");
