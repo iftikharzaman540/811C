@@ -118,7 +118,7 @@ export class GregmornService {
       return data.content.game.url;
     } catch (error) {
       this.logger.error(`Gregmorn openGame error: ${error.message}`);
-      throw new InternalServerErrorException('Failed to launch game');
+      throw new require('@nestjs/common').HttpException(error.message || 'Failed to launch game', 400);
     }
   }
 }
