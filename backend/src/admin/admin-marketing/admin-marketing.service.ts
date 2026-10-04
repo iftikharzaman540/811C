@@ -3,6 +3,28 @@ import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class AdminMarketingService {
+  async getEvents() {
+    let setting = await this.prisma.systemSetting.findUnique({ where: { key: 'promo_events' } });
+    if (!setting) {
+      const defaultEvents = [
+        { id: 1, title: 'Invitation Event', desc: 'Each player you invite', highlight: 'Get Rs 600', icon: '??', category: 'Cooperation' }
+      ];
+      setting = await this.prisma.systemSetting.create({
+        data: { key: 'promo_events', value: JSON.stringify(defaultEvents), description: 'Promo Events' }
+      });
+    }
+    return JSON.parse(setting.value as string);
+  }
+
+  async updateEvents(data: any) {
+    const setting = await this.prisma.systemSetting.upsert({
+      where: { key: 'promo_events' },
+      update: { value: JSON.stringify(data) },
+      create: { key: 'promo_events', value: JSON.stringify(data), description: 'Promo Events' }
+    });
+    return JSON.parse(setting.value as string);
+  }
+
   constructor(private prisma: PrismaService) {}
 
   // PROMO CODES

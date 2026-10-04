@@ -3,6 +3,12 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class PromoService {
+  async getEvents() {
+    const setting = await this.prisma.systemSetting.findUnique({ where: { key: 'promo_events' } });
+    if (!setting) return [];
+    return JSON.parse(setting.value as string);
+  }
+
   constructor(private prisma: PrismaService) {}
 
   async spinWheel(userId: string) {

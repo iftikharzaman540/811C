@@ -21,6 +21,15 @@ export default function PromoPage() {
   
   const [showPhoneModal, setShowPhoneModal] = useState(false);
   const [showRedeemModal, setShowRedeemModal] = useState(false);
+  const [promoEvents, setPromoEvents] = useState<any[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+
+  useEffect(() => {
+    apiRequest('/promo/events').then(res => {
+      setPromoEvents(res || []);
+      setEventsLoading(false);
+    }).catch(() => setEventsLoading(false));
+  }, []);
 
   const topTabs = ["Event", "Unclaimed", "Rebate", "Mission", "VIP", "History", "Fund"];
   
@@ -44,60 +53,32 @@ export default function PromoPage() {
   ];
 
   const renderEventBanners = () => {
-    switch (activeSideTab) {
-      case "All":
-        return (
-          <>
-            <Banner title="Redeem code" desc="Follow the 8111C channel" highlight="Earn 10~77777" icon="🎁" />
-            <Banner title="BRAND ALLIANCE" desc="8111C.com" sub="DUAL CERTIFICATION OF REPUTATION AND STRENGTH" icon="🛡️" />
-            <Banner title="BRAND ALLIANCE" desc="VIP Club" sub="DUAL CERTIFICATION OF REPUTATION AND STRENGTH" icon="👑" badge="1" />
-          </>
-        );
-      case "Cooperation":
-        return (
-          <>
-            <Banner title="Invitation Event" desc="Each player you invite" highlight="Get Rs 600" icon="🤝" />
-            <Banner title="Invitation Event" desc="Each player you invite" highlight="Get Rs 2000" icon="💸" />
-            <Banner title="Invitation Event" desc="Each player you invite" highlight="Get Rs 10,000" icon="💰" />
-            <Banner title="Invitation Event" desc="Each player you invite" highlight="Get Rs 50,000" icon="💎" />
-          </>
-        );
-      case "Channel":
-        return (
-          <>
-            <Banner title="Redeem code" desc="Follow the 8111C channel" highlight="Earn 10~77777" icon="🎁" />
-            <Banner title="Official Channel" desc="Follow us on Facebook" sub="Stay updated on the latest deals" icon="🌐" badge="•" href="https://www.facebook.com/share/1JzvPey4hQ/" />
-            <Banner title="Official Channel" desc="Follow us on Telegram" sub="Stay updated on the latest deals" icon="✈️" badge="•" href="https://t.me/Game8111c" />
-            <Banner title="Official Channel" desc="Follow us on WhatsApp" sub="Stay updated on the latest deals" icon="💬" badge="•" href="https://whatsapp.com/channel/0029VbDJdVw7j6gCK3T1YG0i" />
-          </>
-        );
-      case "Popular":
-        return (
-          <>
-            <Banner title="Redeem code" desc="Follow the 8111C channel" highlight="Earn 10~77777" icon="🎁" />
-            <Banner title="Bet on Aviator" desc="Claim bonus" highlight="Rs 177,777" icon="🚀" />
-            <Banner title="Daily Ranking" desc="Recharge Competition" sub="You're the First" icon="🏆" />
-          </>
-        );
-      case "Mini Games":
-        return (
-          <>
-            <Banner title="Bet on Aviator" desc="Claim bonus" highlight="Rs 177,777" icon="🚀" />
-            <Banner title="Lucky Wheel" desc="Play daily to participate in the Lucky Wheel" highlight="" icon="🎡" />
-            <Banner title="Chicken Road" desc="Betting boost bonus" highlight="Rs 177777" icon="🐔" />
-          </>
-        );
-      case "Slot":
-        return (
-          <>
-            <Banner title="Lucky Wheel" desc="Play daily to participate in the Lucky Wheel" highlight="" icon="🎡" />
-            <Banner title="SLOT BETTING" desc="Lucky bet numbers" highlight="1000X BET BONUS" icon="🎰" />
-            <Banner title="JILI PG Slot" desc="Betting Boost Bonus" highlight="Rs 177777" icon="🛡️" />
-          </>
-        );
-      default:
-        return <div className="flex items-center justify-center h-40 text-neutral-500 text-[13px]">No events available for this category yet.</div>;
+    if (eventsLoading) return <div className="text-center text-neutral-500 py-10">Loading events...</div>;
+    
+    let filtered = promoEvents;
+    if (activeSideTab !== "All") {
+      filtered = promoEvents.filter(ev => ev.category === activeSideTab || ev.category === "All");
     }
+
+    if (filtered.length === 0) {
+      return <div className="text-center text-neutral-500 py-10">No events found for {activeSideTab}</div>;
+    }
+
+    return (
+      <>
+        {filtered.map((ev, i) => (
+          <Banner 
+            key={i} 
+            title={ev.title} 
+            desc={ev.desc} 
+            highlight={ev.highlight} 
+            icon={ev.icon} 
+            sub={ev.sub} 
+            badge={ev.badge} 
+          />
+        ))}
+      </>
+    );
   };
 
   const renderRebateList = () => {

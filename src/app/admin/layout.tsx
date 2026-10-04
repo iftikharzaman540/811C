@@ -30,6 +30,7 @@ const SIDEBAR_NAV = [
     children: [
       { name: "Bonuses", href: "/admin/marketing/bonuses" },
       { name: "Promo Codes", href: "/admin/marketing/promocodes" },
+        { name: "Promo Events", href: "/admin/marketing/events" },
       { name: "Affiliates", href: "/admin/marketing/affiliates" },
     ]
   },

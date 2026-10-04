@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards, Req } from '@nestjs/common';
 import { PromoService } from './promo.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -7,6 +7,12 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 @Controller('api/v1/promo')
 export class PromoController {
   constructor(private readonly promoService: PromoService) {}
+  @Get('events')
+  @ApiOperation({ summary: 'Get all promo events' })
+  async getEvents() {
+    return this.promoService.getEvents();
+  }
+
 
   @Post('spin')
   @UseGuards(AuthGuard('jwt'))

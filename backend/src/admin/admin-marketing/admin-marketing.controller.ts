@@ -10,6 +10,16 @@ import { Role } from '@prisma/client';
 @Roles(Role.SUPER_ADMIN, Role.ADMIN)
 export class AdminMarketingController {
   constructor(private readonly svc: AdminMarketingService) {}
+  @Get('events')
+  getEvents() {
+    return this.svc.getEvents();
+  }
+
+  @Post('events')
+  updateEvents(@Body() data: any) {
+    return this.svc.updateEvents(data);
+  }
+
 
   // PROMO CODES
   @Get('promocodes')
