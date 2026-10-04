@@ -48,13 +48,26 @@ export default function DepositScreen() {
     const API_URL = "https://8111c.com/api/v1";
     
     try {
-      const payload = {  amount: Number(amount), provider: method.split('_')[0].toUpperCase(), accountNo, autoApprove: true  };
+      
+      const providerStr = method.split('_')[0].toUpperCase();
+      let res;
+      
+      if (tab === "online") {
+        const payload = { amount: Number(amount), provider: providerStr, accountNo };
+        res = await fetch(API_URL + '/payments/auto-deposit', {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+          body: JSON.stringify(payload),
+        });
+      } else {
+        const payload = { amount: Number(amount), provider: providerStr, accountNo, transactionId: trxId, autoApprove: false };
+        res = await fetch(API_URL + '/payments/deposit', {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+          body: JSON.stringify(payload),
+        });
+      }
 
-      const res = await fetch(API_URL + '/payments/deposit', {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-        body: JSON.stringify(payload),
-      });
       
       const resData = await res.json();
       if (!res.ok) {
@@ -64,7 +77,7 @@ export default function DepositScreen() {
       }
 
       if (tab === "online") {
-        toast.success("Deposit Successful! Balance updated instantly.");
+        toast.success("Deposit initiated! Please check your phone for the PIN prompt.");
       } else {
         toast.success("Deposit request sent!");
       }
