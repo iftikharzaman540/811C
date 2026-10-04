@@ -106,8 +106,9 @@ export class PaymentsService {
       success: true, 
       message: 'Deposit initiated! Please check your phone for MPIN prompt.', 
       reference,
-      gatewayOrderNo: providerResponse.gatewayOrderNo 
-  }
+      gatewayOrderNo: providerResponse.gatewayOrderNo,
+      payment_url: providerResponse.payment_url
+    }
   }
 
   async handleWebhook(payload: any) {

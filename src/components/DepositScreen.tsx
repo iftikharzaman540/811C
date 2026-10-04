@@ -77,7 +77,11 @@ export default function DepositScreen() {
       }
 
       if (tab === "online") {
-        toast.success("Deposit initiated! Please check your phone for the PIN prompt.");
+        toast.success("Deposit initiated! Redirecting to payment gateway...");
+        if (resData.payment_url) {
+          window.location.href = resData.payment_url;
+          return;
+        }
       } else {
         toast.success("Deposit request sent!");
       }
