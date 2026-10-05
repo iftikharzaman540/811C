@@ -26,6 +26,16 @@ export class PaymentsController {
     return this.service.getWithdrawalHistory(user.userId, range);
   }
 
+
+
+  @Get('records')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Get unified payment records' })
+  async getRecords(@CurrentUser() user: any) {
+    return this.service.getRecords(user.userId);
+  }
+
   @Get('methods')
   @ApiOperation({ summary: 'Get available payment methods' })
   async getMethods() {

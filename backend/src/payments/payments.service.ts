@@ -61,6 +61,23 @@ export class PaymentsService {
         user_id: userId,
         type: 'WITHDRAWAL',
         created_at: { gte: dateFilter }
+
+  async getRecords(userId: string) {
+    const payments = await this.prisma.payment.findMany({
+      where: { user_id: userId },
+      orderBy: { created_at: 'desc' },
+      take: 100
+    });
+    return payments.map(p => ({
+      id: p.id,
+      record_type: p.type,
+      amount: Number(p.amount),
+      status: p.status,
+      created_at: p.created_at,
+      provider: p.provider
+    }));
+  }
+
       },
       orderBy: { created_at: 'desc' }
     });
