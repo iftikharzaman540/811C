@@ -176,6 +176,12 @@ export default function WithdrawalHistoryPage() {
                       ID: {record.transaction_id || record.reference_id || record.id.slice(0,8)}
                     </div>
                   </div>
+                  
+                  {record.status === 'PENDING' && (
+                    <div className="mt-3 p-2 rounded bg-yellow-500/10 border border-yellow-500/20 text-[11px] text-yellow-500/90 leading-tight">
+                      Due to the high volume of withdrawal requests, processing may take 1�2 hours and, in some cases, up to approximately 24 hours. We appreciate your patience and understanding.
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

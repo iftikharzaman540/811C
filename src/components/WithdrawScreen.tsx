@@ -86,7 +86,7 @@ export default function WithdrawScreen() {
         setAmount("");
         setAccountNo("");
         if (refreshUser) refreshUser(); // Refresh balance
-        router.push("/profile");
+          router.push("/withdrawal-history");
       } else {
         toast.error(data.message || "Failed to withdraw");
       }
