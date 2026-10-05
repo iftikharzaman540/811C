@@ -42,6 +42,12 @@ export class SupportService {
       }
     });
 
+    // Update ticket's updated_at so it bumps to the top of the admin panel
+    await this.prisma.ticket.update({
+      where: { id: ticket.id },
+      data: { updated_at: new Date() }
+    });
+
     if (msgCount === 0) {
       setTimeout(async () => {
         try {
@@ -58,14 +64,6 @@ export class SupportService {
           });
         } catch(e){}
       }, 6000);
-    } else {
-      setTimeout(async () => {
-        try {
-          await this.prisma.ticketMessage.create({
-            data: { ticket_id: ticket.id, admin_id: 'system_bot', message: "Mohtaram customer, Assalam-o-Alaikum! ?? Aapka message humein mil gaya hai. Filhal customer service dusre customers ki queries handle kar rahi hai. Meherbani karke thora sabr karein, hum jald hi aapko reply karenge. Aapki samajh aur support ka shukriya! ??" }
-          });
-        } catch(e){}
-      }, 2000);
     }
 
     return { success: true, message: msg };
