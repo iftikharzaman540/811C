@@ -266,7 +266,10 @@ export default function AuthScreen({ onLogin, onClose }: { onLogin?: () => void,
               <button className="text-[11px] text-[#ffdf00]">Demo</button>
             </div>
             
-            {/* Close button at bottom */}
+          </div>
+        </div>
+
+        {/* Close button at bottom */}
         <div className="flex justify-center mt-5 mb-8">
           <button onClick={onClose} className="w-8 h-8 rounded-full border-[1.5px] border-white flex items-center justify-center text-white hover:scale-105 transition-transform bg-black/40">
             <X className="w-5 h-5" />
