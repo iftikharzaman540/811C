@@ -12,10 +12,17 @@ export class AdminFinancialsService {
     private auditLogs: AuditLogsService
   ) {}
 
-  async getDeposits(page = 1, limit = 20, status?: FinancialStatus) {
+  async getDeposits(page = 1, limit = 20, status?: FinancialStatus, search?: string) {
     const skip = (page - 1) * limit;
     const where: any = { type: 'DEPOSIT' };
     if (status) where.status = status;
+    if (search) {
+      where.OR = [
+        { transaction_reference: { contains: search, mode: 'insensitive' } },
+        { user: { username: { contains: search, mode: 'insensitive' } } },
+        { user: { email: { contains: search, mode: 'insensitive' } } }
+      ];
+    }
     
     const [data, total] = await Promise.all([
       this.prisma.payment.findMany({ where, skip, take: limit, orderBy: { created_at: 'desc' }, include: { user: { select: { username: true, email: true } } } }),

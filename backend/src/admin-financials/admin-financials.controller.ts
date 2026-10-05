@@ -23,9 +23,10 @@ export class AdminFinancialsController {
   async getDeposits(
     @Query('page') page = 1,
     @Query('limit') limit = 20,
-    @Query('status') status?: FinancialStatus
+    @Query('status') status?: FinancialStatus,
+    @Query('search') search?: string
   ) {
-    return this.service.getDeposits(Number(page), Number(limit), status);
+    return this.service.getDeposits(Number(page), Number(limit), status, search);
   }
 
   @Patch('deposits/:id/:action')

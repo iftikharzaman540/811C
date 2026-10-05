@@ -1,4 +1,5 @@
-
+const fs = require('fs');
+let code = `
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -18,7 +19,7 @@ export default function DepositsPage() {
   const fetchDeposits = async (p = page, q = search) => {
     setLoading(true);
     try {
-      const res = await apiRequest(`/admin/finances/deposits?page=${p}&limit=50&search=${encodeURIComponent(q)}`);
+      const res = await apiRequest(\`/admin/finances/deposits?page=\${p}&limit=50&search=\${encodeURIComponent(q)}\`);
       setDeposits(res.data);
       setMeta(res.meta);
     } catch (error) {
@@ -39,14 +40,14 @@ export default function DepositsPage() {
   };
 
   const handleProcess = async (id: string, action: 'approve' | 'reject') => {
-    if (!confirm(`Are you sure you want to ${action} this deposit?`)) return;
+    if (!confirm(\`Are you sure you want to \${action} this deposit?\`)) return;
     setProcessingId(id);
     try {
-      await apiRequest(`/admin/finances/deposits/${id}/${action}`, { method: 'PATCH' });
-      toast.success(`Deposit ${action}d successfully`);
+      await apiRequest(\`/admin/finances/deposits/\${id}/\${action}\`, { method: 'PATCH' });
+      toast.success(\`Deposit \${action}d successfully\`);
       fetchDeposits();
     } catch (error: any) {
-      toast.error(error.message || `Failed to ${action} deposit`);
+      toast.error(error.message || \`Failed to \${action} deposit\`);
     } finally {
       setProcessingId(null);
     }
@@ -109,7 +110,7 @@ export default function DepositsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(dep.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
-                      <Link href={`/admin/users/${dep.user_id}`} className="text-white hover:text-[#ffdf00]">
+                      <Link href={\`/admin/users/\${dep.user_id}\`} className="text-white hover:text-[#ffdf00]">
                         {dep.user?.player_id ? 'ID: ' + dep.user.player_id : (dep.user?.username || dep.user?.email || dep.user_id)}
                       </Link>
                     </td>
@@ -120,11 +121,11 @@ export default function DepositsPage() {
                       PKR {Number(dep.amount).toLocaleString()}
                     </td>
                     <td className="px-6 py-4">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                      <span className={\`px-2.5 py-1 rounded-full text-xs font-bold \${
                         dep.status === 'COMPLETED' ? 'bg-green-500/10 text-green-500' :
                         dep.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-500' :
                         'bg-red-500/10 text-red-500'
-                      }`}>
+                      }\`}>
                         {dep.status}
                       </span>
                     </td>
@@ -182,3 +183,5 @@ export default function DepositsPage() {
     </div>
   );
 }
+`;
+fs.writeFileSync('src/app/admin/finances/deposits/page.tsx', code);
