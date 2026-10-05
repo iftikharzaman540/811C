@@ -1273,7 +1273,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             <div className="px-4 py-3 bg-black flex items-center border-b border-neutral-800">
               <button onClick={() => setIsMenuOpen(false)} className="relative mr-4 p-1 cursor-pointer hover:bg-neutral-800 rounded-lg">
                 <ArrowLeft className="w-6 h-6 text-white" />
-                <span className="absolute -top-1 -right-1 bg-[#ff4747] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">6</span>
+                
               </button>
               <img src="/header-logo.jpg" alt="Logo" className="h-[28px] object-contain mix-blend-screen" />
             </div>
@@ -1396,12 +1396,12 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               <div className="grid grid-cols-2 gap-2 mt-2">
                 <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">Event</span>
-                  <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">3</span>
+                  
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">🎯</div>
                 </div>
                 <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-[#cc0000] to-[#800000] rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative">Mission</span>
-                  <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">1</span>
+                  
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">📅</div>
                 </div>
                 <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-red-400 to-red-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
@@ -1423,7 +1423,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 </div>
                 <div onClick={() => { setIsMenuOpen(false); router.push("/promo"); }} className="relative bg-gradient-to-br from-[#2a2a2a] to-[#111111] border border-[#ffdf00]/30 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-white font-bold text-[13px] z-10 relative leading-tight">Unclaim<br/>ed</span>
-                  <span className="absolute -top-1 right-0 bg-[#ff4747] text-white text-[10px] font-bold px-1.5 min-w-[16px] h-4 rounded-full flex items-center justify-center z-20">2</span>
+                  
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">🎁</div>
                 </div>
                 <div onClick={() => { setIsMenuOpen(false); router.push("/profile"); }} className="relative bg-gradient-to-br from-orange-400 to-orange-500 rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">

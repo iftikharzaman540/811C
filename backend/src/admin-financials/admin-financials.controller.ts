@@ -59,8 +59,9 @@ export class AdminFinancialsController {
   async processWithdrawal(
     @CurrentUser() admin: any,
     @Param('id') id: string,
-    @Param('action') action: 'approve' | 'reject' | 'complete'
+    @Param('action') action: 'approve' | 'reject' | 'complete',
+    @Body() body?: { reason?: string }
   ) {
-    return this.service.processWithdrawal(admin.userId, id, action);
+    return this.service.processWithdrawal(admin.userId, id, action, body?.reason);
   }
 }

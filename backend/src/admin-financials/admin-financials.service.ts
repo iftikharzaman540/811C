@@ -81,7 +81,7 @@ export class AdminFinancialsService {
     return { data, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
   }
 
-  async processWithdrawal(adminId: string, withdrawalId: string, action: 'approve' | 'reject' | 'complete') {
+  async processWithdrawal(adminId: string, withdrawalId: string, action: 'approve' | 'reject' | 'complete', reason?: string) {
     const withdrawal = await this.prisma.payment.findUnique({ where: { id: withdrawalId } });
     if (!withdrawal) throw new NotFoundException('Withdrawal not found');
 
