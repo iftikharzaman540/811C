@@ -1309,9 +1309,9 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               {/* Search Results Dropdown inside Sidebar */}
               {sidebarSearch && (
                 <div className="mt-2 bg-[#1c1c1c] rounded-lg border border-neutral-800 overflow-hidden max-h-[300px] overflow-y-auto no-scrollbar shadow-xl">
-                  {realGames.filter((g: any) => (g.title || g.name)?.toLowerCase().includes(sidebarSearch.toLowerCase())).length > 0 ? (
+                  {realGames.filter((g: any) => ((g.title || g.name) || "").toLowerCase().includes(sidebarSearch.toLowerCase())).length > 0 ? (
                     <div className="flex flex-col">
-                      {realGames.filter((g: any) => (g.title || g.name)?.toLowerCase().includes(sidebarSearch.toLowerCase())).slice(0, 15).map((game: any, gIdx: number) => (
+                      {realGames.filter((g: any) => ((g.title || g.name) || "").toLowerCase().includes(sidebarSearch.toLowerCase())).slice(0, 15).map((game: any, gIdx: number) => (
                         <div 
                           key={gIdx}
                           onClick={() => {
