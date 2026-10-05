@@ -1215,7 +1215,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 {(dynamicWinners.length > 0 ? dynamicWinners : marqueeWinners).map((winner, idx) => (
                   <div 
                     key={idx} 
-                    onClick={() => { if(winner.gameId) { const w = window as any; if(w.handleLaunchGame) w.handleLaunchGame(winner.gameId); else toast.error("Loading game..."); } else toast.error("Loading..."); }}
+                    onClick={() => { if(winner.gameId) { const w = window as any; if(w.handleLaunchGame) w.handleLaunchGame(winner.gameId); else toast.error("Please select a game from the list below to play!"); } else toast.error("Please select a game from the list below to play!"); }}
                     className="flex flex-col items-center w-[75px] shrink-0 cursor-pointer group"
                   >
                     {/* Game Icon */}
