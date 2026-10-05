@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { apiRequest } from '@/utils/api';
 import { ArrowLeft, Send, CheckCircle, ShieldAlert, Clock } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
-export default function TicketDetailsPage({ params }: { params: { id: string } }) {
+export default function TicketDetailsPage() {
+  const params = useParams();
   const [ticket, setTicket] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [replyText, setReplyText] = useState('');
