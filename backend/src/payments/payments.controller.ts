@@ -49,9 +49,9 @@ export class PaymentsController {
   @ApiOperation({ summary: 'Initiate a deposit' })
   async deposit(
     @CurrentUser() user: any,
-    @Body() body: { amount: number; provider: PaymentProvider; transactionId?: string; autoApprove?: boolean }
+    @Body() body: { amount: number; provider: PaymentProvider; transactionId?: string; autoApprove?: boolean; accountNo?: string }
   ) {
-    return this.service.createDeposit(user.userId, body.amount, body.provider, body.transactionId, body.autoApprove);
+    return this.service.createDeposit(user.userId, body.amount, body.provider, body.transactionId, body.autoApprove, body.accountNo);
   }
 
   @Post('auto-deposit')

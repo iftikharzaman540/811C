@@ -86,6 +86,7 @@ export default function DepositsPage() {
                 <th className="px-6 py-4 font-medium">Date</th>
                 <th className="px-6 py-4 font-medium">User</th>
                 <th className="px-6 py-4 font-medium">Method</th>
+                <th className="px-6 py-4 font-medium">Payment Account</th>
                 <th className="px-6 py-4 font-medium">Amount</th>
                 <th className="px-6 py-4 font-medium">Status</th>
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
@@ -94,11 +95,11 @@ export default function DepositsPage() {
             <tbody className="divide-y divide-neutral-800">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-neutral-500">Loading deposits...</td>
+                  <td colSpan={8} className="px-6 py-8 text-center text-neutral-500">Loading deposits...</td>
                 </tr>
               ) : deposits.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-neutral-500">No deposits found.</td>
+                  <td colSpan={8} className="px-6 py-8 text-center text-neutral-500">No deposits found.</td>
                 </tr>
               ) : (
                 deposits.map(dep => (
@@ -106,6 +107,7 @@ export default function DepositsPage() {
                     <td className="px-6 py-4 font-mono text-xs">
                        <div className="text-white">{dep.transaction_reference || 'N/A'}</div>
                        <div className="text-neutral-600 text-[10px] mt-1">{dep.id}</div>
+                         <div className="text-[#ffdf00] text-[10px] mt-1 break-all">Merchant ID: {dep.metadata?.webhook_data?.orderNo || dep.metadata?.gatewayOrderNo || 'N/A'}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(dep.created_at).toLocaleString()}</td>
                     <td className="px-6 py-4">
@@ -116,7 +118,10 @@ export default function DepositsPage() {
                     <td className="px-6 py-4">
                       {dep.provider || 'Unknown'}
                     </td>
-                    <td className="px-6 py-4 font-bold text-green-500">
+                    <td className="px-6 py-4">
+                        <span className="text-white font-mono bg-neutral-800 px-2 py-1 rounded text-xs">{dep.metadata?.accountNo || 'N/A'}</span>
+                      </td>
+                      <td className="px-6 py-4 font-bold text-green-500">
                       PKR {Number(dep.amount).toLocaleString()}
                     </td>
                     <td className="px-6 py-4">

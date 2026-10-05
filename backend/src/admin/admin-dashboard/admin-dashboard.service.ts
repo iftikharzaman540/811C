@@ -14,14 +14,8 @@ export class AdminDashboardService {
       pendingKyc
     ] = await Promise.all([
       this.prisma.user.count({ where: { role: 'USER' } }),
-      this.prisma.deposit.aggregate({
-        _sum: { amount: true },
-        where: { status: 'COMPLETED' }
-      }),
-      this.prisma.withdrawal.aggregate({
-        _sum: { amount: true },
-        where: { status: 'COMPLETED' }
-      }),
+      this.prisma.payment.aggregate({ _sum: { amount: true }, where: { type: 'DEPOSIT', status: 'COMPLETED' } }),
+      this.prisma.payment.aggregate({ _sum: { amount: true }, where: { type: 'WITHDRAWAL', status: 'COMPLETED' } }),
       this.prisma.withdrawal.count({ where: { status: 'PENDING' } }),
       this.prisma.kycDocument.count({ where: { status: 'PENDING' } })
     ]);

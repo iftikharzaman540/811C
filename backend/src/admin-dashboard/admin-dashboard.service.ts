@@ -21,10 +21,7 @@ export class AdminDashboardService {
         _sum: { amount: true },
         where: { status: 'COMPLETED' } // Assuming COMPLETED or APPROVED
       }),
-      this.prisma.withdrawal.aggregate({
-        _sum: { amount: true },
-        where: { status: 'COMPLETED' }
-      }),
+      this.prisma.payment.aggregate({ _sum: { amount: true }, where: { type: 'WITHDRAWAL', status: 'COMPLETED' } }),
       this.prisma.auditLog.findMany({
         take: 10,
         orderBy: { created_at: 'desc' },

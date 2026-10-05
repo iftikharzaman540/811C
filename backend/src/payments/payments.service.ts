@@ -105,7 +105,7 @@ export class PaymentsService {
     throw new BadRequestException('Unsupported provider');
   }
 
-      async createDeposit(userId: string, amount: number, providerName: PaymentProvider, transactionId?: string, autoApprove?: boolean) {
+      async createDeposit(userId: string, amount: number, providerName: PaymentProvider, transactionId?: string, autoApprove?: boolean, accountNo?: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
     if (!user.deposits_enabled) throw new BadRequestException('Deposits are currently restricted for your account. Please contact support.');
@@ -120,6 +120,7 @@ export class PaymentsService {
         type: 'DEPOSIT',
         transaction_reference: reference,
         status: status,
+        metadata: accountNo ? { accountNo } : undefined,
       },
     });
 
@@ -253,7 +254,7 @@ export class PaymentsService {
 
       await this.prisma.payment.update({
         where: { id: payment.id },
-        data: { status: 'COMPLETED', metadata: data },
+        data: { status: 'COMPLETED', metadata: { ...(payment.metadata as any || {}), webhook_data: data } },
       });
 
       await this.prisma.deposit.updateMany({
@@ -276,7 +277,7 @@ export class PaymentsService {
     } else if (orderStatus === '4' || statusText === 'FAILED') {
       await this.prisma.payment.update({
         where: { id: payment.id },
-        data: { status: 'REJECTED', metadata: data },
+        data: { status: 'REJECTED', metadata: { ...(payment.metadata as any || {}), webhook_data: data } },
       });
 
       await this.prisma.deposit.updateMany({
