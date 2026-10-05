@@ -325,13 +325,14 @@ export default function UserProfilePage() {
                       <th className="px-4 py-3 font-medium">Payment Method</th>
                       <th className="px-4 py-3 font-medium">Ref #</th>
                       <th className="px-4 py-3 font-medium">Status</th>
-                      <th className="px-4 py-3 font-medium rounded-tr-lg">Date</th>
+                      <th className="px-4 py-3 font-medium">Date</th>
+                        <th className="px-4 py-3 font-medium text-right rounded-tr-lg">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-800">
                     {filteredDeposits.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="px-4 py-8 text-center text-neutral-500">No deposits found.</td>
+                        <td colSpan={7} className="px-4 py-8 text-center text-neutral-500">No deposits found.</td>
                       </tr>
                     ) : (
                       filteredDeposits.map((tx: any) => (
@@ -377,13 +378,14 @@ export default function UserProfilePage() {
                       <th className="px-4 py-3 font-medium">Amount</th>
                       <th className="px-4 py-3 font-medium">Method & Account</th>
                       <th className="px-4 py-3 font-medium">Status</th>
-                      <th className="px-4 py-3 font-medium rounded-tr-lg">Date</th>
+                      <th className="px-4 py-3 font-medium">Date</th>
+                        <th className="px-4 py-3 font-medium text-right rounded-tr-lg">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-neutral-800">
                     {filteredWithdrawals.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="px-4 py-8 text-center text-neutral-500">No withdrawals found.</td>
+                        <td colSpan={6} className="px-4 py-8 text-center text-neutral-500">No withdrawals found.</td>
                       </tr>
                     ) : (
                       filteredWithdrawals.map((tx: any) => (

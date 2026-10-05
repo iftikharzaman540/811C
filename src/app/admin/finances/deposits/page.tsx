@@ -39,10 +39,24 @@ export default function DepositsPage() {
   };
 
   const handleProcess = async (id: string, action: 'approve' | 'reject') => {
-    if (!confirm(`Are you sure you want to ${action} this deposit?`)) return;
+    let reason = '';
+    if (action === 'reject') {
+      const input = prompt('Please enter a reason for rejecting this deposit:');
+      if (input === null) return;
+      reason = input.trim();
+      if (!reason) {
+        toast.error('Reason is required for rejection');
+        return;
+      }
+    } else {
+      if (!confirm(`Are you sure you want to approve this deposit?`)) return;
+    }
     setProcessingId(id);
     try {
-      await apiRequest(`/admin/finances/deposits/${id}/${action}`, { method: 'PATCH' });
+      await apiRequest(`/admin/finances/deposits/${id}/${action}`, { 
+        method: 'PATCH',
+        body: JSON.stringify(reason ? { reason } : {})
+      });
       toast.success(`Deposit ${action}d successfully`);
       fetchDeposits();
     } catch (error: any) {
