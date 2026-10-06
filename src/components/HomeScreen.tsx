@@ -1500,7 +1500,8 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
 
       {/* Floating WhatsApp Button */}
       {showWhatsApp && (
-        <div className="fixed bottom-[110px] right-4 z-50 flex flex-col items-center animate-[bounce_3s_infinite]">
+        <div className="fixed bottom-[110px] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-50 pointer-events-none">
+          <div className="absolute right-4 flex flex-col items-center animate-[bounce_3s_infinite] pointer-events-auto">
           <button 
             onClick={() => setShowWhatsApp(false)}
             className="absolute -top-3 -left-3 bg-black border-[1.5px] border-white rounded-full p-0.5 text-white hover:text-red-500 hover:border-red-500 z-10 shadow-lg"
@@ -1526,6 +1527,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           
           <div className="mt-1.5 text-center px-1 font-medium text-[#25D366] text-[9px] max-w-[70px] leading-[1.1] filter drop-shadow-[0_1px_1px_rgba(0,0,0,1)]">
             Click to follow WhatsApp channel
+          </div>
           </div>
         </div>
       )}
