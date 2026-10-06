@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.app_8111c.twa",
+        "sha256_cert_fingerprints": ["F3:52:CD:12:EF:74:61:7D:88:89:2C:71:6B:4B:28:6E:A9:1D:5D:69:39:6F:12:26:02:6E:49:96:B3:40:26:96"]
+      }
+    }]
