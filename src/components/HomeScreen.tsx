@@ -1310,9 +1310,9 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
               {/* Search Results Dropdown inside Sidebar */}
               {sidebarSearch && (
                 <div className="mt-2 bg-[#1c1c1c] rounded-lg border border-neutral-800 overflow-hidden max-h-[300px] overflow-y-auto no-scrollbar shadow-xl">
-                  {[...gamesList, ...miniGamesList, ...realGames].filter((g: any) => { const s = sidebarSearch.toLowerCase(); return ((g.title || g.name) || '').toLowerCase().includes(s) || ((g.provider || g.logo) || '').toLowerCase().includes(s) || (g.hot && s === 'hot') || ((g.category) || '').toLowerCase().includes(s); }).length > 0 ? (
+                  {[...gamesList, ...miniGamesList, ...realGames].filter((g: any) => { const s = sidebarSearch.toLowerCase(); const n = g.title || g.name; const p = g.provider || g.logo; const c = g.category; return (typeof n === 'string' && n.toLowerCase().includes(s)) || (typeof p === 'string' && p.toLowerCase().includes(s)) || (g.hot && s === 'hot') || (typeof c === 'string' && c.toLowerCase().includes(s)); }).length > 0 ? (
                     <div className="flex flex-col">
-                      {[...gamesList, ...miniGamesList, ...realGames].filter((g: any) => { const s = sidebarSearch.toLowerCase(); return ((g.title || g.name) || '').toLowerCase().includes(s) || ((g.provider || g.logo) || '').toLowerCase().includes(s) || (g.hot && s === 'hot') || ((g.category) || '').toLowerCase().includes(s); }).slice(0, 15).map((game: any, gIdx: number) => (
+                      {[...gamesList, ...miniGamesList, ...realGames].filter((g: any) => { const s = sidebarSearch.toLowerCase(); const n = g.title || g.name; const p = g.provider || g.logo; const c = g.category; return (typeof n === 'string' && n.toLowerCase().includes(s)) || (typeof p === 'string' && p.toLowerCase().includes(s)) || (g.hot && s === 'hot') || (typeof c === 'string' && c.toLowerCase().includes(s)); }).slice(0, 15).map((game: any, gIdx: number) => (
                         <div 
                           key={gIdx}
                           onClick={() => {
