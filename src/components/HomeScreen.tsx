@@ -230,6 +230,7 @@ const heroBanners = [
 import toast from "react-hot-toast";
 import { useUser } from "@/context/UserContext";
 export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginClick?: () => void, onRegisterClick?: () => void }) {
+  const [showWhatsApp, setShowWhatsApp] = useState(true);
   const [heroIndex, setHeroIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [realGames, setRealGames] = useState<any[]>(() => {
