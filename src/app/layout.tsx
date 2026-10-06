@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  manifest: '/manifest.json',
   title: "8111C - Play & Win",
   description: "Play games and win real money",
 };

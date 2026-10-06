@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Home, Gift, UserPlus, Headset, User } from "lucide-react";
+import { Home, Gift, Wallet, Headset, User } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 
 export default function BottomNav({ activeTab = "home" }: { activeTab?: string }) {
@@ -15,9 +15,9 @@ export default function BottomNav({ activeTab = "home" }: { activeTab?: string }
           <Gift className="w-[22px] h-[22px]" />
           <span className="text-[10px] font-bold mt-0.5">Promo</span>
         </Link>
-        <Link href="/invite" className={`flex flex-col items-center gap-1 transition-transform active:scale-95 ${activeTab === 'invite' ? 'text-[#ff0b0b]' : 'text-[#ffdf00] opacity-80 hover:opacity-100 hover:text-[#ff0b0b]'}`}>
-          <UserPlus className="w-[22px] h-[22px]" />
-          <span className="text-[10px] font-bold mt-0.5">Invite</span>
+        <Link href="/deposit" className={`flex flex-col items-center gap-1 transition-transform active:scale-95 ${activeTab === 'deposit' ? 'text-[#ff0b0b]' : 'text-[#ffdf00] opacity-80 hover:opacity-100 hover:text-[#ff0b0b]'}`}>
+          <Wallet className="w-[22px] h-[22px]" />
+          <span className="text-[10px] font-bold mt-0.5">Deposit</span>
         </Link>
         <Link href="/support" className={`flex flex-col items-center gap-1 transition-transform active:scale-95 ${activeTab === 'support' ? 'text-[#ff0b0b]' : 'text-[#ffdf00] opacity-80 hover:opacity-100 hover:text-[#ff0b0b]'}`}>
           <Headset className="w-[22px] h-[22px]" />
