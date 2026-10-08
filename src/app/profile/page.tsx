@@ -7,9 +7,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, User, Gift, Wallet, CreditCard, Banknote, FileText, Settings, Shield, Search, Globe, HelpCircle, MessageSquare, Smartphone, Moon, Info, Crown, Pencil, Bell, ChevronLeft } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 
+import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/UserContext';
 import { apiRequest } from '@/utils/api';
 export default function ProfilePage() {
+  const router = useRouter();
   const { user, loading, logout, notifications = [], unreadNotifCount = 0, markNotifRead } = useUser();
   const [showNotifModal, setShowNotifModal] = useState(false);
   const [vipStatus, setVipStatus] = useState<any>(null);
