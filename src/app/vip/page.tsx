@@ -12,10 +12,15 @@ export default function VipPage() {
   const [vipStatus, setVipStatus] = useState<any>(null);
   const [expandedLevels, setExpandedLevels] = useState<Record<number, boolean>>({ 1: true });
 
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   useEffect(() => {
     apiRequest('/vip/status')
       .then(res => setVipStatus(res))
-      .catch(() => {});
+      .catch((err) => {
+        console.error(err);
+        setErrorMsg(err.message || 'Failed to load data');
+      });
   }, []);
 
   const toggleLevel = (level: number) => {
@@ -68,7 +73,9 @@ export default function VipPage() {
         </div>
 
         {/* Levels List */}
-        {!vipStatus ? (
+        {errorMsg ? (
+          <div className="p-10 text-center text-red-500">{errorMsg}</div>
+        ) : !vipStatus ? (
           <div className="p-10 text-center text-neutral-500 animate-pulse">Loading VIP Data...</div>
         ) : (
           vipStatus.levels?.filter((l: any) => l.level > 0).map((lvl: any) => {
