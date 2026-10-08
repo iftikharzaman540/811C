@@ -7,17 +7,20 @@ import { Gamepad2 } from "lucide-react";
 export default function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    // Simulate loading progress
+    useEffect(() => {
+    const startTime = Date.now();
+    const duration = 2000; // 2 seconds total
+
     const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(onComplete, 500); // Wait a bit before completing
-          return 100;
-        }
-        return prev + 2;
-      });
+      const elapsed = Date.now() - startTime;
+      let newProgress = Math.min(100, (elapsed / duration) * 100);
+      
+      setProgress(newProgress);
+
+      if (newProgress >= 100) {
+        clearInterval(interval);
+        setTimeout(onComplete, 100);
+      }
     }, 40);
 
     return () => clearInterval(interval);

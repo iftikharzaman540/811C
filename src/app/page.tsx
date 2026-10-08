@@ -33,11 +33,16 @@ export default function Home() {
     }
   }, []);
 
-  const handleSplashComplete = () => {
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem("hasSeenSplash", "true");
+    const handleSplashComplete = () => {
+    try {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("hasSeenSplash", "true");
+      }
+    } catch (e) {
+      console.warn("sessionStorage failed", e);
+    } finally {
+      setView("home");
     }
-    setView("home");
   };
 
   if (view === "mounting") {
