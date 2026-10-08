@@ -380,10 +380,22 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       fetch('https://8111c.com/api/v1/games/meganodes/list?t=' + Date.now())
         .then(r => r.json())
         .then(data => { 
-                                                                                              if(data && data.games) { data = data.games; }
-if(Array.isArray(data)) { 
-              // Deduplicate by name to prevent multiple Fortune Gems
-              const seen = new Set();
+                                                                                              if (data && data.games) { data = data.games.list || data.games; }
+if (Array.isArray(data)) {
+  data = data.map((g: any) => ({
+    id: (g.provider_code && g.game_symbol) ? g.provider_code + ':' + g.game_symbol : (g.id || g.game_code),
+    name: g.game_name || g.localized_title || g.name,
+    title: g.localized_title || g.game_name || g.title,
+    img: 'bg-neutral-900',
+    logo: g.provider || g.category || 'API',
+    graphic: 'dYZ',
+    imageUrl: g.game_image || g.icon || g.banner || g.image,
+    provider: g.provider || g.category,
+    ...g
+  }));
+
+  const seen = new Set();
+
               data = data.filter(g => {
                  const name = (g.title || g.name || "").toLowerCase().trim();
                  if (seen.has(name)) return false;
