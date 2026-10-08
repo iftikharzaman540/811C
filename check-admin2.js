@@ -1,7 +1,7 @@
 const { Client } = require('ssh2');
 const conn = new Client();
 conn.on('ready', () => {
-  conn.exec("ls -l /var/www/gaming-app/backend/src/support", (err, stream) => {
+  conn.exec("grep -r \"@Get('vip/levels')\" /var/www/gaming-app/backend/src", (err, stream) => {
     stream.on('data', d => process.stdout.write(d.toString()));
     stream.stderr.on('data', d => process.stderr.write(d.toString()));
     stream.on('close', () => conn.end());

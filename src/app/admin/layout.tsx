@@ -45,6 +45,7 @@ const SIDEBAR_NAV = [
     ]
   },
   
+  { name: "Live Chat", href: "/admin/support/live-chat", icon: MessageSquare },
   { name: "Support Tickets", href: "/admin/support/tickets", icon: MessageSquare },
   {
     name: "Notifications",
