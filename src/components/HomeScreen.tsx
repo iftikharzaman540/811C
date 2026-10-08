@@ -309,13 +309,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
     }
     try {
       toast.loading("Launching game...", { id: 'launch' });
-      const res = await fetch('https://8111c.com/api/v1/games/gregmorn/launch', {
+      const res = await fetch('https://8111c.com/api/v1/games/meganodes/launch', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ gameId, demo: false })
+        body: JSON.stringify({ gameId: finalId, demo: false })
       });
       const data = await res.json();
       toast.dismiss('launch');
@@ -377,10 +377,11 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   
   const { user, logout } = useUser();
   useEffect(() => {
-      fetch('https://8111c.com/api/v1/games/gregmorn/list?t=' + Date.now())
+      fetch('https://8111c.com/api/v1/games/meganodes/list?t=' + Date.now())
         .then(r => r.json())
         .then(data => { 
-                                                                                              if(Array.isArray(data)) { 
+                                                                                              if(data && data.games) { data = data.games; }
+if(Array.isArray(data)) { 
               // Deduplicate by name to prevent multiple Fortune Gems
               const seen = new Set();
               data = data.filter(g => {
@@ -431,7 +432,14 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           return;
         }
         
-        if (gameIdOrName.length < 10) {
+        
+          let finalId = gameIdOrName;
+          if (!finalId.includes(':')) {
+            const found = realGames.find(g => (g.name || '').toLowerCase() === finalId.toLowerCase() || (g.title || '').toLowerCase() === finalId.toLowerCase());
+            if (found && found.id) finalId = found.id;
+          }
+
+          if (gameIdOrName.length < 10 && !finalId.includes(":")) {
            toast.error(`"${gameIdOrName}" is a UI Demo. Please play real games from the 'Slot Game' section below!`, { duration: 4000 });
            return;
         }
@@ -439,13 +447,13 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
         try {
           toast.loading("Launching game...", { id: 'launch' });
           const API_URL = "https://8111c.com/api/v1";
-          const res = await fetch(`${API_URL}/games/gregmorn/launch`, {
+          const res = await fetch(`${API_URL}/games/meganodes/launch`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ gameId: gameIdOrName, demo: false })
+            body: JSON.stringify({ gameId: finalId, demo: false })
           });
           const data = await res.json();
           toast.dismiss('launch');
