@@ -431,7 +431,7 @@ export default function PromoPage() {
                               </button>
                            ) : isReached ? (
                               <button 
-                                 onClick={() => window.claimVipBonus && window.claimVipBonus(lvl.level)}
+                                 onClick={() => (window as any).claimVipBonus && (window as any).claimVipBonus(lvl.level)}
                                  className="px-4 py-1.5 bg-gradient-to-r from-[#ffdf00] to-[#b39b00] text-black rounded font-bold text-xs shadow-[0_0_10px_rgba(255,223,0,0.5)] active:scale-95 transition-transform"
                               >
                                  Claim Bonus
