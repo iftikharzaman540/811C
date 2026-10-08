@@ -9,7 +9,7 @@ import { useUser } from "@/context/UserContext";
 export default function WithdrawScreen() {
   const router = useRouter();
   const { user, loading: userLoading, refreshUser } = useUser();
-  useEffect(() => { if (!userLoading && !user) { toast.error("Please login first"); router.push("/"); } }, [user, userLoading, router]);
+  useEffect(() => { if (!userLoading && !user) { router.push("/?login=true"); } }, [user, userLoading, router]);
   const [amount, setAmount] = useState("");
   const [accountNo, setAccountNo] = useState("");
   const [accountTitle, setAccountTitle] = useState("");
@@ -48,7 +48,7 @@ export default function WithdrawScreen() {
     }
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("Please login first");
+      
       return;
     }
 

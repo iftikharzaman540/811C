@@ -133,18 +133,18 @@ export default function ProfilePage() {
                   <span className="text-[#ffdf00] font-black text-[22px] tracking-tight">Rs {(user?.balance || 0).toFixed(2)}</span>
                 </div>
               ) : (
-                                  <div className="flex flex-col justify-center w-full pr-2 cursor-pointer" onClick={() => router.push('/')}>
-                    <div className="flex justify-between items-center w-full">
+                                  <div className="flex flex-col justify-center w-full pr-2 cursor-pointer">
+                    <div className="flex justify-between items-center w-full" onClick={() => router.push('/?login=true')}>
                       <span className="text-neutral-300 text-[14px]">Please first <span className="text-white font-bold">Login Or Register</span></span>
                       <ChevronRight className="w-4 h-4 text-neutral-500" />
                     </div>
                     <div className="flex items-center gap-3 text-[14px] mt-3">
-                      <div className="flex items-center gap-1.5 text-[#ffdf00] font-bold">
+                      <div className="flex items-center gap-1.5 text-[#ffdf00] font-bold cursor-pointer" onClick={(e) => { e.stopPropagation(); router.push('/?login=true'); }}>
                         <LogIn className="w-4 h-4" />
                         Login
                       </div>
                       <span className="text-neutral-600 text-[12px]">|</span>
-                      <div className="flex items-center gap-1.5 text-[#ff3333] font-bold">
+                      <div className="flex items-center gap-1.5 text-[#ff3333] font-bold cursor-pointer" onClick={(e) => { e.stopPropagation(); router.push('/?register=true'); }}>
                         <UserPlus className="w-4 h-4" />
                         Register
                       </div>

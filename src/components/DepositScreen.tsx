@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 export default function DepositScreen() {
   const router = useRouter();
   const { user, loading: userLoading, refreshUser } = useUser();
-  useEffect(() => { if (!userLoading && !user) { toast.error("Please login first"); router.push("/"); } }, [user, userLoading, router]);
+  useEffect(() => { if (!userLoading && !user) { router.push("/?login=true"); } }, [user, userLoading, router]);
   const [tab, setTab] = useState<"online" | "crypto">("online");
   const [method, setMethod] = useState("");
   const [paymentMethods, setPaymentMethods] = useState<any[]>([]);
@@ -83,7 +83,7 @@ useEffect(() => {
   const handleDeposit = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("Please login first to make a deposit");
+      
       router.push("/");
       return;
     }

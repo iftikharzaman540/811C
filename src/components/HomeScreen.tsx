@@ -304,7 +304,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
   const handleLaunchGame = async (gameId: string) => {
     const token = localStorage.getItem('token');
     if (!token) {
-      toast.error("Please login to play");
+      
       return;
     }
     try {
@@ -427,7 +427,6 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
       (window as any).handleLaunchGame = async (gameIdOrName: string) => {
         const token = localStorage.getItem("token");
         if (!token) {
-          toast.error("Please login to play games!");
           if (onLoginClick) onLoginClick();
           return;
         }
@@ -581,7 +580,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                 </div>
                 <div className="relative">
                   <div className="flex bg-[#ffdf00] hover:bg-[#e6c800] text-black rounded-lg shadow-[0_2px_10px_rgba(255,223,0,0.3)] transition-colors h-[32px]">
-                    <button onClick={() => { if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); } else { window.location.href = '/deposit'; } }} className="px-2.5 text-[13px] font-bold h-full flex items-center justify-center rounded-l-lg border-r border-black/10">
+                    <button onClick={() => { if (!user) { if (onLoginClick) onLoginClick(); } else { window.location.href = '/deposit'; } }} className="px-2.5 text-[13px] font-bold h-full flex items-center justify-center rounded-l-lg border-r border-black/10">
                       Deposit
                     </button>
                     <button onClick={() => setIsDepositMenuOpen(!isDepositMenuOpen)} className="px-1.5 h-full flex items-center justify-center rounded-r-lg">
@@ -592,7 +591,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                     <>
                       <div className="fixed top-0 h-[100dvh] left-1/2 -translate-x-1/2 w-full max-w-[400px] z-40" onClick={() => setIsDepositMenuOpen(false)} />
                       <div className="absolute top-full right-0 mt-1.5 w-32 bg-[#1a1a1a] border border-[#ffdf00]/30 rounded-lg shadow-xl overflow-hidden z-50">
-                        <button onClick={() => { if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); } else { window.location.href = '/withdraw'; } }} className="w-full text-left px-3 py-2 text-[13px] text-white hover:bg-neutral-800 transition-colors font-medium flex items-center gap-2">
+                        <button onClick={() => { if (!user) { if (onLoginClick) onLoginClick(); } else { window.location.href = '/withdraw'; } }} className="w-full text-left px-3 py-2 text-[13px] text-white hover:bg-neutral-800 transition-colors font-medium flex items-center gap-2">
                           <span className="text-xl">💰</span> Withdraw
                         </button>
                       </div>
@@ -635,7 +634,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             { name: "Spins", icon: <Aperture className="w-4 h-4 text-[#ffdf00]" /> },
           ].map((item, i) => (
             <div key={i} onClick={() => {
-    if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); return; }
+    if (!user) { if (onLoginClick) onLoginClick(); return; }
     if (item.name === "Invite") window.location.href = "/invite";
     else if (item.name === "VIP") window.location.href = "/vip";
     else if (item.name === "Spins" || item.name === "Rebate") window.location.href = "/promo";
@@ -1418,7 +1417,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
                   <span className="text-white font-bold text-[13px] z-10 relative">VIP</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">👑</div>
                 </div>
-                <div onClick={() => { setIsMenuOpen(false); if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); } else { router.push("/deposit"); } }} className="relative bg-gradient-to-br from-[#ffdf00] to-[#ccb300] text-black rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
+                <div onClick={() => { setIsMenuOpen(false); if (!user) { if (onLoginClick) onLoginClick(); } else { router.push("/deposit"); } }} className="relative bg-gradient-to-br from-[#ffdf00] to-[#ccb300] text-black rounded-lg p-2.5 h-[60px] flex justify-between overflow-hidden cursor-pointer hover:brightness-110">
                   <span className="text-black font-bold text-[13px] z-10 relative">Fund</span>
                   <span className="absolute top-0 right-0 bg-[#cc0000] text-white text-[10px] font-bold px-1 rounded-bl-lg z-20">50%</span>
                   <div className="absolute right-1 bottom-0 text-3xl opacity-90 drop-shadow-md">👛</div>
