@@ -315,7 +315,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ gameId: finalId, demo: false })
+        body: JSON.stringify({ gameId: gameId, demo: false })
       });
       const data = await res.json();
       toast.dismiss('launch');
