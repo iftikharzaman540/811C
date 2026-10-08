@@ -129,7 +129,7 @@ export default function ProfilePage() {
 
             {/* Big VIP Crown (Top Right Logo) */}
             {(user || hasToken) && (
-              <div className="shrink-0 flex items-center pr-1 self-center cursor-pointer" onClick={() => window.location.href = '/promo?tab=VIP'}>
+              <div className="shrink-0 flex items-center pr-1 self-center cursor-pointer" onClick={() => router.push("/vip")}>
                 <Crown className="w-9 h-9 text-[#ff5500]" style={{ filter: "drop-shadow(0 0 10px rgba(255,85,0,0.8))" }} />
               </div>
             )}
@@ -137,7 +137,7 @@ export default function ProfilePage() {
 
           {/* Proper VIP Card */}
           {(user || hasToken) && (
-            <div onClick={() => window.location.href = '/promo?tab=VIP'} className="mt-5 border border-[#ffdf00]/30 bg-gradient-to-r from-[#1a1700] via-[#0f0a00] to-[#1a1700] rounded-xl p-3 flex items-center justify-between cursor-pointer relative shadow-[0_0_15px_rgba(255,223,0,0.08)] group z-10">
+            <div onClick={() => router.push("/vip")} className="mt-5 border border-[#ffdf00]/30 bg-gradient-to-r from-[#1a1700] via-[#0f0a00] to-[#1a1700] rounded-xl p-3 flex items-center justify-between cursor-pointer relative shadow-[0_0_15px_rgba(255,223,0,0.08)] group z-10">
               
               {/* Left Side: Badge & Progress */}
               <div className="flex-1 pr-3 border-r border-[#ffdf00]/20 flex items-center gap-3">
