@@ -351,294 +351,105 @@ export default function PromoPage() {
 
         {/* VIP TAB CONTENT */}
         {activeTopTab === "VIP" && (
-          <div className="flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#111] p-3">
+          <div className="w-full flex-1 overflow-y-auto pb-24 space-y-4 px-4 pt-4 bg-[#111]">
             
-            {/* VIP Status Card */}
-                {vipStatus && (
-                <div className="bg-gradient-to-br from-[#1a1700] to-black rounded-xl p-4 relative overflow-hidden shadow-[0_0_15px_rgba(255,223,0,0.15)] border border-[#ffdf00]/30 mb-6">
-                  {/* Small Current Level tag */}
-                  <span className="bg-[#cc0000] text-white text-[10px] font-black italic px-2 py-0.5 rounded-br-lg rounded-tl-lg absolute top-0 left-0 shadow-md">Current Level</span>
-                  
-                  {/* Huge VIP 0 */}
-                  <div className="flex items-center gap-3 mt-4">
-                    <h2 className="text-white font-black text-[40px] italic tracking-tighter leading-none">VIP <span className="text-[#ffdf00]">{vipStatus.currentLevel}</span></h2>
-                    {vipStatus.nextLevel && (
-                      <button className="flex items-center gap-1 border border-[#ffdf00]/50 text-neutral-300 text-[10px] px-2 py-1 rounded-full hover:bg-white/5 transition-colors">
-                        Level up now <ChevronRight className="w-3 h-3 text-[#ffdf00]" />
-                      </button>
-                    )}
+            {/* Wagering Progress Box */}
+            {vipStatus && vipStatus.wageringRequirement > 0 && (
+               <div className="bg-[#1a1700] border border-[#ffdf00]/30 p-4 rounded-xl relative shadow-[0_0_15px_rgba(255,223,0,0.08)] mb-4">
+                  <h3 className="text-[#ffdf00] font-black text-lg mb-3">Wagering Progress</h3>
+                  <div className="flex justify-between text-sm text-neutral-300 mb-2">
+                     <span>Requirement:</span>
+                     <span className="font-bold text-white">PKR {vipStatus.wageringRequirement.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-neutral-300 mb-2">
+                     <span>Completed:</span>
+                     <span className="font-bold text-[#00e676]">PKR {vipStatus.wageringCompleted.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-sm text-neutral-300 mb-4">
+                     <span>Remaining:</span>
+                     <span className="font-bold text-[#ff4d4d]">PKR {vipStatus.wageringRemaining.toLocaleString()}</span>
                   </div>
                   
-                  {/* Progress Bar Area */}
-                  <div className="mt-6 mb-2 pr-[80px]">
-                    <div className="w-full h-2 bg-neutral-900 rounded-full overflow-visible relative">
-                      <span className="text-[#ffdf00] bg-black/80 px-1.5 rounded text-[9px] absolute -top-5 left-0 font-bold border border-[#ffdf00]/20">
-                        {vipStatus.requiredForNext ? ((vipStatus.totalDeposited / vipStatus.requiredForNext) * 100).toFixed(0) : 100}%
-                      </span>
-                      <span className="text-neutral-500 absolute -top-5 right-0 italic font-black text-[12px] drop-shadow-md">VIP {vipStatus.nextLevel || 'MAX'}</span>
-                      <div className="h-full bg-gradient-to-r from-[#ff0000] to-[#ffdf00] rounded-full relative" style={{ width: Math.min(100, (vipStatus.requiredForNext ? (vipStatus.totalDeposited / vipStatus.requiredForNext) * 100 : 100)) + '%' }}>
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_10px_#fff]"></div>
-                      </div>
-                    </div>
+                  {/* Progress bar */}
+                  <div className="w-full h-3 bg-[#111] rounded-full overflow-hidden border border-neutral-800">
+                     <div 
+                        className="h-full bg-gradient-to-r from-[#ffdf00] to-[#fff5cc]" 
+                        style={{ width: `${Math.min(100, (vipStatus.wageringCompleted / vipStatus.wageringRequirement) * 100)}%` }}
+                     ></div>
                   </div>
-                  
-                  {/* Text below progress */}
-                  {vipStatus.nextLevel ? (
-                    <p className="text-[12px] text-neutral-400 font-medium mt-3 w-3/4">Deposit <span className="font-bold text-[#ffdf00]">{vipStatus.remaining.toLocaleString()} PKR</span> to enjoy member benefits</p>
-                  ) : (
-                    <p className="text-[12px] text-neutral-400 font-medium mt-3 w-3/4">You have reached the maximum VIP level!</p>
-                  )}
-                  
-                  {/* Big VIP Crown Logo Right */}
-                  <div className="absolute -right-2 top-1/2 -translate-y-1/2 flex flex-col items-center transform scale-110">
-                    <Crown className="w-16 h-16 text-[#ffdf00] fill-current drop-shadow-[0_0_15px_rgba(255,223,0,0.8)] mb-1" />
-                    <div className="bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] text-white font-black italic px-4 py-0.5 rounded-full border-2 border-white shadow-lg text-[18px]">VIP {vipStatus.currentLevel}</div>
+                  <div className="text-center text-xs mt-2 text-neutral-400 font-bold">
+                     {vipStatus.wageringCompleted >= vipStatus.wageringRequirement ? 
+                        <span className="text-[#00e676]">Wagering Completed ?<br/>Bonus is now withdrawable</span> : 
+                        "Status: Wagering in Progress"
+                     }
                   </div>
-                </div>
-                )}
-  
-                {/* Title */}
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <span className="text-neutral-500">🌿</span>
-              <h3 className="text-white font-bold text-[18px]">VIP reward list</h3>
-              <span className="text-neutral-500 transform scale-x-[-1]">🌿</span>
+               </div>
+            )}
+
+            {/* Current VIP Status */}
+            <div className="bg-[#1a1700] border border-[#ffdf00]/30 p-4 rounded-xl flex items-center justify-between">
+               <div>
+                  <div className="text-neutral-400 text-xs">Current Level</div>
+                  <div className="text-[#ffdf00] font-black text-xl italic flex items-center gap-1">
+                     <Crown className="w-5 h-5 fill-current" /> VIP {vipStatus?.currentLevel || 0}
+                  </div>
+               </div>
+               <div className="text-right">
+                  <div className="text-neutral-400 text-xs">Total Turnover</div>
+                  <div className="text-white font-bold text-lg">Rs {(vipStatus?.totalWagered || 0).toLocaleString()}</div>
+               </div>
             </div>
 
-            {/* Sub Tabs */}
-            <div className="flex mb-4">
-              <button className="flex-1 text-[#ffdf00] font-bold text-[14px] pb-2 border-b-2 border-[#ff0b0b]">VIP reward</button>
-              <button className="flex-1 text-neutral-400 font-bold text-[14px] pb-2 border-b border-neutral-800">Rules</button>
-            </div>
-
-            {/* Table Header */}
-            <div className="flex border-b border-neutral-800 text-[12px] font-medium text-neutral-400 pb-2 mb-2">
-              <div className="w-20 pl-2">Level</div>
-              <div className="flex-1 text-center">Rewards/Privileges</div>
-            </div>
-
-            {/* VIP 1 Row (Expanded) */}
-            <div className="flex border border-neutral-800 rounded-lg overflow-hidden mb-3 bg-[#1a1a1a]">
-              <div className="w-20 bg-gradient-to-b from-[#111] to-[#1a1a1a] flex flex-col items-center pt-6 border-r border-neutral-800">
-                <Crown className="w-8 h-8 text-[#ffdf00] fill-current drop-shadow-md mb-1" />
-                <span className="bg-white text-[#cc0000] font-bold text-[10px] px-1.5 rounded-full border border-neutral-300 -mt-2 z-10 shadow-sm">VIP 1</span>
-                <span className="text-white font-bold text-[12px] mt-2">VIP 1</span>
-              </div>
-              <div className="flex-1 flex flex-col">
-                <button onClick={() => setVip1Expanded(!vip1Expanded)} className="flex justify-between items-center p-3 w-full text-left bg-[#222]">
-                  <span className="text-white text-[13px] font-medium">Level up to VIP1 to receive <span className="text-[#ffdf00] font-bold">175.00</span></span>
-                  <div className="flex items-center gap-1 text-[#cc0000] text-[11px] font-medium">
-                    {vip1Expanded ? 'Fold' : 'Expand'} {vip1Expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                  </div>
-                </button>
-                
-                <AnimatePresence>
-                  {vip1Expanded && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-                      <div className="p-3 flex flex-col gap-3">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="bg-gradient-to-br from-green-400 to-green-600 w-8 h-8 rounded-lg flex flex-col items-center justify-center text-white font-bold leading-none shadow-md">
-                              <span className="text-[7px]">📅</span>
-                              <span className="text-[10px]">07</span>
-                            </div>
-                            <span className="text-white text-[12px] font-medium">Weekly salary <span className="text-[#ffdf00] bg-[#4a2e00] px-1 rounded ml-1 font-bold">+25.00</span></span>
-                          </div>
-                          <button onClick={() => window.location.href="/"} className="bg-gradient-to-b from-[#cc0000] to-[#ff0b0b] text-white text-[11px] font-bold px-4 py-1.5 rounded hover:brightness-110">Go to bet</button>
+            {/* VIP Levels List */}
+            <h3 className="text-white font-bold text-lg mt-6 mb-2 flex items-center gap-2"><Crown className="w-5 h-5 text-[#ffdf00]"/> VIP Privileges</h3>
+            <div className="space-y-3">
+               {vipStatus?.levels?.filter((l: any) => l.level > 0).map((lvl: any) => {
+                  const isReached = (vipStatus.totalWagered || 0) >= lvl.min_turnover;
+                  const isClaimed = vipStatus.claims?.some((c: any) => c.level === lvl.level);
+                  
+                  return (
+                     <div key={lvl.level} className="bg-[#151515] border border-neutral-800 p-4 rounded-xl flex justify-between items-center relative overflow-hidden group">
+                        
+                        {/* Glow effect for reached levels */}
+                        {isReached && !isClaimed && <div className="absolute inset-0 bg-gradient-to-r from-[#ffdf00]/10 to-transparent pointer-events-none" />}
+                        
+                        <div>
+                           <div className="flex items-center gap-2 mb-1">
+                              <Crown className={`w-4 h-4 ${isReached ? 'text-[#ffdf00]' : 'text-neutral-500'}`} />
+                              <span className={`font-black italic text-lg ${isReached ? 'text-[#ffdf00]' : 'text-neutral-500'}`}>VIP {lvl.level}</span>
+                           </div>
+                           <div className="text-xs text-neutral-400 mb-2">Turnover req: {(lvl.min_turnover || 0).toLocaleString()}</div>
+                           <div className="text-sm font-bold text-white flex gap-1">
+                              Bonus: <span className="text-[#00e676]">+{lvl.bonus_amount.toLocaleString()}</span>
+                           </div>
                         </div>
                         
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="bg-gradient-to-br from-blue-400 to-blue-600 w-8 h-8 rounded-lg flex flex-col items-center justify-center text-white font-bold leading-none shadow-md">
-                              <span className="text-[7px]">📅</span>
-                              <span className="text-[10px]">30</span>
-                            </div>
-                            <span className="text-white text-[12px] font-medium">Monthly salary <span className="text-[#ffdf00] bg-[#4a2e00] px-1 rounded ml-1 font-bold">+50.00</span></span>
-                          </div>
-                          <button onClick={() => window.location.href="/"} className="bg-gradient-to-b from-[#cc0000] to-[#ff0b0b] text-white text-[11px] font-bold px-4 py-1.5 rounded hover:brightness-110">Go to bet</button>
-                        </div>
-
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <div className="bg-gradient-to-br from-orange-400 to-orange-600 w-8 h-8 rounded-full flex flex-col items-center justify-center text-white shadow-md">
-                              <Trophy className="w-4 h-4" />
-                            </div>
-                            <div className="flex flex-col">
-                              <span className="text-white text-[12px] font-medium">Next level bonus <span className="text-[#ffdf00] bg-[#4a2e00] px-1 rounded ml-1 font-bold">+100.00</span></span>
-                              <span className="text-neutral-500 text-[10px]">Bet for promotion <span className="text-neutral-400">50,000</span></span>
-                            </div>
-                          </div>
-                          <button onClick={() => window.location.href="/"} className="bg-gradient-to-b from-[#cc0000] to-[#ff0b0b] text-white text-[11px] font-bold px-4 py-1.5 rounded hover:brightness-110">Go to bet</button>
-                        </div>
-
-                        <div className="flex items-start gap-2 mt-2 pt-3 border-t border-neutral-800">
-                          <div className="bg-gradient-to-br from-yellow-300 to-yellow-500 w-8 h-8 rounded-lg flex items-center justify-center text-white shadow-md shrink-0">
-                            <Crown className="w-4 h-4" />
-                          </div>
-                          <div className="flex flex-col w-full">
-                            <span className="text-white text-[12px] font-medium mb-1">VIP Privilege</span>
-                            <div className="flex justify-between w-full">
-                              <div className="flex flex-col text-[10px] text-neutral-500 gap-1">
-                                <span>Daily total withdrawal: <span className="text-white font-medium">Unlimited</span></span>
-                                <span>Daily fee-free orders: <span className="text-white font-medium">0 orders</span></span>
+                        <div className="flex flex-col items-end gap-2">
+                           {isClaimed ? (
+                              <button disabled className="px-4 py-1.5 bg-neutral-800 text-neutral-500 rounded font-bold text-xs shadow-inner">
+                                 Claimed ?
+                              </button>
+                           ) : isReached ? (
+                              <button 
+                                 onClick={() => window.claimVipBonus && window.claimVipBonus(lvl.level)}
+                                 className="px-4 py-1.5 bg-gradient-to-r from-[#ffdf00] to-[#b39b00] text-black rounded font-bold text-xs shadow-[0_0_10px_rgba(255,223,0,0.5)] active:scale-95 transition-transform"
+                              >
+                                 Claim Bonus
+                              </button>
+                           ) : (
+                              <div className="text-right">
+                                 <div className="text-[10px] text-neutral-500 mb-1">Remaining</div>
+                                 <div className="text-xs text-neutral-300 font-bold">{(lvl.min_turnover - (vipStatus.totalWagered || 0)).toLocaleString()}</div>
                               </div>
-                              <div className="flex flex-col text-[10px] text-neutral-500">
-                                <span>Daily withdrawal times: <span className="text-white font-medium">Unlimited</span></span>
-                              </div>
-                            </div>
-                          </div>
+                           )}
                         </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+                     </div>
+                  );
+               })}
             </div>
-
-            {/* VIP 2 Row (Collapsed) */}
-            <div className="flex border border-neutral-800 rounded-lg overflow-hidden mb-3 bg-[#1a1a1a]">
-              <div className="w-20 bg-gradient-to-b from-[#111] to-[#1a1a1a] flex flex-col items-center pt-6 border-r border-neutral-800">
-                <Crown className="w-8 h-8 text-[#ffdf00] fill-current drop-shadow-md mb-1 opacity-50" />
-                <span className="bg-white text-[#cc0000] font-bold text-[10px] px-1.5 rounded-full border border-neutral-300 -mt-2 z-10 shadow-sm opacity-50">VIP 2</span>
-                <span className="text-white font-bold text-[12px] mt-2 opacity-50">VIP 2</span>
-              </div>
-              <div className="flex-1 flex flex-col justify-center">
-                <button className="flex justify-between items-center p-3 w-full text-left">
-                  <span className="text-white text-[13px] font-medium">Total bonus <span className="text-[#ffdf00] font-bold">350.00</span></span>
-                  <div className="flex items-center gap-1 text-[#cc0000] text-[11px] font-medium">
-                    Expand <ChevronDown className="w-3 h-3" />
-                  </div>
-                </button>
-              </div>
-            </div>
-
+            <div className="h-20" />
           </div>
-        )}
-
-        {/* HISTORY TAB CONTENT */}
-        {activeTopTab === "History" && (
-          <div className="flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#111]">
-            <div className="p-3 border-b border-neutral-800 flex gap-2">
-              <button className="flex items-center gap-1 border border-neutral-700 rounded-full px-3 py-1 text-neutral-400 text-[12px]">
-                Today <ChevronDown className="w-3 h-3" />
-              </button>
-              <button className="flex items-center gap-1 border border-neutral-700 rounded-full px-3 py-1 text-neutral-400 text-[12px]">
-                All Status <ChevronDown className="w-3 h-3" />
-              </button>
-              <button className="flex items-center gap-1 border border-neutral-700 rounded-full px-3 py-1 text-neutral-400 text-[12px]">
-                All Types <ChevronDown className="w-3 h-3" />
-              </button>
-            </div>
-            <div className="flex-1 flex flex-col items-center justify-center opacity-50 mb-4">
-              <PackageOpen className="w-20 h-20 text-neutral-600 mb-2" />
-              <div className="flex items-center gap-2">
-                <span className="text-neutral-500 text-[13px]">Today No Records,but <span onClick={() => toast("No more records")} className="text-[#cc0000] font-medium cursor-pointer">Read More</span></span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* FUND TAB CONTENT */}
-        {activeTopTab === "Fund" && (
-          <div className="flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#111]">
-            
-            {/* Top Stats Box */}
-            <div className="bg-[#1a1a1a] p-4 m-3 rounded-lg border border-neutral-800 flex flex-col gap-4">
-              <div className="flex justify-between relative">
-                <div className="absolute left-1/2 top-0 bottom-0 w-px bg-neutral-800"></div>
-                <div className="flex-1 flex flex-col items-center gap-1">
-                  <span className="text-neutral-500 text-[12px]">Total deposit</span>
-                  <span className="text-white font-bold text-[20px]">0.00</span>
-                  <div className="relative mt-2">
-                    <span className="absolute -top-3 -right-6 bg-[#cc0000] text-white text-[9px] font-bold px-1 rounded-sm shadow">+50%</span>
-                    <button onClick={() => window.location.href="/deposit"} className="bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] text-[#4a2e00] font-bold text-[12px] px-6 py-1 rounded shadow-md">Deposit</button>
-                  </div>
-                </div>
-                <div className="flex-1 flex flex-col items-center gap-1">
-                  <span className="text-neutral-500 text-[12px]">Fund</span>
-                  <span className="text-[#ffdf00] font-bold text-[20px]">0.00</span>
-                  <div className="relative mt-2">
-                    <button onClick={() => window.location.href="/withdraw"} className="bg-neutral-600 text-neutral-300 font-bold text-[12px] px-6 py-1 rounded shadow-md">Withdraw</button>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex flex-col gap-0.5 text-[10px] text-neutral-500 mt-2">
-                <div>Bonus cap <span className="text-white font-medium">not to be capped</span></div>
-                <div>Times capped <span className="text-white font-medium">not to be capped</span></div>
-              </div>
-            </div>
-
-            {/* Sub Tabs */}
-            <div className="flex border-b border-neutral-800 text-[13px] font-medium bg-[#1a1a1a]">
-              <button className="flex-1 text-[#cc0000] py-3 border-b-2 border-[#cc0000]">Total records</button>
-              <button className="flex-1 text-white py-3">Cumulative betting requirements</button>
-              <button className="px-4 text-white py-3">Rules</button>
-            </div>
-
-            {/* Records Section */}
-            <div className="p-3">
-              <div className="flex justify-between items-center mb-6">
-                <button className="flex items-center justify-between w-24 border border-neutral-700 rounded-full px-3 py-1.5 text-neutral-400 text-[12px]">
-                  Today <ChevronDown className="w-3 h-3" />
-                </button>
-                <div className="text-neutral-500 text-[12px]">Total <span className="text-[#ffdf00] font-bold">0.00</span></div>
-              </div>
-
-              <div className="flex flex-col items-center justify-center opacity-50 mt-10">
-                <PackageOpen className="w-20 h-20 text-neutral-600 mb-2" />
-                <div className="flex items-center gap-2">
-                  <span className="text-neutral-500 text-[13px]">Today No Records,but <span onClick={() => toast("No more records")} className="text-[#cc0000] font-medium cursor-pointer">Read More</span></span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        )}
-
-      </div>
-
-      {/* Linked Phone Number Modal */}
-      <AnimatePresence>
-        {showPhoneModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowPhoneModal(false)} className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center p-4">
-             {/* ... phone modal omitted to save space since it was already correctly placed but Redeem Bonus is what we use now */}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Bonus Redemption Modal */}
-      <AnimatePresence>
-        {showRedeemModal && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowRedeemModal(false)} className="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 flex justify-center items-center p-6">
-            <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} onClick={(e) => e.stopPropagation()} className="bg-gradient-to-b from-[#ffdf00] via-[#ffaa00] to-[#fff3e0] rounded-2xl w-full max-w-sm p-6 shadow-2xl relative">
-              <button onClick={() => setShowRedeemModal(false)} className="absolute top-4 right-4 text-[#4a2e00] hover:scale-110 transition-transform"><X className="w-5 h-5" /></button>
-              <div className="absolute -top-12 -left-6 drop-shadow-2xl z-10 w-28 h-28 pointer-events-none text-[80px]">🎁</div>
-              <div className="text-center mt-4 mb-6 relative z-0">
-                <h2 className="text-[22px] font-black text-[#cc0000] leading-tight drop-shadow-sm uppercase">Bonus<br/>Redemption...</h2>
-              </div>
-              <div className="text-center mb-4">
-                <span className="text-[#4a2e00] font-medium text-[13px]">Win up to <span className="bg-[#cc0000] text-white px-2 py-0.5 rounded-full font-bold">Rs 77,777</span> in bonus!</span>
-              </div>
-              <div className="bg-white rounded-lg p-1.5 flex items-center mb-6 shadow-inner border border-neutral-200">
-                <span className="px-2 text-[16px]">🎫</span>
-                <input type="text" placeholder="The redemption code is co..." className="flex-1 bg-transparent border-none outline-none text-[13px] text-neutral-800 placeholder:text-neutral-400 px-1" />
-                <button onClick={() => toast.success("Pasted from clipboard")} className="text-[#cc0000] font-bold text-[13px] px-3 border-l border-neutral-200">Paste</button>
-              </div>
-              <button onClick={() => toast.error("Invalid redeem code")} className="w-full bg-[#111] text-white font-bold text-[15px] py-3.5 rounded-lg shadow-lg hover:bg-[#333] transition-colors mb-4">Redeem Bonus</button>
-              <div className="text-center">
-                <button onClick={() => toast("Opening rules...")} className="text-[#cc0000] text-[12px] font-bold hover:underline">Event Rules</button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <BottomNav activeTab="promo" />
-    </main>
-  );
-}
-
-function Banner({ title, desc, highlight, sub, icon, badge, href }: { title: string, desc: string, highlight?: string, sub?: string, icon: string, badge?: string, href?: string }) {
+        )} {
   const content = (
     <div className="relative w-full rounded-xl overflow-hidden border border-[#ff0b0b] bg-gradient-to-br from-[#2e0505] via-[#111] to-[#1a1a1a] p-4 shadow-[0_0_15px_rgba(255,11,11,0.15)] flex flex-col justify-between min-h-[110px]">
       <div className="absolute top-0 left-0 bg-gradient-to-r from-[#ff0b0b] to-[#cc0000] px-3 py-0.5 rounded-br-lg flex items-center gap-1 shadow-md">
