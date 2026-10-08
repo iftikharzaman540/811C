@@ -1,18 +1,15 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronUp, ChevronDown, Calendar, Trophy, Diamond, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronUp, ChevronDown, Calendar, Trophy, Diamond } from 'lucide-react';
 import { apiRequest } from '@/utils/api';
-import { useUser } from '@/context/UserContext';
 import toast from 'react-hot-toast';
 
 export default function VipPage() {
   const router = useRouter();
-  const { user } = useUser();
   const [vipStatus, setVipStatus] = useState<any>(null);
   const [expandedLevels, setExpandedLevels] = useState<Record<number, boolean>>({ 1: true });
-
-    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     apiRequest('/vip/status')
@@ -40,7 +37,7 @@ export default function VipPage() {
       });
       toast.dismiss('claim');
       toast.success("Bonus Claimed Successfully!");
-      // refresh status
+      
       const res = await apiRequest('/vip/status');
       setVipStatus(res);
     } catch (e: any) {
@@ -50,79 +47,75 @@ export default function VipPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#141414] text-white flex flex-col font-sans pb-10">
+    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col font-sans pb-10">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-[#1a1a1a] sticky top-0 z-50 shadow-md">
-        <button onClick={() => router.back()} className="text-[#ffdf00] hover:text-white p-1 -ml-1 transition-colors">
+      <div className="flex items-center justify-between p-4 bg-[#111] sticky top-0 z-50 border-b border-[#ffdf00]/20">
+        <button onClick={() => router.back()} className="text-[#ffdf00] hover:text-white transition-colors p-1">
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <h1 className="text-lg font-bold tracking-wide">VIP Privileges</h1>
+        <h1 className="text-lg font-black tracking-wide text-[#ffdf00]">VIP Privileges</h1>
         <div className="w-6"></div>
       </div>
 
-      {/* Main Table Structure matching reference */}
-      <div className="flex-1 w-full flex flex-col mt-2">
-        {/* Table Header */}
-        <div className="flex border-b border-neutral-800 bg-[#1a1a1a] text-neutral-400 text-sm font-bold">
-          <div className="w-[80px] p-4 border-r border-neutral-800 text-center flex-shrink-0 flex items-center justify-center">
-            Level
+      {/* Error State */}
+      {errorMsg ? (
+        <div className="p-10 text-center text-[#ff0b0b] font-bold">{errorMsg}</div>
+      ) : !vipStatus ? (
+        <div className="p-10 text-center text-[#ffdf00]/70 animate-pulse font-medium">Loading VIP Data...</div>
+      ) : (
+        <div className="flex-1 w-full flex flex-col">
+          
+          {/* Table Header */}
+          <div className="flex border-b border-neutral-800 bg-[#111] text-[#ffdf00] text-[13px] font-bold uppercase tracking-wider">
+            <div className="w-[75px] p-3 border-r border-neutral-800 text-center flex-shrink-0">
+              Level
+            </div>
+            <div className="flex-1 p-3 text-center">
+              Rewards / Privileges
+            </div>
           </div>
-          <div className="flex-1 p-4 flex items-center justify-center">
-            Rewards/Privileges
-          </div>
-        </div>
 
-        {/* Levels List */}
-        {errorMsg ? (
-          <div className="p-10 text-center text-red-500">{errorMsg}</div>
-        ) : !vipStatus ? (
-          <div className="p-10 text-center text-neutral-500 animate-pulse">Loading VIP Data...</div>
-        ) : (
-          vipStatus.levels?.filter((l: any) => l.level > 0).map((lvl: any) => {
+          {/* Levels List */}
+          {vipStatus.levels?.filter((l: any) => l.level > 0).map((lvl: any) => {
             const isExpanded = expandedLevels[lvl.level];
             const isReached = (vipStatus.totalWagered || 0) >= lvl.min_turnover;
             const isClaimed = vipStatus.claims?.some((c: any) => c.level === lvl.level);
             
-            // For UI accuracy to reference image:
-            const weeklySalary = (lvl.bonus_amount * 0.25).toFixed(2);
-            const monthlySalary = (lvl.bonus_amount * 0.50).toFixed(2);
-            const totalReceive = (Number(lvl.bonus_amount) + Number(weeklySalary) + Number(monthlySalary)).toFixed(2);
+            // Safe parsing
+            const baseBonus = Number(lvl.bonus_amount || 0);
+            const weeklySalary = (baseBonus * 0.25).toFixed(2);
+            const monthlySalary = (baseBonus * 0.50).toFixed(2);
+            const totalReceive = (baseBonus + Number(weeklySalary) + Number(monthlySalary)).toFixed(2);
 
             return (
-              <div key={lvl.level} className="flex border-b border-neutral-800 bg-[#171717]">
+              <div key={lvl.level} className="flex border-b border-neutral-800/50 bg-[#111]">
                 
-                {/* Left Column: VIP Badge */}
-                <div className="w-[80px] border-r border-neutral-800 flex flex-col items-center justify-start pt-6 flex-shrink-0 bg-[#141414]">
+                {/* Left Column: VIP Badge (Gold Theme) */}
+                <div className="w-[75px] border-r border-neutral-800/50 flex flex-col items-center justify-start pt-5 flex-shrink-0 bg-[#0a0a0a]">
                   <div className="relative flex flex-col items-center">
-                    {/* Crown Icon */}
-                    <div className="w-10 h-10 bg-gradient-to-br from-[#7ae22d] to-[#4c9c15] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(122,226,45,0.3)] mb-1 relative overflow-hidden">
-                       <span className="font-black text-white text-lg relative z-10 italic">V</span>
-                       {/* Crown points */}
-                       <div className="absolute top-1 w-6 h-3 flex justify-between px-[2px]">
-                          <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                          <div className="w-1.5 h-1.5 bg-white rounded-full -mt-1"></div>
-                          <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
-                       </div>
+                    
+                    <div className="w-[42px] h-[42px] bg-gradient-to-br from-[#ffdf00] to-[#ff9900] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(255,223,0,0.2)] mb-1 relative border-2 border-[#fff5cc]">
+                       <span className="font-black text-black text-xl italic drop-shadow-sm">V</span>
                     </div>
-                    {/* VIP Pill */}
-                    <div className="bg-gradient-to-r from-green-400 to-green-600 px-2 py-0.5 rounded-full text-[10px] font-black text-white shadow-sm mb-2 -mt-2 z-10 border border-green-300/30">
+                    
+                    <div className="bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] px-2 py-0.5 rounded border border-[#ff4d4d] text-[10px] font-black text-white shadow-md -mt-2 z-10 whitespace-nowrap">
                       VIP {lvl.level}
                     </div>
-                    <span className="font-black text-white">VIP {lvl.level}</span>
                   </div>
                 </div>
 
                 {/* Right Column: Rewards Details */}
-                <div className="flex-1 flex flex-col">
+                <div className="flex-1 flex flex-col min-w-0">
                   {/* Fold Header */}
                   <div 
                     onClick={() => toggleLevel(lvl.level)}
-                    className="p-4 flex items-center justify-between cursor-pointer hover:bg-neutral-800/30 transition-colors"
+                    className="p-3 flex items-center justify-between cursor-pointer hover:bg-white/[0.02] transition-colors select-none"
                   >
-                    <div className="text-[15px] text-white">
-                      Level up to VIP{lvl.level} to receive <span className="text-[#ff9900] font-bold">{totalReceive}</span>
+                    <div className="text-[13px] text-neutral-300 leading-tight">
+                      Level up to VIP{lvl.level} to receive <br/>
+                      <span className="text-[#ffdf00] font-black text-[15px]">{totalReceive}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-[#7ae22d] text-sm">
+                    <div className="flex items-center gap-1 text-[#ffdf00] text-[12px] font-bold">
                       {isExpanded ? 'Fold' : 'Expand'}
                       {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                     </div>
@@ -130,93 +123,95 @@ export default function VipPage() {
 
                   {/* Expanded Content */}
                   {isExpanded && (
-                    <div className="px-4 pb-6 space-y-5">
+                    <div className="px-3 pb-5 space-y-3">
                       
                       {/* Weekly Salary */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-[#e6ffcc] rounded-xl flex flex-col items-center justify-center text-[#4c9c15] shadow-sm">
-                            <span className="text-[10px] font-bold leading-none mt-1">WEEK</span>
-                            <span className="text-sm font-black leading-none mb-1">07</span>
+                      <div className="flex items-center gap-2 justify-between bg-[#1a1a1a] p-2.5 rounded-lg border border-neutral-800">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-9 h-9 bg-neutral-900 rounded flex flex-col items-center justify-center text-[#ffdf00] border border-[#ffdf00]/20 flex-shrink-0">
+                            <span className="text-[8px] font-bold leading-none mt-1">WEEK</span>
+                            <span className="text-[13px] font-black leading-none mb-1">07</span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[15px] text-white">Weekly salary</span>
-                            <span className="bg-[#4d3300] text-[#ff9900] px-2 py-0.5 rounded text-sm font-bold">+{weeklySalary}</span>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[12px] text-white truncate">Weekly salary</span>
+                            <span className="text-[#00e676] text-[13px] font-black">+{weeklySalary}</span>
                           </div>
                         </div>
-                        <button onClick={handleGoToBet} className="bg-[#7ae22d] hover:bg-[#65cc20] text-black font-bold px-4 py-2 rounded-lg text-sm shadow-md transition-all active:scale-95">
+                        <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] text-white font-bold px-3 py-1.5 rounded text-[11px] shadow-sm whitespace-nowrap active:scale-95">
                           Go to bet
                         </button>
                       </div>
 
                       {/* Monthly Salary */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-[#e6eeff] rounded-xl flex flex-col items-center justify-center text-[#3366ff] shadow-sm">
-                            <span className="text-[10px] font-bold leading-none mt-1">MONTH</span>
-                            <span className="text-sm font-black leading-none mb-1">30</span>
+                      <div className="flex items-center gap-2 justify-between bg-[#1a1a1a] p-2.5 rounded-lg border border-neutral-800">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-9 h-9 bg-neutral-900 rounded flex flex-col items-center justify-center text-[#ffdf00] border border-[#ffdf00]/20 flex-shrink-0">
+                            <span className="text-[8px] font-bold leading-none mt-1">MONTH</span>
+                            <span className="text-[13px] font-black leading-none mb-1">30</span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[15px] text-white">Monthly salary</span>
-                            <span className="bg-[#4d3300] text-[#ff9900] px-2 py-0.5 rounded text-sm font-bold">+{monthlySalary}</span>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[12px] text-white truncate">Monthly salary</span>
+                            <span className="text-[#00e676] text-[13px] font-black">+{monthlySalary}</span>
                           </div>
                         </div>
-                        <button onClick={handleGoToBet} className="bg-[#7ae22d] hover:bg-[#65cc20] text-black font-bold px-4 py-2 rounded-lg text-sm shadow-md transition-all active:scale-95">
+                        <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] text-white font-bold px-3 py-1.5 rounded text-[11px] shadow-sm whitespace-nowrap active:scale-95">
                           Go to bet
                         </button>
                       </div>
 
                       {/* Next Level Bonus */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-[#ffe6cc] rounded-xl flex items-center justify-center text-[#ff6600] shadow-sm relative overflow-hidden">
-                            <Trophy className="w-6 h-6 z-10" />
+                      <div className="flex items-center gap-2 justify-between bg-[#1a1a1a] p-2.5 rounded-lg border border-[#ffdf00]/30 shadow-[0_0_10px_rgba(255,223,0,0.05)]">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-9 h-9 bg-gradient-to-b from-[#332a00] to-black rounded flex items-center justify-center text-[#ffdf00] border border-[#ffdf00]/40 flex-shrink-0">
+                            <Trophy className="w-5 h-5 drop-shadow-md" />
                           </div>
-                          <div className="flex flex-col">
-                            <div className="flex items-center gap-2">
-                              <span className="text-[15px] text-white">Next level bonus</span>
-                              <span className="bg-[#4d3300] text-[#ff9900] px-2 py-0.5 rounded text-sm font-bold">+{Number(lvl.bonus_amount).toFixed(2)}</span>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[12px] text-white truncate">Next level bonus</span>
+                            <div className="flex items-center gap-1.5">
+                               <span className="text-[#00e676] text-[13px] font-black">+{baseBonus.toFixed(2)}</span>
                             </div>
-                            <span className="text-sm text-neutral-500 mt-1">Bet for promotion {lvl.min_turnover.toLocaleString()}</span>
+                            <span className="text-[10px] text-neutral-500 leading-tight mt-0.5 truncate">
+                               Bet target: {Number(lvl.min_turnover || 0).toLocaleString()}
+                            </span>
                           </div>
                         </div>
                         
-                        {/* Dynamic Button for Bonus */}
+                        {/* Dynamic Button */}
                         {isClaimed ? (
-                           <button disabled className="bg-neutral-800 text-neutral-500 font-bold px-4 py-2 rounded-lg text-sm shadow-md">
+                           <button disabled className="flex-shrink-0 bg-neutral-800 text-neutral-500 font-bold px-3 py-1.5 rounded text-[11px] whitespace-nowrap">
                              Claimed
                            </button>
                         ) : isReached ? (
-                           <button onClick={() => claimBonus(lvl.level)} className="bg-gradient-to-r from-[#ffdf00] to-[#ff9900] text-black font-bold px-4 py-2 rounded-lg text-sm shadow-[0_0_10px_rgba(255,153,0,0.5)] transition-all active:scale-95">
+                           <button onClick={() => claimBonus(lvl.level)} className="flex-shrink-0 bg-gradient-to-r from-[#ffdf00] to-[#ff9900] text-black font-black px-3 py-1.5 rounded text-[11px] shadow-[0_0_10px_rgba(255,223,0,0.4)] whitespace-nowrap animate-pulse active:scale-95">
                              Claim Now
                            </button>
                         ) : (
-                          <button onClick={handleGoToBet} className="bg-[#7ae22d] hover:bg-[#65cc20] text-black font-bold px-4 py-2 rounded-lg text-sm shadow-md transition-all active:scale-95">
+                          <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-r from-[#cc0000] to-[#ff0b0b] text-white font-bold px-3 py-1.5 rounded text-[11px] shadow-sm whitespace-nowrap active:scale-95">
                             Go to bet
                           </button>
                         )}
                       </div>
 
                       {/* VIP Privilege */}
-                      <div className="flex items-start gap-3 pt-2">
-                        <div className="w-10 h-10 bg-[#fff5cc] rounded-xl flex items-center justify-center text-[#ffcc00] shadow-sm flex-shrink-0">
-                          <Diamond className="w-6 h-6 fill-[#ffcc00]" />
+                      <div className="flex items-start gap-2.5 bg-[#1a1a1a] p-2.5 rounded-lg border border-neutral-800">
+                        <div className="w-9 h-9 bg-neutral-900 rounded flex items-center justify-center text-[#ffdf00] border border-[#ffdf00]/20 flex-shrink-0">
+                          <Diamond className="w-5 h-5 fill-[#ffdf00]" />
                         </div>
-                        <div className="flex flex-col w-full">
-                          <span className="text-[15px] text-white mb-2">VIP Privilege</span>
+                        <div className="flex flex-col w-full min-w-0">
+                          <span className="text-[13px] font-bold text-[#ffdf00] mb-2">VIP Privilege</span>
                           
-                          <div className="grid grid-cols-2 gap-y-4 gap-x-2 w-full">
+                          <div className="grid grid-cols-2 gap-y-3 gap-x-2 w-full">
                             <div>
-                              <div className="text-xs text-neutral-500 mb-0.5">Daily total withdrawal:</div>
-                              <div className="text-sm text-white font-medium">Unlimited</div>
+                              <div className="text-[10px] text-neutral-500 leading-tight">Daily withdrawal limit</div>
+                              <div className="text-[12px] text-white font-medium">Unlimited</div>
                             </div>
                             <div>
-                              <div className="text-xs text-neutral-500 mb-0.5">Daily withdrawal times:</div>
-                              <div className="text-sm text-white font-medium">Unlimited</div>
+                              <div className="text-[10px] text-neutral-500 leading-tight">Withdrawal times</div>
+                              <div className="text-[12px] text-white font-medium">Unlimited</div>
                             </div>
                             <div>
-                              <div className="text-xs text-neutral-500 mb-0.5">Daily fee-free orders: 0</div>
-                              <div className="text-sm text-white font-medium">orders</div>
+                              <div className="text-[10px] text-neutral-500 leading-tight">Fee-free orders</div>
+                              <div className="text-[12px] text-white font-medium">0 orders</div>
                             </div>
                           </div>
                         </div>
@@ -228,9 +223,9 @@ export default function VipPage() {
 
               </div>
             );
-          })
-        )}
-      </div>
+          })}
+        </div>
+      )}
     </div>
   );
 }
