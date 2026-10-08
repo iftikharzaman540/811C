@@ -447,7 +447,7 @@ if (Array.isArray(data)) {
         
           let finalId = gameIdOrName;
           if (!finalId.includes(':')) {
-            const found = realGames.find(g => (g.name || '').toLowerCase() === finalId.toLowerCase() || (g.title || '').toLowerCase() === finalId.toLowerCase());
+            const found = realGames.find((g: any) => (g.name || '').toLowerCase() === finalId.toLowerCase() || (g.title || '').toLowerCase() === finalId.toLowerCase());
             if (found && found.id) finalId = found.id;
           }
 
