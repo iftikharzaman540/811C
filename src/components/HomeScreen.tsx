@@ -637,6 +637,7 @@ export default function HomeScreen({ onLoginClick, onRegisterClick }: { onLoginC
             <div key={i} onClick={() => {
     if (!user) { toast.error("Please login first"); if (onLoginClick) onLoginClick(); return; }
     if (item.name === "Invite") window.location.href = "/invite";
+    else if (item.name === "VIP") window.location.href = "/vip";
     else if (item.name === "Spins" || item.name === "Rebate") window.location.href = "/promo";
     else toast.success(item.name + " opened");
   }} className="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform">
