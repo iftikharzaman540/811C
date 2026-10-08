@@ -1,22 +1,41 @@
 const fs = require('fs');
-let code = fs.readFileSync('backend/prisma/schema.prisma', 'utf8');
+let content = fs.readFileSync('schema-vps.prisma', 'utf8');
 
-const broadcastModel = `
-model AdminBroadcast {
-  id         String   @id @default(uuid())
-  title      String
-  message    String
-  type       String
-  sent_to    Int
-  target     String   @default("ALL") // "ALL" or specific user_id
-  created_at DateTime @default(now())
-}
-`;
-
-code = code.replace(
-  "// PHASE 5 - ADMIN PANEL MODELS",
-  broadcastModel + "\n// PHASE 5 - ADMIN PANEL MODELS"
+// Add fields to User
+content = content.replace(
+  '  total_deposited  Decimal   @default(0.00) @db.Decimal(15, 2)',
+  '  total_deposited  Decimal   @default(0.00) @db.Decimal(15, 2)\n  total_wagered    Decimal   @default(0.00) @db.Decimal(15, 2)'
 );
 
-fs.writeFileSync('backend/prisma/schema.prisma', code);
-console.log("Added AdminBroadcast model");
+// Add VipBonusClaim relation to User
+content = content.replace(
+  '  VipHistory       VipHistory[]',
+  '  VipHistory       VipHistory[]\n  vip_bonus_claims VipBonusClaim[]'
+);
+
+// Add fields to Wallet
+content = content.replace(
+  '  bonus_balance Decimal   @default(0.00) @db.Decimal(15, 2)',
+  '  bonus_balance        Decimal   @default(0.00) @db.Decimal(15, 2)\n  wagering_requirement Decimal   @default(0.00) @db.Decimal(15, 2)\n  wagering_completed   Decimal   @default(0.00) @db.Decimal(15, 2)'
+);
+
+// Add fields to VipLevel
+content = content.replace(
+  '  min_deposit         Decimal @default(0.00) @db.Decimal(15, 2)',
+  '  min_deposit         Decimal @default(0.00) @db.Decimal(15, 2)\n  min_turnover        Decimal @default(0.00) @db.Decimal(15, 2)\n  bonus_amount        Decimal @default(0.00) @db.Decimal(15, 2)\n  wagering_multiplier Int     @default(1)\n  auto_upgrade        Boolean @default(true)\n  auto_bonus          Boolean @default(true)'
+);
+
+// Add VipBonusClaim model at the end
+content += `\nmodel VipBonusClaim {
+  id         String   @id @default(uuid())
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  level      Int
+  amount     Decimal  @db.Decimal(15, 2)
+  created_at DateTime @default(now())
+
+  @@unique([user_id, level])
+}\n`;
+
+fs.writeFileSync('schema-vps-updated.prisma', content);
+console.log('Updated schema saved to schema-vps-updated.prisma');

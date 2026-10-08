@@ -168,12 +168,12 @@ export default function ProfilePage() {
                 {/* Progress */}
                 <div className="flex-1 flex flex-col justify-center">
                   <div className="w-full h-2.5 bg-[#111] rounded-full overflow-visible relative border border-neutral-800 shadow-inner">
-                    <div className="h-full bg-gradient-to-r from-[#ffdf00] to-[#fff5cc] rounded-full relative" style={{ width: Math.min(100, (vipStatus?.requiredForNext ? (vipStatus.totalDeposited / vipStatus.requiredForNext) * 100 : 0)) + '%' }}>
+                    <div className="h-full bg-gradient-to-r from-[#ffdf00] to-[#fff5cc] rounded-full relative" style={{ width: Math.min(100, (vipStatus?.requiredForNext ? (vipStatus.totalWagered / vipStatus.requiredForNext) * 100 : 0)) + '%' }}>
                       <div className="absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-[0_0_10px_#fff,0_0_20px_#ffdf00]"></div>
                     </div>
                   </div>
                   <div className="text-[11px] text-neutral-400 font-bold mt-2 text-left tracking-tight">
-                    {(vipStatus?.totalDeposited || 0).toLocaleString(undefined, {minimumFractionDigits: 2})} / {(vipStatus?.requiredForNext || 10000).toLocaleString(undefined, {minimumFractionDigits: 2})}
+                    {(vipStatus?.totalWagered || 0).toLocaleString(undefined, {minimumFractionDigits: 2})} / {(vipStatus?.requiredForNext || 10000).toLocaleString(undefined, {minimumFractionDigits: 2})}
                   </div>
                 </div>
               </div>

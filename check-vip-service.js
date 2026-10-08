@@ -1,7 +1,8 @@
 const { Client } = require('ssh2');
+const fs = require('fs');
 const conn = new Client();
 conn.on('ready', () => {
-  conn.exec("cat /var/www/gaming-app/backend/src/vip/vip.service.ts | grep -n -A 20 'async processDepositForVip'", (err, stream) => {
+  conn.exec("cat /var/www/gaming-app/backend/src/vip/vip.service.ts", (err, stream) => {
     stream.on('data', d => process.stdout.write(d.toString()));
     stream.stderr.on('data', d => process.stderr.write(d.toString()));
     stream.on('close', () => conn.end());
