@@ -83,6 +83,14 @@ export default function ProfilePage() {
           <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
           <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
 
+          {/* Top Left Icon (Back to Home) */}
+          <div className="absolute top-4 left-4 z-20">
+            <button onClick={() => router.push('/')} className="text-white hover:text-[#ffdf00] transition-colors flex items-center justify-center p-0.5 rounded-full bg-black/30 backdrop-blur-sm border border-white/10 hover:border-[#ffdf00]/50">
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          </div>
+          <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
+
           {/* Top Right Icons */}
           <div className="absolute top-4 right-4 flex items-center gap-3 z-20">
             {/* Notification Bell */}
