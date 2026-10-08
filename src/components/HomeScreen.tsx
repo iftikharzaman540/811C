@@ -396,7 +396,7 @@ if (Array.isArray(data)) {
 
   const seen = new Set();
 
-              data = data.filter(g => {
+              data = data.filter((g: any) => {
                  const name = (g.title || g.name || "").toLowerCase().trim();
                  if (seen.has(name)) return false;
                  seen.add(name);
