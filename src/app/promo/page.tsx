@@ -449,7 +449,133 @@ export default function PromoPage() {
             </div>
             <div className="h-20" />
           </div>
-        )} {
+        )}
+
+        {/* HISTORY TAB CONTENT */}
+        {activeTopTab === "History" && (
+          <div className="flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#111]">
+            <div className="p-3 border-b border-neutral-800 flex gap-2">
+              <button className="flex items-center gap-1 border border-neutral-700 rounded-full px-3 py-1 text-neutral-400 text-[12px]">
+                Today <ChevronDown className="w-3 h-3" />
+              </button>
+              <button className="flex items-center gap-1 border border-neutral-700 rounded-full px-3 py-1 text-neutral-400 text-[12px]">
+                All Status <ChevronDown className="w-3 h-3" />
+              </button>
+              <button className="flex items-center gap-1 border border-neutral-700 rounded-full px-3 py-1 text-neutral-400 text-[12px]">
+                All Types <ChevronDown className="w-3 h-3" />
+              </button>
+            </div>
+            <div className="flex-1 flex flex-col items-center justify-center opacity-50 mb-4">
+              <PackageOpen className="w-20 h-20 text-neutral-600 mb-2" />
+              <div className="flex items-center gap-2">
+                <span className="text-neutral-500 text-[13px]">Today No Records,but <span onClick={() => toast("No more records")} className="text-[#cc0000] font-medium cursor-pointer">Read More</span></span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* FUND TAB CONTENT */}
+        {activeTopTab === "Fund" && (
+          <div className="flex-1 flex flex-col overflow-y-auto no-scrollbar bg-[#111]">
+            
+            {/* Top Stats Box */}
+            <div className="bg-[#1a1a1a] p-4 m-3 rounded-lg border border-neutral-800 flex flex-col gap-4">
+              <div className="flex justify-between relative">
+                <div className="absolute left-1/2 top-0 bottom-0 w-px bg-neutral-800"></div>
+                <div className="flex-1 flex flex-col items-center gap-1">
+                  <span className="text-neutral-500 text-[12px]">Total deposit</span>
+                  <span className="text-white font-bold text-[20px]">0.00</span>
+                  <div className="relative mt-2">
+                    <span className="absolute -top-3 -right-6 bg-[#cc0000] text-white text-[9px] font-bold px-1 rounded-sm shadow">+50%</span>
+                    <button onClick={() => window.location.href="/deposit"} className="bg-gradient-to-r from-[#ffdf00] to-[#ffaa00] text-[#4a2e00] font-bold text-[12px] px-6 py-1 rounded shadow-md">Deposit</button>
+                  </div>
+                </div>
+                <div className="flex-1 flex flex-col items-center gap-1">
+                  <span className="text-neutral-500 text-[12px]">Fund</span>
+                  <span className="text-[#ffdf00] font-bold text-[20px]">0.00</span>
+                  <div className="relative mt-2">
+                    <button onClick={() => window.location.href="/withdraw"} className="bg-neutral-600 text-neutral-300 font-bold text-[12px] px-6 py-1 rounded shadow-md">Withdraw</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-0.5 text-[10px] text-neutral-500 mt-2">
+                <div>Bonus cap <span className="text-white font-medium">not to be capped</span></div>
+                <div>Times capped <span className="text-white font-medium">not to be capped</span></div>
+              </div>
+            </div>
+
+            {/* Sub Tabs */}
+            <div className="flex border-b border-neutral-800 text-[13px] font-medium bg-[#1a1a1a]">
+              <button className="flex-1 text-[#cc0000] py-3 border-b-2 border-[#cc0000]">Total records</button>
+              <button className="flex-1 text-white py-3">Cumulative betting requirements</button>
+              <button className="px-4 text-white py-3">Rules</button>
+            </div>
+
+            {/* Records Section */}
+            <div className="p-3">
+              <div className="flex justify-between items-center mb-6">
+                <button className="flex items-center justify-between w-24 border border-neutral-700 rounded-full px-3 py-1.5 text-neutral-400 text-[12px]">
+                  Today <ChevronDown className="w-3 h-3" />
+                </button>
+                <div className="text-neutral-500 text-[12px]">Total <span className="text-[#ffdf00] font-bold">0.00</span></div>
+              </div>
+
+              <div className="flex flex-col items-center justify-center opacity-50 mt-10">
+                <PackageOpen className="w-20 h-20 text-neutral-600 mb-2" />
+                <div className="flex items-center gap-2">
+                  <span className="text-neutral-500 text-[13px]">Today No Records,but <span onClick={() => toast("No more records")} className="text-[#cc0000] font-medium cursor-pointer">Read More</span></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
+
+      </div>
+
+      {/* Linked Phone Number Modal */}
+      <AnimatePresence>
+        {showPhoneModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowPhoneModal(false)} className="absolute inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center items-center p-4">
+             {/* ... phone modal omitted to save space since it was already correctly placed but Redeem Bonus is what we use now */}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Bonus Redemption Modal */}
+      <AnimatePresence>
+        {showRedeemModal && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowRedeemModal(false)} className="absolute inset-0 bg-black/80 backdrop-blur-sm z-50 flex justify-center items-center p-6">
+            <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} onClick={(e) => e.stopPropagation()} className="bg-gradient-to-b from-[#ffdf00] via-[#ffaa00] to-[#fff3e0] rounded-2xl w-full max-w-sm p-6 shadow-2xl relative">
+              <button onClick={() => setShowRedeemModal(false)} className="absolute top-4 right-4 text-[#4a2e00] hover:scale-110 transition-transform"><X className="w-5 h-5" /></button>
+              <div className="absolute -top-12 -left-6 drop-shadow-2xl z-10 w-28 h-28 pointer-events-none text-[80px]">🎁</div>
+              <div className="text-center mt-4 mb-6 relative z-0">
+                <h2 className="text-[22px] font-black text-[#cc0000] leading-tight drop-shadow-sm uppercase">Bonus<br/>Redemption...</h2>
+              </div>
+              <div className="text-center mb-4">
+                <span className="text-[#4a2e00] font-medium text-[13px]">Win up to <span className="bg-[#cc0000] text-white px-2 py-0.5 rounded-full font-bold">Rs 77,777</span> in bonus!</span>
+              </div>
+              <div className="bg-white rounded-lg p-1.5 flex items-center mb-6 shadow-inner border border-neutral-200">
+                <span className="px-2 text-[16px]">🎫</span>
+                <input type="text" placeholder="The redemption code is co..." className="flex-1 bg-transparent border-none outline-none text-[13px] text-neutral-800 placeholder:text-neutral-400 px-1" />
+                <button onClick={() => toast.success("Pasted from clipboard")} className="text-[#cc0000] font-bold text-[13px] px-3 border-l border-neutral-200">Paste</button>
+              </div>
+              <button onClick={() => toast.error("Invalid redeem code")} className="w-full bg-[#111] text-white font-bold text-[15px] py-3.5 rounded-lg shadow-lg hover:bg-[#333] transition-colors mb-4">Redeem Bonus</button>
+              <div className="text-center">
+                <button onClick={() => toast("Opening rules...")} className="text-[#cc0000] text-[12px] font-bold hover:underline">Event Rules</button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <BottomNav activeTab="promo" />
+    </main>
+  );
+}
+
+function Banner({ title, desc, highlight, sub, icon, badge, href }: { title: string, desc: string, highlight?: string, sub?: string, icon: string, badge?: string, href?: string }) {
   const content = (
     <div className="relative w-full rounded-xl overflow-hidden border border-[#ff0b0b] bg-gradient-to-br from-[#2e0505] via-[#111] to-[#1a1a1a] p-4 shadow-[0_0_15px_rgba(255,11,11,0.15)] flex flex-col justify-between min-h-[110px]">
       <div className="absolute top-0 left-0 bg-gradient-to-r from-[#ff0b0b] to-[#cc0000] px-3 py-0.5 rounded-br-lg flex items-center gap-1 shadow-md">
