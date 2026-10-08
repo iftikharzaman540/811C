@@ -1,18 +1,15 @@
-const fs = require('fs');
-let code = fs.readFileSync('backend/src/gregmorn/gregmorn-webhook.controller.ts', 'utf8');
+const fs = require("fs");
+const file = "/var/www/gaming-app/backend/src/gregmorn/gregmorn.service.ts";
+let content = fs.readFileSync(file, "utf8");
 
-const targetStr = `const netAmount = winAmount - betAmount;`;
-const replacement = `const netAmount = winAmount - betAmount;
-          
-          // Track wagering requirement
-          if (betAmount > 0) {
-            await this.walletService.updateWageringCompleted(effectiveUserId, betAmount).catch(e => this.logger.error('Wagering update error:', e));
-          }`;
+content = content.replace(
+  /if \(decoded\.GameSiteUrl\) \{/g,
+  "const gameUrl = decoded.GamesSiteUrl || decoded.GameSiteUrl;\n            if (gameUrl) {"
+);
+content = content.replace(
+  /const baseUrl = decoded\.GameSiteUrl\.endsWith\('\/'\) \? decoded\.GameSiteUrl\.slice\(0, -1\) : decoded\.GameSiteUrl;/g,
+  "const baseUrl = gameUrl.endsWith('/') ? gameUrl.slice(0, -1) : gameUrl;"
+);
 
-if (code.includes(targetStr)) {
-  code = code.replace(targetStr, replacement);
-  fs.writeFileSync('backend/src/gregmorn/gregmorn-webhook.controller.ts', code);
-  console.log("Patched gregmorn-webhook.controller.ts");
-} else {
-  console.log("Could not find target string in gregmorn-webhook.controller.ts");
-}
+fs.writeFileSync(file, content, "utf8");
+console.log("Patched gregmorn.service.ts on the VPS!");

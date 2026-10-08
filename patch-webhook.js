@@ -1,14 +1,25 @@
+const { Client } = require('ssh2');
+const conn = new Client();
+conn.on('ready', () => {
+  const patchScript = `
 const fs = require('fs');
-let code = fs.readFileSync('backend/src/payments/payments.service.ts', 'utf8');
+const path = '/var/www/gaming-app/backend/src/payments/payments.service.ts';
+let content = fs.readFileSync(path, 'utf8');
 
-code = code.replace(
-  /data: \{ status: 'COMPLETED', metadata: data \},/g,
-  "data: { status: 'COMPLETED', metadata: { ...(payment.metadata as any || {}), webhook_data: data } },"
-);
+const targetStr = "    if (orderStatus === '2' || statusText === 'PAID') {";
+const replaceStr = "    if (orderStatus === '2' || statusText === 'PAID' || statusText === 'SUCCESS' || orderStatus.toUpperCase() === 'SUCCESS' || orderStatus.toUpperCase() === 'OK') {";
 
-code = code.replace(
-  /data: \{ status: 'REJECTED', metadata: data \},/g,
-  "data: { status: 'REJECTED', metadata: { ...(payment.metadata as any || {}), webhook_data: data } },"
-);
-
-fs.writeFileSync('backend/src/payments/payments.service.ts', code);
+if (content.includes(targetStr)) {
+  content = content.replace(targetStr, replaceStr);
+  fs.writeFileSync(path, content);
+  console.log('Patched payments.service.ts handleWebhook success condition');
+} else {
+  console.log('Could not find targetStr in payments.service.ts');
+}
+`;
+  conn.exec(`cat << 'EOF' > /tmp/patch-webhook.js\n${patchScript}\nEOF\nnode /tmp/patch-webhook.js`, (err, stream) => {
+    stream.on('data', d => process.stdout.write(d.toString()));
+    stream.stderr.on('data', d => process.stderr.write(d.toString()));
+    stream.on('close', () => conn.end());
+  });
+}).connect({host:'169.58.50.184',port:22,username:'root',password:'Iftkharzaman'});

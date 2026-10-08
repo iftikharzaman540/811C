@@ -1,26 +1,25 @@
+const { Client } = require('ssh2');
+const conn = new Client();
+conn.on('ready', () => {
+  const patchScript = `
 const fs = require('fs');
-let code = fs.readFileSync('backend/src/payments/providers/xpresspay.provider.ts', 'utf8');
+const path = '/var/www/gaming-app/backend/src/payments/providers/xpresspay.provider.ts';
+let content = fs.readFileSync(path, 'utf8');
 
-const queryMethod = 
-  async checkOrderStatus(merOrderNo: string): Promise<boolean> {
-    try {
-      const payload: Record<string, any> = { appId: this.appId, merOrderNo };
-      payload['sign'] = this.generateSignature(payload);
-      const response = await axios.post('https://xpresspay.cloud/api/v2/payment/order/query', payload, {
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        timeout: 10000,
-      });
-      const data = response.data;
-      if (data && data.code == 0 && data.data && String(data.data.orderStatus) === '2') {
-        return true;
-      }
-      return false;
-    } catch (e) {
-      this.logger.error('Failed to query XpressPay status', e.message);
-      return false;
-    }
-  }
-;
+const targetStr = "      if (data && (data.code == 0 || data.code == '0') && data.data && String(data.data.orderStatus) === '2') {";
+const replaceStr = "      const st = data?.data?.orderStatus ? String(data.data.orderStatus).toUpperCase() : '';\\n      const statusText = data?.data?.status ? String(data.data.status).toUpperCase() : '';\\n      if (data && (data.code == 0 || data.code == '0') && data.data && (st === '2' || st === 'SUCCESS' || st === 'OK' || statusText === 'SUCCESS')) {";
 
-code = code.replace(/}\s*$/g, queryMethod + "\n}");
-fs.writeFileSync('backend/src/payments/providers/xpresspay.provider.ts', code);
+if (content.includes(targetStr)) {
+  content = content.replace(targetStr, replaceStr);
+  fs.writeFileSync(path, content);
+  console.log('Patched xpresspay.provider.ts checkOrderStatus success condition');
+} else {
+  console.log('Could not find targetStr in xpresspay.provider.ts');
+}
+`;
+  conn.exec(`cat << 'EOF' > /tmp/patch-xpresspay.js\n${patchScript}\nEOF\nnode /tmp/patch-xpresspay.js`, (err, stream) => {
+    stream.on('data', d => process.stdout.write(d.toString()));
+    stream.stderr.on('data', d => process.stderr.write(d.toString()));
+    stream.on('close', () => conn.end());
+  });
+}).connect({host:'169.58.50.184',port:22,username:'root',password:'Iftkharzaman'});

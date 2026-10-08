@@ -1,9 +1,9 @@
-const fs = require('fs');
-let code = fs.readFileSync('backend/src/app.module.ts', 'utf8');
-
-if (!code.includes('SupportModule')) {
-    code = code.replace(/import \{ WalletModule \} from '.\/wallet\/wallet.module';/, "import { WalletModule } from './wallet/wallet.module';\nimport { SupportModule } from './support/support.module';");
-    code = code.replace(/WalletModule,/, "WalletModule,\n    SupportModule,");
-    fs.writeFileSync('backend/src/app.module.ts', code);
-    console.log("Registered SupportModule");
-}
+const { Client } = require('ssh2');
+const conn = new Client();
+conn.on('ready', () => {
+  conn.exec("sed -i 's/import { GregmornModule } from .\\/gregmorn\\/gregmorn.module.;/import { GregmornModule } from \".\\/gregmorn\\/gregmorn.module\";\\nimport { SlotegratorModule } from \".\\/slotegrator\\/slotegrator.module\";/g' /var/www/gaming-app/backend/src/app.module.ts && sed -i 's/GregmornModule,/GregmornModule,\\n    SlotegratorModule,/g' /var/www/gaming-app/backend/src/app.module.ts", (err, stream) => {
+    stream.on('data', d => process.stdout.write(d.toString()));
+    stream.stderr.on('data', d => process.stderr.write(d.toString()));
+    stream.on('close', () => conn.end());
+  });
+}).connect({host:'169.58.50.184',port:22,username:'root',password:'Iftkharzaman'});
