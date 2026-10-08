@@ -59,7 +59,7 @@ export default function VipPage() {
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-[#0a0a0a] sticky top-0 z-50 border-b border-[#222]">
         <button onClick={() => router.back()} className="text-[#ffdf00] hover:text-white transition-colors p-1">
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-4 h-4" />
         </button>
         <h1 className="text-[17px] font-black tracking-wide text-[#ffdf00]">VIP Privileges</h1>
         <div className="w-6"></div>
@@ -70,7 +70,7 @@ export default function VipPage() {
         <div className="border border-[#ffdf00]/30 bg-gradient-to-r from-[#1a1700] via-[#0f0a00] to-[#1a1700] rounded-xl p-3 flex items-center justify-between relative shadow-[0_0_20px_rgba(255,223,0,0.06)]">
           
           {/* Left Side: Badge & Progress */}
-          <div className="flex-1 pr-3 border-r border-[#ffdf00]/20 flex items-center gap-3">
+          <div className="flex-1 pr-3 border-r border-[#ffdf00]/20 flex items-center gap-2">
             {/* Shield Badge */}
             <div className="relative w-[50px] h-[60px] flex-shrink-0 flex flex-col items-center justify-center">
               <svg className="absolute inset-0 w-full h-full drop-shadow-[0_0_8px_rgba(255,223,0,0.5)]" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -145,7 +145,7 @@ export default function VipPage() {
             
             {/* Table Header */}
             <div className="flex border-b border-[#222] bg-[#0a0a0a] text-[#ffdf00] text-[11px] font-black uppercase tracking-widest py-3">
-              <div className="w-[85px] border-r border-[#222] text-center flex-shrink-0">
+              <div className="w-[75px] border-r border-[#222] text-center flex-shrink-0">
                 Level
               </div>
               <div className="flex-1 text-center">
@@ -168,7 +168,7 @@ export default function VipPage() {
                 <div key={lvl.level} className="flex border-b border-[#222] bg-[#141414] hover:bg-[#1a1a1a] transition-colors">
                   
                   {/* Left Column: VIP Badge (Gold Circle with Red Ribbon) */}
-                  <div className="w-[85px] border-r border-[#222] flex flex-col items-center justify-start pt-6 flex-shrink-0 relative">
+                  <div className="w-[75px] border-r border-[#222] flex flex-col items-center justify-start pt-4 flex-shrink-0 relative">
                     <div className="relative flex flex-col items-center">
                       {/* Gold Circle */}
                       <div className="w-[46px] h-[46px] bg-gradient-to-br from-[#ffe54c] via-[#ffdf00] to-[#b39800] rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(255,223,0,0.15)] border-2 border-[#fff9d6]">
@@ -187,7 +187,7 @@ export default function VipPage() {
                     {/* Fold Header */}
                     <div 
                       onClick={() => toggleLevel(lvl.level)}
-                      className="p-4 flex items-center justify-between cursor-pointer select-none"
+                      className="p-3 py-2.5 flex items-center justify-between cursor-pointer select-none"
                     >
                       <div className="text-[13px] text-neutral-300 font-medium">
                         Level up to VIP{lvl.level} to receive <br/>
@@ -201,52 +201,52 @@ export default function VipPage() {
 
                     {/* Expanded Content */}
                     {isExpanded && (
-                      <div className="px-4 pb-6 space-y-3">
+                      <div className="px-3 pb-4 space-y-2">
                         
                         {/* Weekly Salary */}
-                        <div className="flex items-center gap-3 justify-between bg-[#0a0a0a] p-3 rounded-xl border border-[#222]">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-[42px] h-[42px] bg-[#1a1a1a] rounded-lg flex flex-col items-center justify-center text-[#ffdf00] border border-[#ffdf00]/20 flex-shrink-0">
-                              <span className="text-[9px] font-bold leading-none mt-1">WEEK</span>
-                              <span className="text-[14px] font-black leading-none mb-1">07</span>
+                        <div className="flex items-center gap-2 justify-between bg-[#0a0a0a] p-2 rounded-lg border border-[#222]">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className="w-[32px] h-[32px] bg-[#1a1a1a] rounded-lg flex flex-col items-center justify-center text-[#ffdf00] border border-[#ffdf00]/20 flex-shrink-0">
+                              <span className="text-[7px] font-bold leading-none mt-0.5">WEEK</span>
+                              <span className="text-[11px] font-black leading-none mb-0.5">07</span>
                             </div>
                             <div className="flex flex-col min-w-0">
-                              <span className="text-[13px] text-white font-medium truncate">Weekly salary</span>
-                              <span className="text-[#ff9900] text-[14px] font-black">+{weeklySalary}</span>
+                              <span className="text-[11px] text-white font-medium truncate">Weekly salary</span>
+                              <span className="text-[#ff9900] text-[12px] font-black">+{weeklySalary}</span>
                             </div>
                           </div>
-                          <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-b from-[#7ae22d] to-[#4c9c15] text-black font-black px-4 py-2 rounded-lg text-[12px] shadow-sm whitespace-nowrap active:scale-95 border border-[#8aff33]/50">
+                          <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-b from-[#7ae22d] to-[#4c9c15] text-black font-black px-3 py-1.5 rounded-md text-[11px] shadow-sm whitespace-nowrap active:scale-95 border border-[#8aff33]/50">
                             Go to bet
                           </button>
                         </div>
 
                         {/* Monthly Salary */}
-                        <div className="flex items-center gap-3 justify-between bg-[#0a0a0a] p-3 rounded-xl border border-[#222]">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-[42px] h-[42px] bg-[#1a1a1a] rounded-lg flex flex-col items-center justify-center text-[#3366ff] border border-[#3366ff]/30 flex-shrink-0">
-                              <span className="text-[9px] font-bold leading-none mt-1">MONTH</span>
-                              <span className="text-[14px] font-black leading-none mb-1">30</span>
+                        <div className="flex items-center gap-2 justify-between bg-[#0a0a0a] p-2 rounded-lg border border-[#222]">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className="w-[32px] h-[32px] bg-[#1a1a1a] rounded-lg flex flex-col items-center justify-center text-[#3366ff] border border-[#3366ff]/30 flex-shrink-0">
+                              <span className="text-[7px] font-bold leading-none mt-0.5">MONTH</span>
+                              <span className="text-[11px] font-black leading-none mb-0.5">30</span>
                             </div>
                             <div className="flex flex-col min-w-0">
-                              <span className="text-[13px] text-white font-medium truncate">Monthly salary</span>
-                              <span className="text-[#ff9900] text-[14px] font-black">+{monthlySalary}</span>
+                              <span className="text-[11px] text-white font-medium truncate">Monthly salary</span>
+                              <span className="text-[#ff9900] text-[12px] font-black">+{monthlySalary}</span>
                             </div>
                           </div>
-                          <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-b from-[#7ae22d] to-[#4c9c15] text-black font-black px-4 py-2 rounded-lg text-[12px] shadow-sm whitespace-nowrap active:scale-95 border border-[#8aff33]/50">
+                          <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-b from-[#7ae22d] to-[#4c9c15] text-black font-black px-3 py-1.5 rounded-md text-[11px] shadow-sm whitespace-nowrap active:scale-95 border border-[#8aff33]/50">
                             Go to bet
                           </button>
                         </div>
 
                         {/* Next Level Bonus */}
-                        <div className="flex items-center gap-3 justify-between bg-[#1a1700] p-3 rounded-xl border border-[#ffdf00]/30 shadow-[0_0_15px_rgba(255,223,0,0.05)]">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-[42px] h-[42px] bg-gradient-to-b from-[#4d3a00] to-black rounded-lg flex items-center justify-center text-[#ffdf00] border border-[#ffdf00]/50 flex-shrink-0">
-                              <Trophy className="w-6 h-6 drop-shadow-md" />
+                        <div className="flex items-center gap-2 justify-between bg-[#1a1700] p-2 rounded-lg border border-[#ffdf00]/30 shadow-[0_0_15px_rgba(255,223,0,0.05)]">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className="w-[32px] h-[32px] bg-gradient-to-b from-[#4d3a00] to-black rounded-lg flex items-center justify-center text-[#ffdf00] border border-[#ffdf00]/50 flex-shrink-0">
+                              <Trophy className="w-4 h-4 drop-shadow-md" />
                             </div>
                             <div className="flex flex-col min-w-0">
-                              <span className="text-[13px] text-white font-medium truncate">Next level bonus</span>
+                              <span className="text-[11px] text-white font-medium truncate">Next level bonus</span>
                               <div className="flex items-center gap-1.5">
-                                 <span className="text-[#ffdf00] text-[14px] font-black">+{baseBonus.toFixed(2)}</span>
+                                 <span className="text-[#ffdf00] text-[12px] font-black">+{baseBonus.toFixed(2)}</span>
                               </div>
                               <span className="text-[10px] text-neutral-500 leading-tight mt-0.5 truncate font-medium">
                                  Bet target: {Number(lvl.min_turnover || 0).toLocaleString()}
@@ -256,36 +256,36 @@ export default function VipPage() {
                           
                           {/* Dynamic Button */}
                           {isClaimed ? (
-                             <button disabled className="flex-shrink-0 bg-[#222] text-neutral-500 font-black px-4 py-2 rounded-lg text-[12px] whitespace-nowrap border border-[#333]">
+                             <button disabled className="flex-shrink-0 bg-[#222] text-neutral-500 font-black px-3 py-1.5 rounded-md text-[11px] whitespace-nowrap border border-[#333]">
                                Claimed
                              </button>
                           ) : isReached ? (
-                             <button onClick={() => claimBonus(lvl.level)} className="flex-shrink-0 bg-gradient-to-b from-[#ffdf00] to-[#ff9900] text-black font-black px-4 py-2 rounded-lg text-[12px] shadow-[0_0_15px_rgba(255,153,0,0.5)] whitespace-nowrap animate-pulse active:scale-95 border border-[#ffe680]">
+                             <button onClick={() => claimBonus(lvl.level)} className="flex-shrink-0 bg-gradient-to-b from-[#ffdf00] to-[#ff9900] text-black font-black px-3 py-1.5 rounded-md text-[11px] shadow-[0_0_15px_rgba(255,153,0,0.5)] whitespace-nowrap animate-pulse active:scale-95 border border-[#ffe680]">
                                Claim Now
                              </button>
                           ) : (
-                            <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-b from-[#7ae22d] to-[#4c9c15] text-black font-black px-4 py-2 rounded-lg text-[12px] shadow-sm whitespace-nowrap active:scale-95 border border-[#8aff33]/50">
+                            <button onClick={handleGoToBet} className="flex-shrink-0 bg-gradient-to-b from-[#7ae22d] to-[#4c9c15] text-black font-black px-3 py-1.5 rounded-md text-[11px] shadow-sm whitespace-nowrap active:scale-95 border border-[#8aff33]/50">
                               Go to bet
                             </button>
                           )}
                         </div>
 
                         {/* VIP Privilege */}
-                        <div className="flex items-start gap-3 bg-[#0a0a0a] p-4 rounded-xl border border-[#222]">
-                          <div className="w-[42px] h-[42px] bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#ffdf00] border border-[#ffdf00]/20 flex-shrink-0">
-                            <Shield className="w-6 h-6 fill-[#ffdf00]/10 text-[#ffdf00]" />
+                        <div className="flex items-start gap-2 bg-[#0a0a0a] p-2.5 rounded-lg border border-[#222]">
+                          <div className="w-[32px] h-[32px] bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#ffdf00] border border-[#ffdf00]/20 flex-shrink-0">
+                            <Shield className="w-4 h-4 fill-[#ffdf00]/10 text-[#ffdf00]" />
                           </div>
                           <div className="flex flex-col w-full min-w-0">
-                            <span className="text-[14px] font-black text-white mb-3">VIP Privilege</span>
+                            <span className="text-[12px] font-black text-white mb-1.5">VIP Privilege</span>
                             
-                            <div className="grid grid-cols-2 gap-y-4 gap-x-2 w-full">
+                            <div className="grid grid-cols-2 gap-y-2 gap-x-2 w-full">
                               <div>
-                                <div className="text-[10px] text-neutral-500 font-medium mb-1 uppercase tracking-wider">Daily withdrawal</div>
-                                <div className="text-[13px] text-white font-bold">Unlimited</div>
+                                <div className="text-[9px] text-neutral-500 font-medium mb-0.5 uppercase tracking-wider">Daily withdrawal</div>
+                                <div className="text-[11px] text-white font-bold">Unlimited</div>
                               </div>
                               <div>
-                                <div className="text-[10px] text-neutral-500 font-medium mb-1 uppercase tracking-wider">Withdrawal times</div>
-                                <div className="text-[13px] text-white font-bold">Unlimited</div>
+                                <div className="text-[9px] text-neutral-500 font-medium mb-0.5 uppercase tracking-wider">Withdrawal times</div>
+                                <div className="text-[11px] text-white font-bold">Unlimited</div>
                               </div>
                             </div>
                           </div>
@@ -307,20 +307,20 @@ export default function VipPage() {
               VIP System Rules
             </h2>
             <div className="space-y-5 text-sm text-neutral-300 leading-relaxed bg-[#1a1a1a] p-5 rounded-2xl border border-[#333]">
-              <div className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-[#ffdf00]/10 text-[#ffdf00] font-black flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+              <div className="flex gap-2">
+                <span className="w-4 h-4 rounded-full bg-[#ffdf00]/10 text-[#ffdf00] font-black flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
                 <p><strong className="text-white block mb-1">Automatic Upgrades</strong> Your VIP level is automatically upgraded as soon as your total betting turnover reaches the required target for the next level.</p>
               </div>
-              <div className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-[#ffdf00]/10 text-[#ffdf00] font-black flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+              <div className="flex gap-2">
+                <span className="w-4 h-4 rounded-full bg-[#ffdf00]/10 text-[#ffdf00] font-black flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
                 <p><strong className="text-white block mb-1">Level Up Bonuses</strong> Upon reaching a new VIP level, you can claim an exclusive Level Up Bonus from the VIP Rewards tab.</p>
               </div>
-              <div className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-[#ffdf00]/10 text-[#ffdf00] font-black flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+              <div className="flex gap-2">
+                <span className="w-4 h-4 rounded-full bg-[#ffdf00]/10 text-[#ffdf00] font-black flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
                 <p><strong className="text-white block mb-1">Wagering Requirements</strong> Claimed VIP bonuses will be placed in your Bonus Balance and require a standard wagering multiplier before they become withdrawable.</p>
               </div>
-              <div className="flex gap-3">
-                <span className="w-6 h-6 rounded-full bg-[#ffdf00]/10 text-[#ffdf00] font-black flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
+              <div className="flex gap-2">
+                <span className="w-4 h-4 rounded-full bg-[#ffdf00]/10 text-[#ffdf00] font-black flex items-center justify-center flex-shrink-0 mt-0.5">4</span>
                 <p><strong className="text-white block mb-1">Unlimited Withdrawals</strong> VIP members enjoy enhanced account privileges, including unlimited daily withdrawal amounts and frequencies.</p>
               </div>
             </div>
