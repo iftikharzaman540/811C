@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronUp, ChevronDown, Calendar, Trophy, Diamond, Crown, Shield } from 'lucide-react';
 import { apiRequest } from '@/utils/api';
 import toast from 'react-hot-toast';
+import BottomNav from '@/components/BottomNav';
 
 export default function VipPage() {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function VipPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#111] text-white flex flex-col font-sans pb-10">
+    <div className="min-h-screen bg-[#111] text-white flex flex-col font-sans pb-[80px]">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-[#0a0a0a] sticky top-0 z-50 border-b border-[#222]">
         <button onClick={() => router.back()} className="text-[#ffdf00] hover:text-white transition-colors p-1">
@@ -327,6 +328,7 @@ export default function VipPage() {
           </div>
         )}
       </div>
+      <BottomNav />
     </div>
   );
 }
