@@ -49,6 +49,73 @@ export default function VipPage() {
   };
 
   // Get next level bonus for the top card
+
+  const getBadgeStyle = (level: number) => {
+    // Default mapping based on screenshot
+    let style = {
+      base1: '#ffe54c', base2: '#ffdf00', base3: '#997a00',
+      inner1: '#2a2000', inner2: '#0a0800',
+      hasWings: false, wingColor: '#000000'
+    };
+
+    if (level === 0) style = { ...style, base1: '#ffe54c', base2: '#ffdf00', base3: '#997a00' };
+    else if (level === 1) style = { ...style, base1: '#ff9999', base2: '#ff3333', base3: '#990000', inner1: '#330000', inner2: '#1a0000' };
+    else if (level === 2 || (level >= 10 && level <= 29)) style = { ...style, base1: '#d4a373', base2: '#b5835a', base3: '#6b4c31', inner1: '#261b11', inner2: '#130d08' }; // VIP 2 & VIP 10-29
+    else if (level === 3) style = { ...style, base1: '#66ff99', base2: '#00cc44', base3: '#006622', inner1: '#001a09', inner2: '#000d04' };
+    else if (level === 4) style = { ...style, base1: '#66b2ff', base2: '#3385ff', base3: '#004080', inner1: '#001326', inner2: '#000a13' };
+    else if (level === 5) style = { ...style, base1: '#d966ff', base2: '#a600cc', base3: '#4d0066', inner1: '#1a0026', inner2: '#0d0013' };
+    else if (level === 6) style = { ...style, base1: '#ff66b2', base2: '#e60073', base3: '#800040', inner1: '#260013', inner2: '#130009' };
+    else if (level === 7) style = { ...style, base1: '#ffea80', base2: '#ffcc00', base3: '#cc9900', inner1: '#2a2000', inner2: '#0a0800' };
+    else if (level === 8) style = { ...style, base1: '#d1b3ff', base2: '#8000ff', base3: '#330066', inner1: '#130026', inner2: '#090013' };
+    else if (level === 9) style = { ...style, base1: '#ff8080', base2: '#ff0000', base3: '#990000', inner1: '#260000', inner2: '#130000' };
+    
+    // VIP 30-39: Blue/Silver with wings
+    if (level >= 30 && level <= 39) {
+      style = { ...style, base1: '#b3e6ff', base2: '#33ccff', base3: '#0077b3', inner1: '#002233', inner2: '#00111a', hasWings: true, wingColor: '#66d9ff' };
+    }
+    // VIP 40-50: Gold with wings
+    if (level >= 40 && level <= 50) {
+      style = { ...style, base1: '#ffe54c', base2: '#ffdf00', base3: '#b39800', inner1: '#330000', inner2: '#1a0000', hasWings: true, wingColor: '#ffdf00' };
+    }
+
+    return style;
+  };
+
+  const renderBadge = (level: number) => {
+    const st = getBadgeStyle(level);
+    const gid = `grad_${level}`;
+    
+    return (
+      <div className="relative w-[50px] h-[60px] flex flex-col items-center justify-center">
+        {st.hasWings && (
+          <svg className="absolute w-[80px] h-[40px] top-[10px] left-1/2 -translate-x-1/2" viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 25 Q30 5 10 20 Q20 30 50 40 Q80 30 90 20 Q70 5 50 25" fill={st.wingColor} opacity="0.6"/>
+            <path d="M50 25 Q30 0 0 15 Q15 25 50 45 Q85 25 100 15 Q70 0 50 25" fill={st.wingColor} opacity="0.4"/>
+          </svg>
+        )}
+        <svg className="absolute inset-0 w-full h-full drop-shadow-[0_0_8px_rgba(0,0,0,0.5)] z-10" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 0L40 10V25C40 35 20 48 20 48C20 48 0 35 0 25V10L20 0Z" fill={`url(#gold_${gid})`}/>
+          <path d="M20 2L38 11V24.5C38 33.5 20 45 20 45C20 45 2 33.5 2 24.5V11L20 2Z" fill={`url(#dark_${gid})`}/>
+          <defs>
+            <linearGradient id={`gold_${gid}`} x1="0" y1="0" x2="0" y2="48" gradientUnits="userSpaceOnUse">
+              <stop stopColor={st.base1}/>
+              <stop offset="0.5" stopColor={st.base2}/>
+              <stop offset="1" stopColor={st.base3}/>
+            </linearGradient>
+            <linearGradient id={`dark_${gid}`} x1="0" y1="0" x2="0" y2="48" gradientUnits="userSpaceOnUse">
+              <stop stopColor={st.inner1}/>
+              <stop offset="1" stopColor={st.inner2}/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div className="z-20 flex flex-col items-center mt-[-4px]">
+          <Crown className="w-5 h-5 text-white fill-current mb-0.5 opacity-90" />
+          <span className="text-white font-black text-[12px] italic leading-none drop-shadow-md">VIP {level}</span>
+        </div>
+      </div>
+    );
+  };
+
   const getNextLevelBonus = () => {
     if (!vipStatus || !vipStatus.levels || !vipStatus.nextLevel) return '0.00';
     const next = vipStatus.levels.find((l: any) => l.level === vipStatus.nextLevel);
