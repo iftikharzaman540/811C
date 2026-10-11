@@ -1,18 +1,320 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { ChevronLeft, Share, Copy, Calendar } from "lucide-react";
+import { ChevronLeft, Share, Copy, Calendar, Search, Check } from "lucide-react";
 import BottomNav from "@/components/BottomNav";
 import { motion, AnimatePresence } from "framer-motion";
+import { useUser } from "@/context/UserContext";
 
 export default function InvitePage() {
+  const { user } = useUser();
   const [activeTab, setActiveTab] = useState("Home");
-  const tabs = ["Home", "Promotion Sharing", "My Data", "Performance", "Commission", "Subordinate Information", "Subordinate Betting", "Subordinate Finance", "Subordinate claim", "Commission Rate"];
-  
+  const [copied, setCopied] = useState(false);
+  const tabs = [
+    "Home",
+    "Promotion Sharing",
+    "My Data",
+    "Performance",
+    "Commission",
+    "Subordinate Information",
+    "Subordinate Betting",
+    "Subordinate Finance",
+    "Subordinate claim",
+    "Commission Rate"
+  ];
+
   const [dateModalOpen, setDateModalOpen] = useState(false);
   const [rateTab, setRateTab] = useState("Mini Games");
+
+  // Overview state
+  const [loading, setLoading] = useState(true);
+  const [overview, setOverview] = useState<any>(null);
+
+  // My Data state
+  const [myDataPeriod, setMyDataPeriod] = useState("Today");
+  const [myData, setMyData] = useState<any>(null);
+  const [myDataLoading, setMyDataLoading] = useState(false);
+
+  // Performance state
+  const [perfPeriod, setPerfPeriod] = useState("Today");
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
+  const [performanceData, setPerformanceData] = useState<any[]>([]);
+  const [perfLoading, setPerfLoading] = useState(false);
+
+  // Subordinates states
+  const [subPeriod, setSubPeriod] = useState("Today");
+  const [subSort, setSubSort] = useState("login_date");
+  const [subSearch, setSubSearch] = useState("");
+  const [subordinates, setSubordinates] = useState<any[]>([]);
+  const [subLoading, setSubLoading] = useState(false);
+
+  // Subordinate Betting states
+  const [bettingSort, setBettingSort] = useState("valid_bet");
+  const [bettingDropdownOpen, setBettingDropdownOpen] = useState(false);
+  const [bettingSearch, setBettingSearch] = useState("");
+  const [bettingList, setBettingList] = useState<any[]>([]);
+  const [bettingLoading, setBettingLoading] = useState(false);
+
+  // Subordinate Finance states
+  const [financeSearch, setFinanceSearch] = useState("");
+  const [financeList, setFinanceList] = useState<any[]>([]);
+  const [financeLoading, setFinanceLoading] = useState(false);
+
+  // Claims states
+  const [claimsList, setClaimsList] = useState<any[]>([]);
+  const [claimsLoading, setClaimsLoading] = useState(false);
+
+  const API_URL = "https://8111c.com/api/v1";
+
+  // Capture referral code from URL if someone was invited
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code") || params.get("ref");
+      if (code) {
+        localStorage.setItem("referral_code", code.toUpperCase().trim());
+      }
+    }
+  }, []);
+
+  // Fetch Overview
+  const fetchOverview = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      const res = await fetch(`${API_URL}/referrals/overview`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setOverview(data);
+      }
+    } catch (err) {
+      console.error("Error fetching overview:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchOverview();
+  }, [user]);
+
+  // Fetch My Data
+  const fetchMyData = async (period: string) => {
+    setMyDataLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const res = await fetch(`${API_URL}/referrals/my-data?period=${encodeURIComponent(period)}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMyData(data);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setMyDataLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "My Data") {
+      fetchMyData(myDataPeriod);
+    }
+  }, [activeTab, myDataPeriod]);
+
+  // Fetch Performance
+  const fetchPerformance = async () => {
+    setPerfLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      let url = `${API_URL}/referrals/performance?period=${encodeURIComponent(perfPeriod)}`;
+      if (perfPeriod === "Custom" && customStart && customEnd) {
+        url += `&startDate=${customStart}&endDate=${customEnd}`;
+      }
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const json = await res.json();
+        setPerformanceData(json.data || []);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setPerfLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "Performance" || activeTab === "Commission") {
+      fetchPerformance();
+    }
+  }, [activeTab, perfPeriod, customStart, customEnd]);
+
+  // Fetch Subordinates
+  const fetchSubordinates = async () => {
+    setSubLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      let url = `${API_URL}/referrals/subordinates?period=${encodeURIComponent(subPeriod)}&sortBy=${subSort}`;
+      if (subSearch) url += `&search=${encodeURIComponent(subSearch)}`;
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const json = await res.json();
+        setSubordinates(json.data || []);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setSubLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "Subordinate Information") {
+      fetchSubordinates();
+    }
+  }, [activeTab, subPeriod, subSort, subSearch]);
+
+  // Fetch Subordinate Betting
+  const fetchBetting = async () => {
+    setBettingLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      let url = `${API_URL}/referrals/subordinate-betting?sortBy=${bettingSort}`;
+      if (bettingSearch) url += `&search=${encodeURIComponent(bettingSearch)}`;
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const json = await res.json();
+        setBettingList(json.data || []);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setBettingLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "Subordinate Betting") {
+      fetchBetting();
+    }
+  }, [activeTab, bettingSort, bettingSearch]);
+
+  // Fetch Subordinate Finance
+  const fetchFinance = async () => {
+    setFinanceLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      let url = `${API_URL}/referrals/subordinate-finance?search=${encodeURIComponent(financeSearch)}`;
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.ok) {
+        const json = await res.json();
+        setFinanceList(json.data || []);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setFinanceLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "Subordinate Finance") {
+      fetchFinance();
+    }
+  }, [activeTab, financeSearch]);
+
+  // Fetch Claims
+  const fetchClaims = async () => {
+    setClaimsLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const res = await fetch(`${API_URL}/referrals/claims`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setClaimsList(json.data || []);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setClaimsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "Subordinate claim") {
+      fetchClaims();
+    }
+  }, [activeTab]);
+
+  // Referral link builder
+  const referralCode = overview?.referral_code || user?.referral_code || "8111C";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://8111c.com";
+  const inviteUrl = `${origin}/invite?code=${referralCode}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(inviteUrl)}`;
+
+  const handleCopyLink = () => {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(inviteUrl);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = inviteUrl;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        textArea.remove();
+      }
+      setCopied(true);
+      toast.success("Invite link copied!");
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error("Failed to copy link");
+    }
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({ title: "Join 8111C", url: inviteUrl }).catch(() => {});
+    } else {
+      handleCopyLink();
+    }
+  };
+
+  const handleSaveInvitation = () => {
+    const a = document.createElement("a");
+    a.href = qrUrl;
+    a.download = `8111C-Invite-${referralCode}.png`;
+    a.target = "_blank";
+    a.click();
+    toast.success("Invitation saved to gallery!");
+  };
+
+  // Marquee list
+  const marqueeItems = overview?.marquee || [
+    { agent: "63****115", amount: "249,714.13" },
+    { agent: "34****980", amount: "19,486.07" }
+  ];
 
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white flex flex-col pb-24 font-sans overflow-x-hidden">
@@ -61,20 +363,15 @@ export default function InvitePage() {
               {/* Scrolling Commission Tape */}
               <div className="bg-[#111111] border-b border-neutral-800 py-2 px-2 overflow-hidden flex items-center shadow-md">
                 <div className="flex animate-marquee whitespace-nowrap items-center gap-4">
-                  <div className="flex items-center gap-1.5 text-[11px]">
-                    <span className="text-[14px]">🏆</span>
-                    <span className="text-neutral-400">Agent ID:</span>
-                    <span className="font-bold text-white">63****115</span>
-                    <span className="text-neutral-400 ml-1">Commission earned today:</span>
-                    <span className="text-[#ffdf00] font-bold">249,714.13</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[11px]">
-                    <span className="text-[14px]">🔥</span>
-                    <span className="text-neutral-400">Agent ID:</span>
-                    <span className="font-bold text-white">34****980</span>
-                    <span className="text-neutral-400 ml-1">Commission earned today:</span>
-                    <span className="text-[#ffdf00] font-bold">19,486.07</span>
-                  </div>
+                  {marqueeItems.map((item: any, idx: number) => (
+                    <div key={idx} className="flex items-center gap-1.5 text-[11px]">
+                      <span className="text-[14px]">{idx % 2 === 0 ? "🏆" : "🔥"}</span>
+                      <span className="text-neutral-400">Agent ID:</span>
+                      <span className="font-bold text-white">{item.agent}</span>
+                      <span className="text-neutral-400 ml-1">Commission earned today:</span>
+                      <span className="text-[#ffdf00] font-bold">{Number(item.amount).toLocaleString()}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -83,8 +380,12 @@ export default function InvitePage() {
                 <div className="w-full aspect-[21/9] rounded-xl overflow-hidden relative border border-[#ff0b0b] shadow-[0_0_15px_rgba(255,11,11,0.2)]">
                   <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10 flex flex-col justify-center px-4">
                     <img src="/splash-logo.png" alt="Logo" className="h-4 w-auto mb-2 mix-blend-screen opacity-90 object-left object-contain" />
-                    <h2 className="text-[#ffdf00] text-lg font-black tracking-tighter italic">Invitation Event</h2>
-                    <p className="text-white text-xs mt-1 leading-tight">Each player you invite<br/>Get <span className="text-[#ffdf00] font-bold text-sm">Rs 10,000</span></p>
+                    <h2 className="text-[#ffdf00] text-lg font-black tracking-tighter italic">
+                      {overview?.config?.banner_heading || "Invitation Event"}
+                    </h2>
+                    <p className="text-white text-xs mt-1 leading-tight">
+                      Each player you invite<br/>Get <span className="text-[#ffdf00] font-bold text-sm">{overview?.config?.banner_reward_text || `Rs ${overview?.config?.fixed_reward_amount || 100}`}</span>
+                    </p>
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-tr from-[#2e0505] to-[#cc0000] z-0"></div>
                   
@@ -101,10 +402,14 @@ export default function InvitePage() {
               <div className="px-3">
                 <div className="bg-[#1c1c1c] rounded-xl border border-neutral-800 p-4 shadow-lg flex flex-col gap-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-neutral-500 font-bold">-</span>
+                    <span className="text-neutral-500 font-bold">
+                      {overview?.stats ? `Total: ${overview.stats.total_subordinates}` : "-"}
+                    </span>
                     <div className="flex flex-col items-end">
                       <span className="text-neutral-500 text-[11px]">Number of audits</span>
-                      <span className="text-white text-[13px] font-bold">-</span>
+                      <span className="text-white text-[13px] font-bold">
+                        {overview?.stats ? overview.stats.pending_audits : "-"}
+                      </span>
                     </div>
                   </div>
                   <div className="flex justify-between items-center">
@@ -113,7 +418,9 @@ export default function InvitePage() {
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-neutral-500 text-[11px]">Settlement cycle</span>
-                      <span className="text-white text-[13px] font-bold">Daily settlement</span>
+                      <span className="text-white text-[13px] font-bold">
+                        {overview?.config?.settlement_cycle || "Daily settlement"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -126,37 +433,60 @@ export default function InvitePage() {
                   {/* QR Code Section */}
                   <div className="w-[100px] shrink-0 flex flex-col gap-2">
                     <div className="bg-white p-1 rounded-lg aspect-square flex items-center justify-center">
-                      <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://8111C.com" alt="QR" className="w-full h-full" />
+                      <img src={qrUrl} alt="QR" className="w-full h-full object-contain" />
                     </div>
-                    <button onClick={() => toast.success("Invitation saved to gallery!")} className="w-full bg-[#cc0000] text-white text-[10px] font-bold py-1.5 rounded text-center leading-tight shadow-md hover:bg-[#ff0b0b]">
+                    <button onClick={handleSaveInvitation} className="w-full bg-[#cc0000] text-white text-[10px] font-bold py-1.5 rounded text-center leading-tight shadow-md hover:bg-[#ff0b0b] transition-colors">
                       Save<br/>invitation...
                     </button>
                   </div>
 
                   {/* Links & Socials Section */}
                   <div className="flex-1 flex flex-col justify-between">
-                    <div className="flex items-center bg-[#111111] border border-neutral-700 rounded-lg p-2 h-9 shadow-inner">
-                      <span className="flex-1 text-[11px] text-neutral-400 truncate">https://8111C.com/invite</span>
-                      <div className="h-4 w-[1px] bg-neutral-700 mx-2"></div>
-                      <Copy onClick={() => { navigator.clipboard.writeText("https://8111C.com/invite"); toast.success("Link copied!"); }} className="w-4 h-4 text-[#ffdf00] cursor-pointer" />
+                    <div 
+                      onClick={handleCopyLink}
+                      className="flex items-center bg-[#111111] border border-neutral-700 hover:border-[#ffdf00]/60 rounded-lg pl-2 pr-1 h-9 shadow-inner cursor-pointer transition-colors group"
+                      title="Click to copy invite link"
+                    >
+                      <span className="flex-1 text-[11px] text-neutral-300 font-mono truncate select-all">{inviteUrl}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleCopyLink(); }}
+                        className={`ml-1.5 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1 transition-all shrink-0 shadow-sm ${
+                          copied
+                            ? "bg-emerald-600 text-white"
+                            : "bg-gradient-to-r from-[#ffaa00] to-[#ffdf00] text-[#3d2400] hover:brightness-110 active:scale-95"
+                        }`}
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="w-3 h-3 stroke-[3]" />
+                            <span>Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3 stroke-[2.5]" />
+                            <span>Copy</span>
+                          </>
+                        )}
+                      </button>
                     </div>
                     
                     <div className="flex justify-between items-center mt-3 px-1">
-                      <div onClick={() => navigator.share ? navigator.share({title: "Join 8111C", url: "https://8111C.com/invite"}) : toast.success("Opening share dialog...")} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <div onClick={handleShare} className="flex flex-col items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
                         <div className="w-9 h-9 rounded-full border border-neutral-700 flex items-center justify-center text-[#ffdf00]">
                           <Share className="w-4 h-4" />
                         </div>
                         <span className="text-[9px] text-neutral-400">Share</span>
                       </div>
-                      <div onClick={() => window.open("https://wa.me/?text=Join%20me%20on%208111C!%20https://8111C.com/invite", "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <div onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`Join me on 8111C! ${inviteUrl}`)}`, "_blank")} className="flex flex-col items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA" className="w-9 h-9" />
                         <span className="text-[9px] text-neutral-400">WhatsApp</span>
                       </div>
-                      <div onClick={() => window.open("https://t.me/share/url?url=https://8111C.com/invite&text=Join%20me!", "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <div onClick={() => window.open(`https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent("Join me on 8111C!")}`, "_blank")} className="flex flex-col items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG" className="w-9 h-9" />
                         <span className="text-[9px] text-neutral-400">Telegram</span>
                       </div>
-                      <div onClick={() => window.open("https://www.facebook.com/sharer/sharer.php?u=https://8111C.com/invite", "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <div onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(inviteUrl)}`, "_blank")} className="flex flex-col items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="FB" className="w-9 h-9" />
                         <span className="text-[9px] text-neutral-400">Facebook</span>
                       </div>
@@ -185,32 +515,55 @@ export default function InvitePage() {
                 <div className="bg-[#1c1c1c] rounded-xl border border-neutral-800 p-3 shadow-lg flex gap-3">
                   <div className="w-[85px] shrink-0 flex flex-col gap-2">
                     <div className="bg-white p-1 rounded-lg aspect-square flex items-center justify-center">
-                      <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://8111C.com" alt="QR" className="w-full h-full" />
+                      <img src={qrUrl} alt="QR" className="w-full h-full object-contain" />
                     </div>
-                    <button onClick={() => toast.success("Invitation saved to gallery!")} className="w-full bg-[#cc0000] text-white text-[9px] font-bold py-1.5 rounded text-center leading-tight shadow-md hover:bg-[#ff0b0b]">
+                    <button onClick={handleSaveInvitation} className="w-full bg-[#cc0000] text-white text-[9px] font-bold py-1.5 rounded text-center leading-tight shadow-md hover:bg-[#ff0b0b] transition-colors">
                       Save<br/>invitation...
                     </button>
                   </div>
                   <div className="flex-1 flex flex-col justify-between">
-                    <div className="flex items-center bg-[#111111] border border-neutral-700 rounded-lg p-2 h-9 shadow-inner">
-                      <span className="flex-1 text-[11px] text-neutral-400 truncate">https://8111C.com/invite</span>
-                      <div className="h-4 w-[1px] bg-neutral-700 mx-2"></div>
-                      <Copy onClick={() => { navigator.clipboard.writeText("https://8111C.com/invite"); toast.success("Link copied!"); }} className="w-4 h-4 text-[#ffdf00] cursor-pointer" />
+                    <div 
+                      onClick={handleCopyLink}
+                      className="flex items-center bg-[#111111] border border-neutral-700 hover:border-[#ffdf00]/60 rounded-lg pl-2 pr-1 h-9 shadow-inner cursor-pointer transition-colors group"
+                      title="Click to copy invite link"
+                    >
+                      <span className="flex-1 text-[11px] text-neutral-300 font-mono truncate select-all">{inviteUrl}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); handleCopyLink(); }}
+                        className={`ml-1.5 px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider flex items-center gap-1 transition-all shrink-0 shadow-sm ${
+                          copied
+                            ? "bg-emerald-600 text-white"
+                            : "bg-gradient-to-r from-[#ffaa00] to-[#ffdf00] text-[#3d2400] hover:brightness-110 active:scale-95"
+                        }`}
+                      >
+                        {copied ? (
+                          <>
+                            <Check className="w-3 h-3 stroke-[3]" />
+                            <span>Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3 stroke-[2.5]" />
+                            <span>Copy</span>
+                          </>
+                        )}
+                      </button>
                     </div>
                     <div className="flex justify-between items-center mt-3 px-1">
-                      <div onClick={() => navigator.share ? navigator.share({title: "Join 8111C", url: "https://8111C.com/invite"}) : toast.success("Opening share dialog...")} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <div onClick={handleShare} className="flex flex-col items-center gap-1 cursor-pointer">
                         <div className="w-8 h-8 rounded-full border border-neutral-700 flex items-center justify-center text-[#ffdf00]"><Share className="w-3.5 h-3.5" /></div>
                         <span className="text-[8px] text-neutral-400">Share</span>
                       </div>
-                      <div onClick={() => window.open("https://wa.me/?text=Join%20me%20on%208111C!%20https://8111C.com/invite", "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <div onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(`Join me on 8111C! ${inviteUrl}`)}`, "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA" className="w-8 h-8" />
                         <span className="text-[8px] text-neutral-400">WhatsApp</span>
                       </div>
-                      <div onClick={() => window.open("https://t.me/share/url?url=https://8111C.com/invite&text=Join%20me!", "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <div onClick={() => window.open(`https://t.me/share/url?url=${encodeURIComponent(inviteUrl)}&text=${encodeURIComponent("Join me on 8111C!")}`, "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG" className="w-8 h-8" />
                         <span className="text-[8px] text-neutral-400">Telegram</span>
                       </div>
-                      <div onClick={() => window.open("https://www.facebook.com/sharer/sharer.php?u=https://8111C.com/invite", "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
+                      <div onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(inviteUrl)}`, "_blank")} className="flex flex-col items-center gap-1 cursor-pointer">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" alt="FB" className="w-8 h-8" />
                         <span className="text-[8px] text-neutral-400">Facebook</span>
                       </div>
@@ -249,13 +602,11 @@ export default function InvitePage() {
                   <div className="text-[10px] text-neutral-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 italic">
                     (Hierarchical Commission Tree Visualization)
                   </div>
-                  {/* Decorative glowing lines to simulate tree */}
                   <div className="absolute w-[2px] h-32 bg-[#ff0b0b] top-4 shadow-[0_0_8px_rgba(255,11,11,0.8)]"></div>
                   <div className="absolute w-[60%] h-[2px] bg-[#ff0b0b] top-12 shadow-[0_0_8px_rgba(255,11,11,0.8)]"></div>
                   <div className="absolute w-[2px] h-32 bg-[#ffdf00] top-4 left-[20%] shadow-[0_0_8px_rgba(255,223,0,0.8)]"></div>
                   <div className="absolute w-[2px] h-32 bg-[#ffdf00] top-4 right-[20%] shadow-[0_0_8px_rgba(255,223,0,0.8)]"></div>
                   
-                  {/* Nodes mockup */}
                   <div className="w-10 h-10 bg-[#ffaa00] rounded-full absolute top-8 left-[20%] -translate-x-1/2 border-2 border-white flex items-center justify-center text-xs font-black">B1</div>
                   <div className="w-10 h-10 bg-[#ffaa00] rounded-full absolute top-8 right-[20%] translate-x-1/2 border-2 border-white flex items-center justify-center text-xs font-black">B2</div>
                   <div className="w-10 h-10 bg-[#ffdf00] rounded-full absolute top-28 left-[10%] -translate-x-1/2 border-2 border-white flex items-center justify-center text-xs font-black text-black">C1</div>
@@ -270,8 +621,16 @@ export default function InvitePage() {
             <motion.div key="mydata" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3 pt-3">
               {/* Date Filters */}
               <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 pb-1">
-                {["Today", "Yesterday", "This Week", "Last Week", "This Month"].map((btn, i) => (
-                  <button key={i} className={`whitespace-nowrap px-4 py-1.5 rounded-full text-[12px] font-medium transition-colors border ${i === 0 ? "bg-[#cc0000] border-[#cc0000] text-white shadow-md" : "bg-[#141414] border-neutral-700 text-neutral-400"}`}>
+                {["Today", "Yesterday", "This Week", "Last Week", "This Month"].map((btn) => (
+                  <button
+                    key={btn}
+                    onClick={() => setMyDataPeriod(btn)}
+                    className={`whitespace-nowrap px-4 py-1.5 rounded-full text-[12px] font-medium transition-colors border ${
+                      myDataPeriod === btn
+                        ? "bg-[#cc0000] border-[#cc0000] text-white shadow-md"
+                        : "bg-[#141414] border-neutral-700 text-neutral-400"
+                    }`}
+                  >
                     {btn}
                   </button>
                 ))}
@@ -281,29 +640,33 @@ export default function InvitePage() {
               <div className="px-3">
                 <div className="bg-[#141414] rounded-xl p-4 flex flex-col gap-3 border border-neutral-800 shadow-lg">
                   <div className="flex justify-between items-center border-b border-neutral-800 pb-3">
-                    <h3 className="text-[14px] font-bold text-white">Today Commission</h3>
+                    <h3 className="text-[14px] font-bold text-white">{myDataPeriod} Commission</h3>
                     <div className="flex flex-col items-end">
-                      <span className="text-[14px] font-bold text-white">-</span>
-                      <span className="text-[10px] text-neutral-500">(Total commission -)</span>
+                      <span className="text-[14px] font-bold text-white">
+                        PKR {Number(myData?.today_commission || 0).toLocaleString()}
+                      </span>
+                      <span className="text-[10px] text-neutral-500">
+                        (Total commission PKR {Number(myData?.total_commission || overview?.stats?.total_commission || 0).toLocaleString()})
+                      </span>
                     </div>
                   </div>
                   
                   <div className="flex flex-col gap-2.5 text-[12px]">
                     <div className="flex justify-between text-neutral-300">
                       <span>Direct commission</span>
-                      <span>-</span>
+                      <span className="font-semibold text-white">PKR {Number(myData?.direct_commission || 0).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-neutral-300">
                       <span>Other commission</span>
-                      <span>-</span>
+                      <span className="font-semibold text-white">PKR {Number(myData?.other_commission || 0).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-neutral-300">
                       <span>Promotional event rewards</span>
-                      <span>-</span>
+                      <span className="font-semibold text-white">PKR {Number(myData?.promotional_rewards || 0).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-neutral-300">
                       <span>Agent activity rewards</span>
-                      <span>-</span>
+                      <span className="font-semibold text-white">PKR {Number(myData?.activity_rewards || 0).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -314,24 +677,44 @@ export default function InvitePage() {
                 
                 <div className="flex flex-col gap-3">
                   {[
-                    { title: "Total new users", sub1: "Subordinate Stats", sub2: "Other Stats" },
-                    { title: "Total deposit (Users)", sub1: "Subordinate Stats", sub2: "Other Stats" },
-                    { title: "Total first charge (Number of people)", sub1: "Subordinate Stats", sub2: "Other Stats" },
-                    { title: "Same-day reg. first-deposit (Number of people)", sub1: "Subordinate Stats", sub2: "Other Stats" }
+                    {
+                      title: "Total new users",
+                      val: myData?.metrics?.total_new_users?.total ?? 0,
+                      sub1: myData?.metrics?.total_new_users?.sub1 ?? 0,
+                      sub2: myData?.metrics?.total_new_users?.sub2 ?? 0
+                    },
+                    {
+                      title: "Total deposit (Users)",
+                      val: myData?.metrics?.total_deposit_users?.total ?? 0,
+                      sub1: myData?.metrics?.total_deposit_users?.sub1 ?? 0,
+                      sub2: myData?.metrics?.total_deposit_users?.sub2 ?? 0
+                    },
+                    {
+                      title: "Total first charge (Number of people)",
+                      val: myData?.metrics?.total_first_charge?.total ?? 0,
+                      sub1: myData?.metrics?.total_first_charge?.sub1 ?? 0,
+                      sub2: myData?.metrics?.total_first_charge?.sub2 ?? 0
+                    },
+                    {
+                      title: "Same-day reg. first-deposit (Number of people)",
+                      val: myData?.metrics?.same_day_first_deposit?.total ?? 0,
+                      sub1: myData?.metrics?.same_day_first_deposit?.sub1 ?? 0,
+                      sub2: myData?.metrics?.same_day_first_deposit?.sub2 ?? 0
+                    }
                   ].map((item, i) => (
                     <div key={i} className="bg-[#141414] rounded-xl p-4 flex flex-col gap-3 border border-neutral-800 shadow-md">
                       <div className="flex justify-between items-start">
                         <span className="text-[13px] font-bold text-white w-2/3">{item.title}</span>
-                        <span className="text-[13px] font-bold text-white">-</span>
+                        <span className="text-[13px] font-bold text-white">{item.val}</span>
                       </div>
                       <div className="flex flex-col gap-1 text-[11px] text-neutral-500">
                         <div className="flex justify-between">
-                          <span>{item.sub1}</span>
-                          <span>-</span>
+                          <span>Subordinate Stats</span>
+                          <span className="text-neutral-300">{item.sub1}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>{item.sub2}</span>
-                          <span>-</span>
+                          <span>Other Stats</span>
+                          <span className="text-neutral-300">{item.sub2}</span>
                         </div>
                       </div>
                     </div>
@@ -349,12 +732,33 @@ export default function InvitePage() {
                 onClick={() => setDateModalOpen(true)}
                 className="self-start border border-[#ff0b0b] rounded-full px-4 py-1.5 flex items-center gap-1.5 text-[#ffdf00] text-[11px] hover:bg-[#2e0505] transition-colors"
               >
-                Today <ChevronLeft className="w-3.5 h-3.5 rotate-90" />
+                {perfPeriod} <ChevronLeft className="w-3.5 h-3.5 rotate-90" />
               </button>
 
-              <div className="flex-1 flex items-center justify-center pt-20 pb-40">
-                <p className="text-neutral-500 text-sm">No data available</p>
-              </div>
+              {perfLoading ? (
+                <div className="flex-1 flex items-center justify-center pt-20 pb-40">
+                  <p className="text-neutral-400 text-sm">Loading performance...</p>
+                </div>
+              ) : performanceData.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center pt-20 pb-40">
+                  <p className="text-neutral-500 text-sm">No data available</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 mt-2">
+                  {performanceData.map((item, i) => (
+                    <div key={i} className="bg-[#141414] p-3 rounded-xl border border-neutral-800 flex justify-between items-center text-xs">
+                      <div>
+                        <div className="font-bold text-white">Member #{item.member}</div>
+                        <div className="text-[10px] text-neutral-500">{new Date(item.date).toLocaleDateString()}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-neutral-400">Turnover: PKR {item.turnover.toLocaleString()}</div>
+                        <div className="text-[#ffdf00] font-bold">Comm: PKR {item.commission.toLocaleString()}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {/* Date Modal Overlay */}
               <AnimatePresence>
@@ -368,34 +772,49 @@ export default function InvitePage() {
                       className="w-full max-w-sm bg-[#1c1c1c] rounded-2xl border border-neutral-800 p-4 shadow-2xl flex flex-col gap-4"
                     >
                       <div className="grid grid-cols-3 gap-2">
-                        {["Today", "Yesterday", "This Week", "Last Week", "This Month", "Last Month"].map((btn, i) => (
-                          <button key={i} className={`py-2 text-[11px] rounded-lg font-bold border transition-colors ${i === 0 ? "border-[#ff0b0b] text-[#ffdf00] shadow-[0_0_8px_rgba(255,11,11,0.2)] bg-[#2e0505]" : "border-neutral-800 text-white hover:bg-neutral-800"}`}>
+                        {["Today", "Yesterday", "This Week", "Last Week", "This Month", "Last Month"].map((btn) => (
+                          <button
+                            key={btn}
+                            onClick={() => { setPerfPeriod(btn); setDateModalOpen(false); }}
+                            className={`py-2 text-[11px] rounded-lg font-bold border transition-colors ${
+                              perfPeriod === btn
+                                ? "border-[#ff0b0b] text-[#ffdf00] shadow-[0_0_8px_rgba(255,11,11,0.2)] bg-[#2e0505]"
+                                : "border-neutral-800 text-white hover:bg-neutral-800"
+                            }`}
+                          >
                             {btn}
                           </button>
                         ))}
                       </div>
-                      <button className="py-2 text-[11px] rounded-lg font-bold border border-neutral-800 text-white hover:bg-neutral-800 w-1/3">
+                      <button
+                        onClick={() => { setPerfPeriod("All"); setDateModalOpen(false); }}
+                        className={`py-2 text-[11px] rounded-lg font-bold border w-1/3 transition-colors ${
+                          perfPeriod === "All" ? "border-[#ff0b0b] text-[#ffdf00] bg-[#2e0505]" : "border-neutral-800 text-white hover:bg-neutral-800"
+                        }`}
+                      >
                         All
                       </button>
 
                       <div className="mt-2">
                         <h4 className="text-[12px] font-bold text-white mb-2">Custom</h4>
                         <div className="flex gap-4">
-                          <div className="flex-1 flex flex-col items-center">
-                            <span className="text-[11px] text-neutral-400 mb-2">Start Date</span>
-                            <div className="h-20 overflow-hidden w-full relative flex flex-col items-center justify-center text-white border-y border-neutral-700">
-                              <div className="absolute inset-0 bg-gradient-to-b from-[#1c1c1c] via-transparent to-[#1c1c1c] pointer-events-none z-10"></div>
-                              <div className="text-[13px] opacity-30 my-1">22 &nbsp;&nbsp; 07</div>
-                              <div className="text-[13px] opacity-60 my-1">23 &nbsp;&nbsp; 08</div>
-                              <div className="text-[15px] font-bold my-1 text-[#ffdf00]">24 &nbsp;&nbsp; 09 &nbsp;&nbsp; 2026</div>
-                            </div>
+                          <div className="flex-1 flex flex-col">
+                            <span className="text-[11px] text-neutral-400 mb-1">Start Date</span>
+                            <input
+                              type="date"
+                              value={customStart}
+                              onChange={(e) => setCustomStart(e.target.value)}
+                              className="bg-neutral-900 border border-neutral-700 text-white rounded p-1.5 text-xs outline-none"
+                            />
                           </div>
-                          <div className="flex-1 flex flex-col items-center">
-                            <span className="text-[11px] text-neutral-400 mb-2">End Date</span>
-                            <div className="h-20 overflow-hidden w-full relative flex flex-col items-center justify-center text-white border-y border-neutral-700">
-                              <div className="absolute inset-0 bg-gradient-to-b from-[#1c1c1c] via-transparent to-[#1c1c1c] pointer-events-none z-10"></div>
-                              <div className="text-[15px] font-bold my-1 text-[#ffdf00] mt-auto mb-2">24 &nbsp;&nbsp; 09 &nbsp;&nbsp; 2026</div>
-                            </div>
+                          <div className="flex-1 flex flex-col">
+                            <span className="text-[11px] text-neutral-400 mb-1">End Date</span>
+                            <input
+                              type="date"
+                              value={customEnd}
+                              onChange={(e) => setCustomEnd(e.target.value)}
+                              className="bg-neutral-900 border border-neutral-700 text-white rounded p-1.5 text-xs outline-none"
+                            />
                           </div>
                         </div>
                       </div>
@@ -404,7 +823,7 @@ export default function InvitePage() {
                         <button onClick={() => setDateModalOpen(false)} className="flex-1 py-3 rounded-xl border border-[#ff0b0b] text-[#ffdf00] font-bold text-[13px] hover:bg-[#2e0505] transition-colors">
                           Cancel
                         </button>
-                        <button onClick={() => setDateModalOpen(false)} className="flex-1 py-3 rounded-xl bg-[#cc0000] text-white font-bold text-[13px] hover:bg-[#ff0b0b] transition-colors shadow-lg">
+                        <button onClick={() => { if (customStart && customEnd) setPerfPeriod("Custom"); setDateModalOpen(false); }} className="flex-1 py-3 rounded-xl bg-[#cc0000] text-white font-bold text-[13px] hover:bg-[#ff0b0b] transition-colors shadow-lg">
                           Confirm
                         </button>
                       </div>
@@ -415,148 +834,294 @@ export default function InvitePage() {
             </motion.div>
           )}
 
-          {(activeTab === "Commission") && (
+          {activeTab === "Commission" && (
             <motion.div key="commission" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3 pt-3 px-3 pb-8">
-              <div className="text-[12px] text-neutral-400 px-2 pb-2 border-b border-neutral-800">
-                Settlement cycle <span className="text-white">-</span>
+              <div className="text-[12px] text-neutral-400 px-2 pb-2 border-b border-neutral-800 flex justify-between items-center">
+                <span>Settlement cycle: <span className="text-white font-bold">{overview?.config?.settlement_cycle || "Daily settlement"}</span></span>
+                <span className="text-xs text-[#ffdf00]">Total Comm: PKR {Number(overview?.stats?.total_commission || 0).toLocaleString()}</span>
               </div>
               
               <button 
                 onClick={() => setDateModalOpen(true)}
                 className="self-start border border-[#ff0b0b] rounded-full px-4 py-1.5 flex items-center gap-1.5 text-[#ffdf00] text-[11px] hover:bg-[#2e0505] transition-colors"
               >
-                Today <ChevronLeft className="w-3.5 h-3.5 rotate-90" />
+                {perfPeriod} <ChevronLeft className="w-3.5 h-3.5 rotate-90" />
               </button>
 
-              <div className="flex-1 flex items-center justify-center pt-20 pb-40">
-                <p className="text-neutral-500 text-sm">No data available</p>
-              </div>
+              {perfLoading ? (
+                <div className="flex-1 flex items-center justify-center pt-20 pb-40">
+                  <p className="text-neutral-400 text-sm">Loading records...</p>
+                </div>
+              ) : performanceData.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center pt-20 pb-40">
+                  <p className="text-neutral-500 text-sm">No data available</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 mt-2">
+                  {performanceData.map((item, i) => (
+                    <div key={i} className="bg-[#141414] p-3 rounded-xl border border-neutral-800 flex justify-between items-center text-xs">
+                      <div>
+                        <div className="font-bold text-white">Commission from #{item.member}</div>
+                        <div className="text-[10px] text-neutral-500">{new Date(item.date).toLocaleDateString()}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[#ffdf00] font-bold text-sm">+PKR {item.commission.toLocaleString()}</div>
+                        <div className="text-[10px] text-green-400">{item.status}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </motion.div>
           )}
 
-          {(activeTab === "Subordinate Information") && (
+          {activeTab === "Subordinate Information" && (
             <motion.div key="sub-info" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3 pt-3 px-3 pb-8">
-              <div className="flex gap-2 mb-4">
-                <button className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]">
-                  Today <ChevronLeft className="w-3 h-3 rotate-90" />
+              <div className="flex gap-2 mb-2 items-center">
+                <button
+                  onClick={() => {
+                    const next = subPeriod === "Today" ? "All" : "Today";
+                    setSubPeriod(next);
+                  }}
+                  className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]"
+                >
+                  {subPeriod} <ChevronLeft className="w-3 h-3 rotate-90" />
                 </button>
-                <button onClick={() => toast.success("Sorting applied")} className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]">
-                  Sort by login date <ChevronLeft className="w-3 h-3 rotate-90" />
+                <button
+                  onClick={() => {
+                    const next = subSort === "login_date" ? "created_at" : "login_date";
+                    setSubSort(next);
+                    toast.success(`Sorted by ${next === "login_date" ? "login date" : "registration date"}`);
+                  }}
+                  className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]"
+                >
+                  {subSort === "login_date" ? "Sort by login date" : "Sort by reg. date"} <ChevronLeft className="w-3 h-3 rotate-90" />
                 </button>
-                <button onClick={() => toast("Search feature coming soon")} className="border border-neutral-700 rounded-full px-3 py-1 flex items-center justify-between flex-1 text-neutral-500 text-[11px]">
-                  Member ID
-                  <span className="text-[#ffdf00]">🔍</span>
-                </button>
-              </div>
-              <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-40 gap-4 opacity-50">
-                <div className="w-24 h-24 bg-neutral-800 rounded-2xl flex items-center justify-center relative shadow-inner">
-                   {/* Empty box graphic mockup */}
-                   <div className="absolute top-2 right-2 text-3xl opacity-20 -rotate-12">✈️</div>
-                   <div className="w-16 h-12 bg-neutral-700 rounded-lg border-t-2 border-neutral-600"></div>
+                <div className="border border-neutral-700 rounded-full px-3 py-1 flex items-center justify-between flex-1 text-neutral-400 text-[11px] bg-neutral-900">
+                  <input
+                    type="text"
+                    value={subSearch}
+                    onChange={(e) => setSubSearch(e.target.value)}
+                    placeholder="Member ID"
+                    className="bg-transparent outline-none text-white text-[11px] w-full"
+                  />
+                  <Search className="w-3.5 h-3.5 text-[#ffdf00] shrink-0 ml-1" />
                 </div>
-                <div className="flex items-center gap-2 text-neutral-500 text-[13px]">
-                  No content yet <span className="text-[#ffdf00]">↻</span>
-                </div>
               </div>
+
+              {subLoading ? (
+                <div className="py-20 text-center text-neutral-400 text-sm">Loading subordinates...</div>
+              ) : subordinates.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-40 gap-4 opacity-50">
+                  <div className="w-24 h-24 bg-neutral-800 rounded-2xl flex items-center justify-center relative shadow-inner">
+                     <div className="absolute top-2 right-2 text-3xl opacity-20 -rotate-12">✈️</div>
+                     <div className="w-16 h-12 bg-neutral-700 rounded-lg border-t-2 border-neutral-600"></div>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-500 text-[13px]">
+                    No content yet <span className="text-[#ffdf00]">↻</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 mt-2">
+                  {subordinates.map((sub) => (
+                    <div key={sub.id} className="bg-[#141414] border border-neutral-800 rounded-xl p-3 flex justify-between items-center text-xs">
+                      <div>
+                        <div className="font-bold text-white flex items-center gap-1.5">
+                          <span>👤</span>
+                          <span>Member ID: {sub.member_id}</span>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${sub.status === 'ACTIVE' ? 'bg-green-500/20 text-green-400' : 'bg-neutral-800 text-neutral-400'}`}>
+                            {sub.status}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-neutral-500 mt-1">Phone: {sub.phone}</div>
+                        <div className="text-[10px] text-neutral-500">Reg: {new Date(sub.created_at).toLocaleDateString()}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-neutral-400">Total Recharge</div>
+                        <div className="text-[#ffdf00] font-bold text-sm">PKR {sub.total_deposit.toLocaleString()}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </motion.div>
           )}
 
-          {(activeTab === "Subordinate Betting") && (
+          {activeTab === "Subordinate Betting" && (
             <motion.div key="sub-betting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3 pt-3 px-3 pb-8 relative">
-              <div className="flex gap-2 mb-4">
-                <button className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]">
-                  Today <ChevronLeft className="w-3 h-3 rotate-90" />
+              <div className="flex gap-2 mb-2 items-center">
+                <button
+                  onClick={() => setBettingDropdownOpen(!bettingDropdownOpen)}
+                  className="border border-[#ffdf00] rounded-full px-3 py-1 flex items-center gap-1 text-[#ffdf00] text-[11px] bg-[#2e0505]"
+                >
+                  {bettingSort === "valid_bet" ? "Valid bet sorting" : "Cumulative turnover"} <ChevronLeft className="w-3 h-3 -rotate-90" />
                 </button>
-                <button onClick={() => toast.success("Dropdown opened")} className="border border-[#ffdf00] rounded-full px-3 py-1 flex items-center gap-1 text-[#ffdf00] text-[11px] bg-[#2e0505]">
-                  Valid bet sorting <ChevronLeft className="w-3 h-3 -rotate-90" />
-                </button>
-                <button onClick={() => toast("Search feature coming soon")} className="border border-neutral-700 rounded-full px-3 py-1 flex items-center justify-between flex-1 text-neutral-500 text-[11px]">
-                  Member ID
-                  <span className="text-[#ffdf00]">🔍</span>
-                </button>
+                <div className="border border-neutral-700 rounded-full px-3 py-1 flex items-center justify-between flex-1 text-neutral-400 text-[11px] bg-neutral-900">
+                  <input
+                    type="text"
+                    value={bettingSearch}
+                    onChange={(e) => setBettingSearch(e.target.value)}
+                    placeholder="Member ID"
+                    className="bg-transparent outline-none text-white text-[11px] w-full"
+                  />
+                  <Search className="w-3.5 h-3.5 text-[#ffdf00] shrink-0 ml-1" />
+                </div>
               </div>
               
-              {/* Dropdown Menu Mockup */}
-              <div className="absolute top-12 left-24 w-48 bg-[#1c1c1c] rounded-xl border border-neutral-700 p-2 shadow-2xl z-20 flex flex-col">
-                 <button className="text-left px-3 py-2 text-[#ffdf00] font-bold text-[12px]">Valid bet sorting</button>
-                 <button className="text-left px-3 py-2 text-neutral-400 text-[12px] leading-tight hover:bg-neutral-800 rounded-lg">Cumulative win and loss sorting</button>
-              </div>
+              {/* Dropdown Menu */}
+              {bettingDropdownOpen && (
+                <div className="absolute top-12 left-4 w-48 bg-[#1c1c1c] rounded-xl border border-neutral-700 p-2 shadow-2xl z-30 flex flex-col">
+                   <button
+                     onClick={() => { setBettingSort("valid_bet"); setBettingDropdownOpen(false); }}
+                     className="text-left px-3 py-2 text-[#ffdf00] font-bold text-[12px]"
+                   >
+                     Valid bet sorting
+                   </button>
+                   <button
+                     onClick={() => { setBettingSort("turnover"); setBettingDropdownOpen(false); }}
+                     className="text-left px-3 py-2 text-neutral-400 text-[12px] leading-tight hover:bg-neutral-800 rounded-lg"
+                   >
+                     Cumulative turnover sorting
+                   </button>
+                </div>
+              )}
 
-              <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-40 gap-4 opacity-50">
-                <div className="w-24 h-24 bg-neutral-800 rounded-2xl flex items-center justify-center relative shadow-inner">
-                   <div className="absolute top-2 right-2 text-3xl opacity-20 -rotate-12">✈️</div>
-                   <div className="w-16 h-12 bg-neutral-700 rounded-lg border-t-2 border-neutral-600"></div>
+              {bettingLoading ? (
+                <div className="py-20 text-center text-neutral-400 text-sm">Loading betting stats...</div>
+              ) : bettingList.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-40 gap-4 opacity-50">
+                  <div className="w-24 h-24 bg-neutral-800 rounded-2xl flex items-center justify-center relative shadow-inner">
+                     <div className="absolute top-2 right-2 text-3xl opacity-20 -rotate-12">✈️</div>
+                     <div className="w-16 h-12 bg-neutral-700 rounded-lg border-t-2 border-neutral-600"></div>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-500 text-[13px]">
+                    No content yet <span className="text-[#ffdf00]">↻</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-neutral-500 text-[13px]">
-                  No content yet <span className="text-[#ffdf00]">↻</span>
+              ) : (
+                <div className="flex flex-col gap-2 mt-2">
+                  {bettingList.map((sub) => (
+                    <div key={sub.id} className="bg-[#141414] border border-neutral-800 rounded-xl p-3 flex justify-between items-center text-xs">
+                      <div>
+                        <div className="font-bold text-white">Member #{sub.member_id}</div>
+                        <div className="text-[10px] text-neutral-500">Phone: {sub.phone}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-neutral-400">Valid Bets</div>
+                        <div className="text-[#ffdf00] font-bold text-sm">PKR {sub.total_turnover.toLocaleString()}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </motion.div>
           )}
 
-          {(activeTab === "Subordinate Finance") && (
+          {activeTab === "Subordinate Finance" && (
             <motion.div key="sub-finance" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3 pt-3 px-3 pb-8">
-              <div className="flex gap-2 mb-4">
-                <button className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]">
-                  Today <ChevronLeft className="w-3 h-3 rotate-90" />
-                </button>
+              <div className="flex gap-2 mb-2 items-center">
                 <button onClick={() => toast.success("Sorting applied")} className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]">
-                  Sort by recharge... <ChevronLeft className="w-3 h-3 rotate-90" />
+                  Sort by recharge <ChevronLeft className="w-3 h-3 rotate-90" />
                 </button>
-                <button onClick={() => toast("Search feature coming soon")} className="border border-neutral-700 rounded-full px-3 py-1 flex items-center justify-between flex-1 text-neutral-500 text-[11px]">
-                  Member ID
-                  <span className="text-[#ffdf00]">🔍</span>
-                </button>
-              </div>
-              <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-40 gap-4 opacity-50">
-                <div className="w-24 h-24 bg-neutral-800 rounded-2xl flex items-center justify-center relative shadow-inner">
-                   <div className="absolute top-2 right-2 text-3xl opacity-20 -rotate-12">✈️</div>
-                   <div className="w-16 h-12 bg-neutral-700 rounded-lg border-t-2 border-neutral-600"></div>
-                </div>
-                <div className="flex items-center gap-2 text-neutral-500 text-[13px]">
-                  No content yet <span className="text-[#ffdf00]">↻</span>
+                <div className="border border-neutral-700 rounded-full px-3 py-1 flex items-center justify-between flex-1 text-neutral-400 text-[11px] bg-neutral-900">
+                  <input
+                    type="text"
+                    value={financeSearch}
+                    onChange={(e) => setFinanceSearch(e.target.value)}
+                    placeholder="Member ID"
+                    className="bg-transparent outline-none text-white text-[11px] w-full"
+                  />
+                  <Search className="w-3.5 h-3.5 text-[#ffdf00] shrink-0 ml-1" />
                 </div>
               </div>
+
+              {financeLoading ? (
+                <div className="py-20 text-center text-neutral-400 text-sm">Loading finance...</div>
+              ) : financeList.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-40 gap-4 opacity-50">
+                  <div className="w-24 h-24 bg-neutral-800 rounded-2xl flex items-center justify-center relative shadow-inner">
+                     <div className="absolute top-2 right-2 text-3xl opacity-20 -rotate-12">✈️</div>
+                     <div className="w-16 h-12 bg-neutral-700 rounded-lg border-t-2 border-neutral-600"></div>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-500 text-[13px]">
+                    No content yet <span className="text-[#ffdf00]">↻</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2 mt-2">
+                  {financeList.map((sub) => (
+                    <div key={sub.id} className="bg-[#141414] border border-neutral-800 rounded-xl p-3 flex justify-between items-center text-xs">
+                      <div>
+                        <div className="font-bold text-white">Member #{sub.member_id}</div>
+                        <div className="text-[10px] text-neutral-500">Phone: {sub.phone}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-neutral-400">Total Recharge</div>
+                        <div className="text-green-400 font-bold text-sm">PKR {sub.total_deposit.toLocaleString()}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </motion.div>
           )}
 
-          {(activeTab === "Subordinate claim") && (
+          {activeTab === "Subordinate claim" && (
             <motion.div key="sub-claim" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col gap-3 pt-3 px-3 pb-8">
-              <div className="flex gap-2 mb-4">
-                <button className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]">
-                  Today <ChevronLeft className="w-3 h-3 rotate-90" />
-                </button>
-                <button onClick={() => toast.success("Sorting applied")} className="border border-neutral-700 rounded-full px-3 py-1 flex items-center gap-1 text-neutral-300 text-[11px]">
-                  Total collection o... <ChevronLeft className="w-3 h-3 rotate-90" />
-                </button>
-                <button onClick={() => toast("Search feature coming soon")} className="border border-neutral-700 rounded-full px-3 py-1 flex items-center justify-between flex-1 text-neutral-500 text-[11px]">
-                  Member ID
-                  <span className="text-[#ffdf00]">??</span>
-                </button>
+              <div className="flex justify-between items-center px-1 mb-2">
+                <span className="text-xs text-neutral-400">Total Claims: {claimsList.length}</span>
+                <span className="text-xs text-[#ffdf00]">
+                  Approved: PKR {claimsList.filter(c => c.status === 'CREDITED' || c.status === 'APPROVED').reduce((s, c) => s + c.amount, 0).toLocaleString()}
+                </span>
               </div>
-              <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-40 gap-4 opacity-50">
-                <div className="w-24 h-24 bg-neutral-800 rounded-2xl flex items-center justify-center relative shadow-inner">
-                   <div className="absolute top-2 right-2 text-3xl opacity-20 -rotate-12">??</div>
-                   <div className="w-16 h-12 bg-neutral-700 rounded-lg border-t-2 border-neutral-600"></div>
+
+              {claimsLoading ? (
+                <div className="py-20 text-center text-neutral-400 text-sm">Loading claims...</div>
+              ) : claimsList.length === 0 ? (
+                <div className="flex-1 flex flex-col items-center justify-center pt-24 pb-40 gap-4 opacity-50">
+                  <div className="w-24 h-24 bg-neutral-800 rounded-2xl flex items-center justify-center relative shadow-inner">
+                     <div className="absolute top-2 right-2 text-3xl opacity-20 -rotate-12">✈️</div>
+                     <div className="w-16 h-12 bg-neutral-700 rounded-lg border-t-2 border-neutral-600"></div>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-500 text-[13px]">
+                    No content yet <span className="text-[#ffdf00]">↻</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-neutral-500 text-[13px]">
-                  No content yet <span className="text-[#ffdf00]">?</span>
+              ) : (
+                <div className="flex flex-col gap-2 mt-2">
+                  {claimsList.map((claim) => (
+                    <div key={claim.id} className="bg-[#141414] border border-neutral-800 rounded-xl p-3 flex justify-between items-center text-xs">
+                      <div>
+                        <div className="font-bold text-white">{claim.description || claim.reward_type}</div>
+                        <div className="text-[10px] text-neutral-500">{new Date(claim.created_at).toLocaleString()}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[#ffdf00] font-bold text-sm">+PKR {claim.amount.toLocaleString()}</div>
+                        <div className={`text-[10px] font-bold ${
+                          claim.status === 'CREDITED' || claim.status === 'APPROVED' ? 'text-green-400' :
+                          claim.status === 'PENDING' ? 'text-yellow-400' : 'text-red-400'
+                        }`}>
+                          {claim.status}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </motion.div>
           )}
 
-          {(activeTab === "Commission Rate") && (
+          {activeTab === "Commission Rate" && (
             <motion.div key="commission-rate" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex gap-2 pt-3 px-2 pb-8 items-start">
               {/* Left Sidebar (Vertical Tabs) */}
               <div className="w-[85px] flex flex-col gap-2 shrink-0">
                 {[
-                  { id: "Mini Games", icon: "???" },
-                  { id: "Slot", icon: "??" },
-                  { id: "Fishing", icon: "??" },
-                  { id: "Cards", icon: "??" },
-                  { id: "Live", icon: "?????" },
-                  { id: "Sports", icon: "?" }
+                  { id: "Mini Games", icon: "🎮" },
+                  { id: "Slot", icon: "🎰" },
+                  { id: "Fishing", icon: "🐟" },
+                  { id: "Cards", icon: "♠️" },
+                  { id: "Live", icon: "🎲" },
+                  { id: "Sports", icon: "⚽" }
                 ].map(t => (
                   <button 
                     key={t.id}
@@ -567,7 +1132,7 @@ export default function InvitePage() {
                         : "bg-[#141414] border-neutral-800 text-neutral-400"
                     }`}
                   >
-                    <span className="text-xl grayscale opacity-80">{t.icon}</span>
+                    <span className="text-xl">{t.icon}</span>
                     <span className="text-[10px] font-medium leading-none text-center">{t.id}</span>
                   </button>
                 ))}
@@ -592,21 +1157,25 @@ export default function InvitePage() {
 
                 {/* Table Rows */}
                 <div className="flex flex-col text-[11px] font-bold text-center">
-                  {[
+                  {(overview?.config?.tiers || [
                     { mem: 0, perf: "0.00", rate: "0.40%" },
                     { mem: 0, perf: "10,000,000.00", rate: "0.50%" },
                     { mem: 0, perf: "30,000,000.00", rate: "0.80%" },
                     { mem: 0, perf: "50,000,000.00", rate: "1.00%" },
                     { mem: 0, perf: "100,000,000.00", rate: "1.20%" },
-                    { mem: 0, perf: "300,000,000.00", rate: "1.50%" },
+                    { mem: 0, perf: "30,000,000.00", rate: "1.50%" },
                     { mem: 0, perf: "500,000,000.00", rate: "2.00%" },
                     { mem: 0, perf: "1,000,000,000.00", rate: "2.50%" },
                     { mem: 0, perf: "5,000,000,000.00", rate: "3.00%" }
-                  ].map((row, i) => (
+                  ]).map((row: any, i: number) => (
                     <div key={i} className={`flex py-3 px-1 ${i % 2 !== 0 ? "bg-[#141414]" : "bg-transparent"}`}>
                       <div className="flex-1 text-white flex items-center justify-center">{row.mem}</div>
                       <div className="flex-[1.5] text-white flex items-center justify-center">{row.perf}</div>
-                      <div className="flex-1 text-[#ffdf00] flex items-center justify-center">{row.rate}</div>
+                      <div className="flex-1 text-[#ffdf00] flex items-center justify-center">
+                        {overview?.config?.category_rates?.[rateTab]
+                          ? `${(Number(overview.config.category_rates[rateTab]) * 100).toFixed(2)}%`
+                          : row.rate}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -620,7 +1189,3 @@ export default function InvitePage() {
     </main>
   );
 }
-
-
-
-
